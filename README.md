@@ -2,11 +2,9 @@
 
 libstodium was born a fork of
 [Robosodium](https://github.com/GerardSoleCa/Robosodium), which was born as a
-fork of [kalium-jni](https://github.com/joshjdevl/kalium-jni/). With this
-library you will be able to compile libsodium for Android platforms and
-automatically create the wrapper for the JNI. It can also be added to Android
-Studio as a module, using the generated
-build.gradle/libstodium.iml/proguard-rules.pro files.
+fork of [kalium-jni](https://github.com/joshjdevl/kalium-jni/). The goal of this
+library is to improve the API, documentation, and better intergration with
+Android Studio.
 
 Credits to:
 * [**Libsodium**](https://github.com/jedisct1/libsodium): author [Frank Denis](https://github.com/jedisct1) and [Contributors](https://github.com/jedisct1/libsodium/graphs/contributors)
@@ -18,38 +16,38 @@ Credits to:
 *When you plan to use libstodium in an Android Studio project, I would recommend
 cloning the repository into a subdirectory of the project root.*
 
-1. First of all download this repository and its submodules:
+1. To start, download this repository and its submodules (libsodium):
   ```bash
   $ git clone https://github.com/ArteMisc/libstodium.git
   $ git submodule init 
   $ git submodule update
   ```
 
-2. Start from first clone:
+2. (Optional) on Ubuntu, you can run this command to make sure everything is setup on your machine:
   ```bash
-  $ ./do_the_job.sh
+  $ ./install_system_dependencies.sh
   ```
   
-3. Build JNI for Linux instead of Android:
+3. Next, run the setup script:
   ```bash
-  $ ./do_the_job.sh linux
-  ```
-4. Where to find the compiled libs:
-  ```bash
-  cd libs # Libs for Android using the architecture dirs
-  cd linux_lib # Lib for Linux. To be used copy to /usr/lib for example. Or just place anywhere you want
+  $ ./setup.sh # load Ndk and Swig, install libsodium and JNI bindings, cleanup
   ```
 
-5. If something goes wrong or you want to re-run parts of the compilation, just call the following scripts:
-  ```bash
-  do_the_job.sh              # Start and run all the scripts
-  install_software.sh        # First update aptitude cache and install necessary packages
-  build_jni_linux.sh         # Build libsodium with jni for linux.
-  download_ndk.sh            # Download the required Android NDK
-  build_android_libsodium.sh # Compile Libsodium for Android
-  build_jni.sh               # Generate the JNI library (*.so)
-  ```
+In order for setup to run correctly, the environment variable JAVA_HOME should be set.
+If this is not the case, the script will quit. You can set the JAVA_HOME value using
+`export JAVA_HOME=/path/to/java` or by running the command like this:
+```bash
+$ JAVA_HOME=/path/to/java ./setup.sh
+```
 
+### Notes:
+* Do NOT run the script as root. You will be asked to allow sudo for a few specific commands during the script's execution.
+* Currently supported architectures are:
+  * mips
+  * arm
+  * arm-v7a
+  * x86.
+  
 ### License
 
 Each part has its own software license, including:
@@ -57,3 +55,11 @@ Each part has its own software license, including:
 * **kalium-jni** [Apache License. Version 2.0](https://github.com/joshjdevl/kalium-jni/blob/master/LICENSE.txt)
 * **Robosodium** [Apache License. Version 2.0](https://github.com/GerardSoleCa/Robosodium/blob/master/LICENSE.txt)
 * **libstodium** [Apache License. Version 2.0](https://github.com/ArteMisc/libstodium/blob/master/LICENSE.txt)
+
+### TODO
+* Imporove the API, provide more docs.
+* Make the API compatible with Java's native Security interfaces.
+* Add tests.
+* Support more architectures as they come along (mainly 64-bits archs).
+* Add code examples to the Readme.
+* Add a guide for adding the project as Android Studio module to a project.
