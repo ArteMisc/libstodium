@@ -11,7 +11,16 @@ Credits to:
 * [**Kalium-jni**](https://github.com/joshjdevl/kalium-jni/): author [joshjdevl](https://github.com/joshjdevl) and [Contributors](https://github.com/joshjdevl/kalium-jni/graphs/contributors)
 * [**Robosodium**](https://github.com/GerardSoleCa/Robosodium): author [GerardSoleCa](https://github.com/GerardSoleCa)
 
-### How to
+### Target platform
+
+The library is heavily focussed on intergration with Android Studio and working
+on Android systems.
+
+The supported Android API versions are:
+* Min SDK Version: 16 (4.1 Jelly Bean)
+* Target SDK Version: 23 (6.0 Marshmallow)
+
+### How to install
 
 *When you plan to use libstodium in an Android Studio project, I would recommend
 cloning the repository into a subdirectory of the project root.*
@@ -46,7 +55,7 @@ $ JAVA_HOME=/path/to/java ./setup.sh
   * mips
   * arm
   * arm-v7a
-  * x86.
+  * x86
   
 ### License
 
