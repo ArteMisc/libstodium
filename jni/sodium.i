@@ -235,7 +235,7 @@ int crypto_sign_detached(unsigned char *dst_signature,
                          unsigned long long msg_len,
                          const unsigned char *local_private_key);
 
-int crypto_sign_verify_detached(const unsigned char *src_signed_msg,
+int crypto_sign_verify_detached(const unsigned char *src_signature,
                                 const unsigned char *src_msg,
                                 unsigned long long msg_len,
                                 const unsigned char *remote_public_key);

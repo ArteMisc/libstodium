@@ -1,5 +1,7 @@
 # libstodium
 
+*This project is very young and as such the API is not yet stable or complete.*
+
 libstodium was born a fork of
 [Robosodium](https://github.com/GerardSoleCa/Robosodium), which was born as a
 fork of [kalium-jni](https://github.com/joshjdevl/kalium-jni/). The goal of this
@@ -72,3 +74,4 @@ Each part has its own software license, including:
 * Support more architectures as they come along (mainly 64-bits archs).
 * Add code examples to the Readme.
 * Add a guide for adding the project as Android Studio module to a project.
+* Add support for Maven.

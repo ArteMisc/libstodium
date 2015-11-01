@@ -1,5 +1,7 @@
 package eu.artemisc.stodium;
 
+import android.support.annotation.NonNull;
+
 import org.abstractj.kalium.Sodium;
 
 /**
@@ -28,6 +30,18 @@ public final class Stodium {
         }
         throw new SecurityException(
                 String.format("Stodium: operation returned non-zero status %d", status));
+    }
+
+    public static void checkSize(final int src,
+                                 final int expected,
+                                 @NonNull final String constant)
+            throws SecurityException {
+        if (src == expected) {
+            return;
+        }
+        throw new SecurityException(
+                String.format("Check size failed on [%s] [expected: %d, real: %d]",
+                        constant, expected, src));
     }
 
 
