@@ -19,7 +19,7 @@ public final class Stodium {
     private Stodium() {}
 
     /**
-     * Stodium used
+     *
      * @param status
      * @throws SecurityException
      */
@@ -32,6 +32,13 @@ public final class Stodium {
                 String.format("Stodium: operation returned non-zero status %d", status));
     }
 
+    /**
+     *
+     * @param src
+     * @param expected
+     * @param constant
+     * @throws SecurityException
+     */
     public static void checkSize(final int src,
                                  final int expected,
                                  @NonNull final String constant)
@@ -44,13 +51,17 @@ public final class Stodium {
                         constant, expected, src));
     }
 
-
-    private void runInit() {
+    /**
+     * runInit wraps a call to sodium_init().
+     */
+    private void runInit()
+            throws RuntimeException {
         if (Sodium.sodium_init() == -1) {
-            throw new RuntimeException("StrodiumInit: could not initialize Sodium library");
+            throw new RuntimeException("StodiumInit: could not initialize Sodium library");
         }
     }
 
+    // Load the library.
     static {
         System.loadLibrary("kaliumjni");
     }
@@ -59,9 +70,9 @@ public final class Stodium {
     /**
      * Stodium constructor should be called once per application, or at least
      * before any class is used that requires the native methods to be
-     * available.
+     * available. This ensures the library is loaded and initialized.
      */
-    public static void StrodiumInit() {
+    public static void StodiumInit() {
         new Stodium().runInit();
     }
 }

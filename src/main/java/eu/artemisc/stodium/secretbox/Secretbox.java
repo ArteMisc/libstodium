@@ -14,43 +14,23 @@ import eu.artemisc.stodium.Stodium;
  */
 public final class Secretbox {
     static {
-        Stodium.StrodiumInit();
+        // Require sodium_init();
+        Stodium.StodiumInit();
     }
 
+    // block the constructor
+    private Secretbox() {}
+
+    // constants
     public static final int KEYBYTES = 32;
     public static final int NONCEBYTES = 24;
     public static final int MACBYTES = 16;
 
-    /**
-     * checkLengths validates whether the inputlengths match the restrictions
-     * created by the crypto_secretbox_* constants.
-     */
-    private static void checkLengths(final int cipherLen,
-                                     final int plainLen,
-                                     final int nonceLen,
-                                     final int keyLen)
-            throws SecurityException {
-        if (cipherLen != plainLen + MACBYTES) {
-            throw new SecurityException("Secretbox: cipherLen != plainLen + MACBYTES. " +
-                    cipherLen + " != " + (plainLen + MACBYTES));
-        }
-        if (nonceLen != NONCEBYTES) {
-            throw new SecurityException("Secretbox: nonceLen != NONCEBYTES. " +
-                    nonceLen + " != " + NONCEBYTES);
-        }
-        if (keyLen != KEYBYTES) {
-            throw new SecurityException("Secretbox: keyLen != KEYBYTES. " +
-                    keyLen + " != " + KEYBYTES);
-        }
-    }
+    // wrappers
 
-    private static void checkMacLength(final int macLen)
-            throws SecurityException {
-        if (macLen != MACBYTES) {
-            throw new SecurityException("Secretbox: macLen != MACBYTES. " +
-                    macLen + " != " + MACBYTES);
-        }
-    }
+    //
+    // _easy
+    //
 
     /**
      *
@@ -62,13 +42,14 @@ public final class Secretbox {
      *
      * @see <a href="https://download.libsodium.org/doc/secret-key_cryptography/authenticated_encryption.html">libsodium documentation</a>
      */
-    public static void SealEasy(@NonNull final byte[] dstCipher,
-                                @NonNull final byte[] srcPlain,
-                                @NonNull final byte[] nonce,
-                                @NonNull final byte[] secretKey)
+    public static void easy(@NonNull final byte[] dstCipher,
+                            @NonNull final byte[] srcPlain,
+                            @NonNull final byte[] nonce,
+                            @NonNull final byte[] secretKey)
             throws SecurityException {
-        checkLengths(dstCipher.length, srcPlain.length, nonce.length,
-                secretKey.length);
+        Stodium.checkSize(dstCipher.length, srcPlain.length + MACBYTES, "srcPlain.length + Secretbox.MACBYTES");
+        Stodium.checkSize(nonce.length, NONCEBYTES, "Secretbox.NONCEBYTES");
+        Stodium.checkSize(secretKey.length, KEYBYTES, "Secretbox.KEYBYTES");
         Stodium.checkStatus(Sodium.crypto_secretbox_easy(dstCipher, srcPlain,
                 srcPlain.length, nonce, secretKey));
     }
@@ -88,11 +69,16 @@ public final class Secretbox {
                                 @NonNull final byte[] nonce,
                                 @NonNull final byte[] secretKey)
             throws SecurityException {
-        checkLengths(srcCipher.length, dstPlain.length, nonce.length,
-                secretKey.length);
+        Stodium.checkSize(srcCipher.length, dstPlain.length + MACBYTES, "dstPlain.length + Secretbox.MACBYTES");
+        Stodium.checkSize(nonce.length, NONCEBYTES, "Secretbox.NONCEBYTES");
+        Stodium.checkSize(secretKey.length, KEYBYTES, "Secretbox.KEYBYTES");
         Stodium.checkStatus(Sodium.crypto_secretbox_open_easy(dstPlain,
                 srcCipher, srcCipher.length, nonce, secretKey));
     }
+
+    //
+    // _detached
+    //
 
     /**
      *
@@ -105,15 +91,16 @@ public final class Secretbox {
      *
      * @see <a href="https://download.libsodium.org/doc/secret-key_cryptography/authenticated_encryption.html">libsodium documentation</a>
      */
-    public static void SealDetached(@NonNull final byte[] dstCipher,
-                                    @NonNull final byte[] dstMac,
-                                    @NonNull final byte[] srcPlain,
-                                    @NonNull final byte[] nonce,
-                                    @NonNull final byte[] secretKey)
+    public static void detached(@NonNull final byte[] dstCipher,
+                                @NonNull final byte[] dstMac,
+                                @NonNull final byte[] srcPlain,
+                                @NonNull final byte[] nonce,
+                                @NonNull final byte[] secretKey)
             throws SecurityException {
-        checkMacLength(dstMac.length);
-        checkLengths(dstCipher.length + dstMac.length, srcPlain.length,
-                nonce.length, secretKey.length);
+        Stodium.checkSize(dstCipher.length, srcPlain.length, "srcPlain.length");
+        Stodium.checkSize(dstMac.length, MACBYTES, "Secretbox.MACBYTES");
+        Stodium.checkSize(nonce.length, NONCEBYTES, "Secretbox.NONCEBYTES");
+        Stodium.checkSize(secretKey.length, KEYBYTES, "Secretbox.KEYBYTES");
         Stodium.checkStatus(Sodium.crypto_secretbox_detached(dstCipher, dstMac,
                 srcPlain, srcPlain.length, nonce, secretKey));
     }
@@ -129,15 +116,16 @@ public final class Secretbox {
      *
      * @see <a href="https://download.libsodium.org/doc/secret-key_cryptography/authenticated_encryption.html">libsodium documentation</a>
      */
-    public static void OpenDetached(@NonNull final byte[] dstPlain,
+    public static void openDetached(@NonNull final byte[] dstPlain,
                                     @NonNull final byte[] srcCipher,
                                     @NonNull final byte[] srcMac,
                                     @NonNull final byte[] nonce,
                                     @NonNull final byte[] secretKey)
             throws SecurityException {
-        checkMacLength(srcMac.length);
-        checkLengths(srcCipher.length + srcMac.length, dstPlain.length,
-                nonce.length, secretKey.length);
+        Stodium.checkSize(srcCipher.length, dstPlain.length, "dstPlain.length");
+        Stodium.checkSize(srcMac.length, MACBYTES, "Secretbox.MACBYTES");
+        Stodium.checkSize(nonce.length, NONCEBYTES, "Secretbox.NONCEBYTES");
+        Stodium.checkSize(secretKey.length, KEYBYTES, "Secretbox.KEYBYTES");
         Stodium.checkStatus(Sodium.crypto_secretbox_open_detached(dstPlain,
                 srcCipher, srcMac, srcCipher.length, nonce, secretKey));
     }

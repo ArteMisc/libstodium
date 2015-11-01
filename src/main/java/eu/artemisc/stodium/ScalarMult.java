@@ -10,24 +10,22 @@ import org.abstractj.kalium.Sodium;
  * @author Jan van de Molengraft [jan@artemisc.eu]
  */
 public final class ScalarMult {
-    // block constructor
-    private ScalarMult() {}
-
-    public static int SCALAR_BYTES = 32;
-
-    private static void checkKeyLengths(final int pubKeyLen,
-                                        final int privKeyLen)
-            throws SecurityException {
-        if (pubKeyLen != SCALAR_BYTES) {
-            throw new SecurityException("ScalarMult: pubKeyLen != SCALAR_BYTES. " +
-                    pubKeyLen + " != " + SCALAR_BYTES);
-        }
-        if (privKeyLen != SCALAR_BYTES) {
-            throw new SecurityException("ScalarMult: privKeyLen != SCALAR_BYTES. " +
-                    privKeyLen + " != " + SCALAR_BYTES);
-        }
+    static {
+        // Require sodium_init();
+        Stodium.StodiumInit();
     }
 
+    // block the constructor
+    private ScalarMult() {}
+
+    // constants
+    public static int SCALAR_BYTES = 32;
+
+    // wrappers
+
+    //
+    // scalar_mult*
+    //
 
     /**
      *
@@ -40,11 +38,9 @@ public final class ScalarMult {
                                   @NonNull final byte[] src,
                                   @NonNull final byte[] groupElement)
             throws SecurityException {
-        checkKeyLengths(dst.length, src.length);
-        if (groupElement.length != SCALAR_BYTES) {
-            throw new SecurityException("ScalarMult: privKeyLen != SCALAR_BYTES. " +
-                    groupElement.length + " != " + SCALAR_BYTES);
-        }
+        Stodium.checkSize(dst.length, SCALAR_BYTES, "ScalarMult.SCALAR_BYTES");
+        Stodium.checkSize(src.length, SCALAR_BYTES, "ScalarMult.SCALAR_BYTES");
+        Stodium.checkSize(groupElement.length, SCALAR_BYTES, "ScalarMult.SCALAR_BYTES");
         Stodium.checkStatus(Sodium.crypto_scalarmult_curve25519(dst, src,
                 groupElement));
     }
@@ -58,9 +54,14 @@ public final class ScalarMult {
     public static void scalarMultBase(@NonNull final byte[] dst,
                                       @NonNull final byte[] src)
             throws SecurityException {
-        checkKeyLengths(dst.length, src.length);
+        Stodium.checkSize(dst.length, SCALAR_BYTES, "ScalarMult.SCALAR_BYTES");
+        Stodium.checkSize(src.length, SCALAR_BYTES, "ScalarMult.SCALAR_BYTES");
         Stodium.checkStatus(Sodium.crypto_scalarmult_base(dst, src));
     }
+
+    //
+    // convert curve
+    //
 
     /**
      * curve25519PrivateToPublic is a simple wrapper that calls curve25519's

@@ -10,7 +10,12 @@ import eu.artemisc.stodium.Stodium;
  * @author Jan van de Molengraft [jan@artemisc.eu]
  */
 public final class Sign {
-    // Block constructor
+    static {
+        // Require sodium_init();
+        Stodium.StodiumInit();
+    }
+
+    // block the constructor
     private Sign() {}
 
     // constants
@@ -18,6 +23,8 @@ public final class Sign {
     public static final int PUBLICKEYBYTES = 32;
     public static final int PRIVATEKEYBYTES = 64;
     public static final int SEEDBYTES = 32;
+
+    // wrappers
 
     //
     // keypair methods

@@ -10,12 +10,12 @@ import org.abstractj.kalium.Sodium;
  * @author Jan van de Molengraft [jan@artemisc.eu]
  */
 public final class RandomBytes {
-    // dependency on Sodium
     static {
-        Sodium.sodium_init();
+        // Require sodium_init();
+        Stodium.StodiumInit();
     }
 
-    // hide constructor
+    // block the constructor
     private RandomBytes() {}
 
     /**
@@ -29,5 +29,4 @@ public final class RandomBytes {
     public static void nextBytes(@NonNull final byte[] buffer) {
         Sodium.randombytes_buf(buffer, buffer.length);
     }
-
 }
