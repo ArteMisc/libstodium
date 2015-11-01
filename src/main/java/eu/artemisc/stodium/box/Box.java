@@ -1,10 +1,10 @@
-package eu.artemisc.strodium.box;
+package eu.artemisc.stodium.box;
 
 import android.support.annotation.NonNull;
 
 import org.abstractj.kalium.Sodium;
 
-import eu.artemisc.strodium.Strodium;
+import eu.artemisc.stodium.Stodium;
 
 /**
  * ox is a static class that maps all calls to the corresponding native
@@ -14,7 +14,7 @@ import eu.artemisc.strodium.Strodium;
  */
 public final class Box {
     static {
-        Strodium.StrodiumInit();
+        Stodium.StrodiumInit();
     }
 
     // block the constructor
@@ -85,14 +85,6 @@ public final class Box {
         }
     }
 
-    private static void checkStatus(final int status)
-            throws SecurityException {
-        if (status == 0) {
-            return;
-        }
-        throw new SecurityException(
-                String.format("Secretbox: method returned non-zero status %d", status));
-    }
 
     // wrappers
 
@@ -110,7 +102,7 @@ public final class Box {
                                @NonNull final byte[] dstPrivateKey)
             throws SecurityException {
         checkKeyLengths(dstPublicKey.length, dstPrivateKey.length);
-        checkStatus(Sodium.crypto_box_keypair(dstPublicKey, dstPrivateKey));
+        Stodium.checkStatus(Sodium.crypto_box_keypair(dstPublicKey, dstPrivateKey));
     }
 
     /**
@@ -126,8 +118,8 @@ public final class Box {
             throws SecurityException {
         checkKeyLengths(dstPublicKey.length, dstPrivateKey.length);
         checkSeedLength(srcSeed.length);
-        checkStatus(Sodium.crypto_box_seed_keypair(dstPublicKey, dstPrivateKey,
-                srcSeed));
+        Stodium.checkStatus(Sodium.crypto_box_seed_keypair(dstPublicKey,
+                dstPrivateKey, srcSeed));
     }
 
     //
@@ -151,8 +143,8 @@ public final class Box {
             throws SecurityException {
         checkLengths(dstCipher.length, srcPlain.length, nonce.length,
                 remotePubKey.length, localPrivKey.length);
-        checkStatus(Sodium.crypto_box_easy(dstCipher, srcPlain, srcPlain.length,
-                nonce, remotePubKey, localPrivKey));
+        Stodium.checkStatus(Sodium.crypto_box_easy(dstCipher, srcPlain,
+                srcPlain.length, nonce, remotePubKey, localPrivKey));
     }
 
     /**
@@ -172,7 +164,7 @@ public final class Box {
             throws SecurityException {
         checkLengths(srcCipher.length, dstPlain.length, nonce.length,
                 remotePubKey.length, localPrivKey.length);
-        checkStatus(Sodium.crypto_box_open_easy(dstPlain, srcCipher,
+        Stodium.checkStatus(Sodium.crypto_box_open_easy(dstPlain, srcCipher,
                 srcCipher.length, nonce, remotePubKey, localPrivKey));
     }
 
@@ -200,8 +192,8 @@ public final class Box {
         checkMacLength(dstMac.length);
         checkLengths(dstCipher.length, dstMac.length + srcPlain.length,
                 nonce.length, remotePubKey.length, localPrivKey.length);
-        checkStatus(Sodium.crypto_box_detached(dstCipher, dstMac, srcPlain,
-                srcPlain.length, nonce, remotePubKey, localPrivKey));
+        Stodium.checkStatus(Sodium.crypto_box_detached(dstCipher, dstMac,
+                srcPlain, srcPlain.length, nonce, remotePubKey, localPrivKey));
     }
 
     /**
@@ -224,8 +216,8 @@ public final class Box {
         checkMacLength(srcMac.length);
         checkLengths(srcCipher.length, srcMac.length + dstPlain.length,
                 nonce.length, remotePubKey.length, localPrivKey.length);
-        checkStatus(Sodium.crypto_box_detached(srcCipher, srcMac, dstPlain,
-                srcCipher.length, nonce, remotePubKey, localPrivKey));
+        Stodium.checkStatus(Sodium.crypto_box_detached(srcCipher, srcMac,
+                dstPlain, srcCipher.length, nonce, remotePubKey, localPrivKey));
     }
 
     //
@@ -245,8 +237,8 @@ public final class Box {
             throws SecurityException {
         checkBefornmLength(dstSharedKey.length);
         checkKeyLengths(remotePubKey.length, localPrivKey.length);
-        checkStatus(Sodium.crypto_box_beforenm(dstSharedKey, remotePubKey,
-                localPrivKey));
+        Stodium.checkStatus(Sodium.crypto_box_beforenm(dstSharedKey,
+                remotePubKey, localPrivKey));
     }
 
     //
@@ -269,7 +261,7 @@ public final class Box {
         checkBefornmLength(sharedKey.length);
         checkLengths(dstCipher.length, srcPlain.length, nonce.length,
                 PUBLICKEYBYTES, SECRETKEYBYTES);
-        checkStatus(Sodium.crypto_box_easy_afternm(dstCipher, srcPlain,
+        Stodium.checkStatus(Sodium.crypto_box_easy_afternm(dstCipher, srcPlain,
                 srcPlain.length, nonce, sharedKey));
     }
 
@@ -289,8 +281,8 @@ public final class Box {
         checkBefornmLength(sharedKey.length);
         checkLengths(srcCipher.length, dstPlain.length, nonce.length,
                 PUBLICKEYBYTES, SECRETKEYBYTES);
-        checkStatus(Sodium.crypto_box_open_easy_afternm(dstPlain, srcCipher,
-                srcCipher.length, nonce, sharedKey));
+        Stodium.checkStatus(Sodium.crypto_box_open_easy_afternm(dstPlain,
+                srcCipher, srcCipher.length, nonce, sharedKey));
     }
 
     //
@@ -316,8 +308,8 @@ public final class Box {
         checkBefornmLength(sharedKey.length);
         checkLengths(dstCipher.length, srcPlain.length + dstMac.length,
                 nonce.length, PUBLICKEYBYTES, SECRETKEYBYTES);
-        checkStatus(Sodium.crypto_box_open_detached_afternm(dstCipher, dstMac,
-                srcPlain, srcPlain.length, nonce, sharedKey));
+        Stodium.checkStatus(Sodium.crypto_box_open_detached_afternm(dstCipher,
+                dstMac, srcPlain, srcPlain.length, nonce, sharedKey));
     }
 
     /**
@@ -339,7 +331,7 @@ public final class Box {
         checkBefornmLength(sharedKey.length);
         checkLengths(srcCipher.length, dstPlain.length + srcMac.length,
                 nonce.length, PUBLICKEYBYTES, SECRETKEYBYTES);
-        checkStatus(Sodium.crypto_box_open_detached_afternm(dstPlain, srcCipher,
-                srcMac, srcCipher.length, nonce, sharedKey));
+        Stodium.checkStatus(Sodium.crypto_box_open_detached_afternm(dstPlain,
+                srcCipher, srcMac, srcCipher.length, nonce, sharedKey));
     }
 }

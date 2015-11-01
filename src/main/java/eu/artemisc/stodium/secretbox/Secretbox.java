@@ -1,10 +1,10 @@
-package eu.artemisc.strodium.secretbox;
+package eu.artemisc.stodium.secretbox;
 
 import android.support.annotation.NonNull;
 
 import org.abstractj.kalium.Sodium;
 
-import eu.artemisc.strodium.Strodium;
+import eu.artemisc.stodium.Stodium;
 
 /**
  * Secretbox is a static class that maps all calls to the corresponding native
@@ -14,7 +14,7 @@ import eu.artemisc.strodium.Strodium;
  */
 public final class Secretbox {
     static {
-        Strodium.StrodiumInit();
+        Stodium.StrodiumInit();
     }
 
     public static final int KEYBYTES = 32;
@@ -52,15 +52,6 @@ public final class Secretbox {
         }
     }
 
-    private static void checkStatus(final int status)
-            throws SecurityException {
-        if (status == 0) {
-            return;
-        }
-        throw new SecurityException(
-                String.format("Secretbox: method returned non-zero status %d", status));
-    }
-
     /**
      *
      * @param dstCipher
@@ -76,10 +67,10 @@ public final class Secretbox {
                                 @NonNull final byte[] nonce,
                                 @NonNull final byte[] secretKey)
             throws SecurityException {
-        // validate input
-        checkLengths(dstCipher.length, srcPlain.length, nonce.length, secretKey.length);
-        // run and check
-        checkStatus(Sodium.crypto_secretbox_easy(dstCipher, srcPlain, srcPlain.length, nonce, secretKey));
+        checkLengths(dstCipher.length, srcPlain.length, nonce.length,
+                secretKey.length);
+        Stodium.checkStatus(Sodium.crypto_secretbox_easy(dstCipher, srcPlain,
+                srcPlain.length, nonce, secretKey));
     }
 
     /**
@@ -97,17 +88,16 @@ public final class Secretbox {
                                 @NonNull final byte[] nonce,
                                 @NonNull final byte[] secretKey)
             throws SecurityException {
-        // validate input
-        checkLengths(srcCipher.length, dstPlain.length, nonce.length, secretKey.length);
-        // run and check
-        checkStatus(Sodium.crypto_secretbox_open_easy(dstPlain, srcCipher, srcCipher.length, nonce, secretKey));
-
+        checkLengths(srcCipher.length, dstPlain.length, nonce.length,
+                secretKey.length);
+        Stodium.checkStatus(Sodium.crypto_secretbox_open_easy(dstPlain,
+                srcCipher, srcCipher.length, nonce, secretKey));
     }
 
     /**
      *
      * @param dstCipher
-     * @param mac
+     * @param dstMac
      * @param srcPlain
      * @param nonce
      * @param secretKey
@@ -116,23 +106,23 @@ public final class Secretbox {
      * @see <a href="https://download.libsodium.org/doc/secret-key_cryptography/authenticated_encryption.html">libsodium documentation</a>
      */
     public static void SealDetached(@NonNull final byte[] dstCipher,
-                                    @NonNull final byte[] mac,
+                                    @NonNull final byte[] dstMac,
                                     @NonNull final byte[] srcPlain,
                                     @NonNull final byte[] nonce,
                                     @NonNull final byte[] secretKey)
             throws SecurityException {
-        // validate input
-        checkMacLength(mac.length);
-        checkLengths(dstCipher.length + mac.length, srcPlain.length, nonce.length, secretKey.length);
-        // run and check
-        checkStatus(Sodium.crypto_secretbox_detached(dstCipher, mac, srcPlain, srcPlain.length, nonce, secretKey));
+        checkMacLength(dstMac.length);
+        checkLengths(dstCipher.length + dstMac.length, srcPlain.length,
+                nonce.length, secretKey.length);
+        Stodium.checkStatus(Sodium.crypto_secretbox_detached(dstCipher, dstMac,
+                srcPlain, srcPlain.length, nonce, secretKey));
     }
 
     /**
      *
      * @param dstPlain
      * @param srcCipher
-     * @param mac
+     * @param srcMac
      * @param nonce
      * @param secretKey
      * @throws SecurityException
@@ -141,14 +131,14 @@ public final class Secretbox {
      */
     public static void OpenDetached(@NonNull final byte[] dstPlain,
                                     @NonNull final byte[] srcCipher,
-                                    @NonNull final byte[] mac,
+                                    @NonNull final byte[] srcMac,
                                     @NonNull final byte[] nonce,
                                     @NonNull final byte[] secretKey)
             throws SecurityException {
-        // validate input
-        checkMacLength(mac.length);
-        checkLengths(srcCipher.length + mac.length, dstPlain.length, nonce.length, secretKey.length);
-        // run and check
-        checkStatus(Sodium.crypto_secretbox_open_detached(dstPlain, srcCipher, mac, srcCipher.length, nonce, secretKey));
+        checkMacLength(srcMac.length);
+        checkLengths(srcCipher.length + srcMac.length, dstPlain.length,
+                nonce.length, secretKey.length);
+        Stodium.checkStatus(Sodium.crypto_secretbox_open_detached(dstPlain,
+                srcCipher, srcMac, srcCipher.length, nonce, secretKey));
     }
 }
