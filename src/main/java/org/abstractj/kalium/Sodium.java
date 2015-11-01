@@ -21,6 +21,18 @@ public class Sodium {
     SodiumJNI.randombytes(dst_buf, buf_len);
   }
 
+  public static void randombytes_buf(byte[] buff, int buff_len) {
+    SodiumJNI.randombytes_buf(buff, buff_len);
+  }
+
+  public static int randombytes_close() {
+    return SodiumJNI.randombytes_close();
+  }
+
+  public static void randombytes_stir() {
+    SodiumJNI.randombytes_stir();
+  }
+
   public static int crypto_secretbox_easy(byte[] dst_cipher, byte[] src_plain, int plain_len, byte[] nonce, byte[] secret_key) {
     return SodiumJNI.crypto_secretbox_easy(dst_cipher, src_plain, plain_len, nonce, secret_key);
   }

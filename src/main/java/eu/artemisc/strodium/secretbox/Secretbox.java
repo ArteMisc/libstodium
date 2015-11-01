@@ -4,6 +4,8 @@ import android.support.annotation.NonNull;
 
 import org.abstractj.kalium.Sodium;
 
+import eu.artemisc.strodium.Strodium;
+
 /**
  * Secretbox is a static class that maps all calls to the corresponding native
  * implementations. All the methods are crypto_secretbox_* functions.
@@ -11,6 +13,10 @@ import org.abstractj.kalium.Sodium;
  * @author Jan van de Molengraft [jan@artemisc.eu]
  */
 public final class Secretbox {
+    static {
+        Strodium.StrodiumInit();
+    }
+
     public static final int KEYBYTES = 32;
     public static final int NONCEBYTES = 24;
     public static final int MACBYTES = 16;

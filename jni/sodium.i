@@ -75,6 +75,18 @@ void randombytes(unsigned char *dst_buf,
                  unsigned long long buf_len);
 
 /*
+    randombytes API
+*/
+
+/*void randombytes_buf(void * const buf, const size_t size);*/
+void randombytes_buf(unsigned char * const buff,
+                    const unsigned long long buff_len);
+
+int randombytes_close(void);
+
+void randombytes_stir(void);
+
+/*
     crypto_secretbox API
 */
 int crypto_secretbox_easy(unsigned char *dst_cipher,

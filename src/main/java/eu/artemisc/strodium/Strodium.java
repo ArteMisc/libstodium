@@ -13,18 +13,26 @@ import org.abstractj.kalium.Sodium;
  * @author Jan van de Molengraft [jan@artemisc.eu]
  */
 public final class Strodium {
-    private Strodium() {
-    }
+    private Strodium() {}
 
-    /**
-     * Strodium constructor should be called once per application.
-     */
-    public static void StrodiumInit() {
-        System.loadLibrary("kaliumjni");
-        // TODO call sodium.Init()
+    private void runInit() {
         if (Sodium.sodium_init() == -1) {
             throw new RuntimeException("StrodiumInit: could not initialize Sodium library");
         }
+    }
+
+    static {
+        System.loadLibrary("kaliumjni");
+    }
+
+
+    /**
+     * Strodium constructor should be called once per application, or at least
+     * before any class is used that requires the native methods to be
+     * available.
+     */
+    public static void StrodiumInit() {
+        new Strodium().runInit();
     }
 }
 

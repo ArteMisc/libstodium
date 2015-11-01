@@ -12,6 +12,9 @@ public class SodiumJNI {
   public final static native int sodium_init();
   public final static native String sodium_version_string();
   public final static native void randombytes(byte[] jarg1, int jarg2);
+  public final static native void randombytes_buf(byte[] jarg1, int jarg2);
+  public final static native int randombytes_close();
+  public final static native void randombytes_stir();
   public final static native int crypto_secretbox_easy(byte[] jarg1, byte[] jarg2, int jarg3, byte[] jarg4, byte[] jarg5);
   public final static native int crypto_secretbox_open_easy(byte[] jarg1, byte[] jarg2, int jarg3, byte[] jarg4, byte[] jarg5);
   public final static native int crypto_secretbox_detached(byte[] jarg1, byte[] jarg2, byte[] jarg3, int jarg4, byte[] jarg5, byte[] jarg6);

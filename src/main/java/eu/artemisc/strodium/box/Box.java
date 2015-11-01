@@ -1,8 +1,10 @@
-package eu.artemisc.strodium.Box;
+package eu.artemisc.strodium.box;
 
 import android.support.annotation.NonNull;
 
 import org.abstractj.kalium.Sodium;
+
+import eu.artemisc.strodium.Strodium;
 
 /**
  * ox is a static class that maps all calls to the corresponding native
@@ -11,6 +13,10 @@ import org.abstractj.kalium.Sodium;
  * @author Jan van de Molengraft [jan@artemisc.eu]
  */
 public final class Box {
+    static {
+        Strodium.StrodiumInit();
+    }
+
     // block the constructor
     private Box() {}
 
