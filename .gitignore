@@ -1,0 +1,8 @@
+*.sw*
+**/build/*
+**/android-ndk*
+**/obj/*
+**/lib/*
+**/libs/*
+**/linux_lib/*
+**/swig-2.0.10*
