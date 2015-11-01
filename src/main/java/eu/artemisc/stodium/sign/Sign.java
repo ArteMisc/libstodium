@@ -23,6 +23,16 @@ public final class Sign {
     // keypair methods
     //
 
+    /**
+     * keypair generates a new, random, keypair for use with the crypto_sign
+     * functions. The implementation used Ed25519.
+     *
+     * @param dstPublicKey
+     * @param dstPrivateKey
+     * @throws SecurityException
+     *
+     * @see <a href="https://download.libsodium.org/doc/public-key_cryptography/public-key_signatures.html#key-pair-generation">libsodium docs</a>
+     */
     public static void keypair(@NonNull final byte[] dstPublicKey,
                                @NonNull final byte[] dstPrivateKey)
             throws SecurityException {
@@ -32,6 +42,17 @@ public final class Sign {
                 Sodium.crypto_sign_keypair(dstPublicKey, dstPrivateKey));
     }
 
+    /**
+     * keypairSeed generates a new keypair for use with crypto_sign, using the
+     * given seed.
+     *
+     * @param dstPublicKey
+     * @param dstPrivateKey
+     * @param srcSeed
+     * @throws SecurityException
+     *
+     * @see <a href="https://download.libsodium.org/doc/public-key_cryptography/public-key_signatures.html#key-pair-generation">libsodium docs</a>
+     */
     public static void keypairSeed(@NonNull final byte[] dstPublicKey,
                                    @NonNull final byte[] dstPrivateKey,
                                    @NonNull final byte[] srcSeed)
@@ -47,6 +68,16 @@ public final class Sign {
     // conversion methods
     //
 
+    /**
+     * publicFromPrivate uses the provided private key to calculate its
+     * corresponding public key.
+     *
+     * @param dstPublicKey
+     * @param srcPrivateKey
+     * @throws SecurityException
+     *
+     * @see <a href="https://download.libsodium.org/doc/public-key_cryptography/public-key_signatures.html#extracting-the-seed-and-the-public-key-from-the-secret-key">libsodium docs</a>
+     */
     public static void publicFromPrivate(@NonNull final byte[] dstPublicKey,
                                          @NonNull final byte[] srcPrivateKey)
             throws SecurityException {
@@ -56,8 +87,18 @@ public final class Sign {
                 Sodium.crypto_sign_ed25519_sk_to_pk(dstPublicKey, srcPrivateKey));
     }
 
+    /**
+     * seedFromPrivate extracts the seed from the given private key.
+     *
+     * @param dstSeed
+     * @param srcPrivateKey
+     * @throws SecurityException
+     *
+     * @see <a href="https://download.libsodium.org/doc/public-key_cryptography/public-key_signatures.html#extracting-the-seed-and-the-public-key-from-the-secret-key">libsodium docs</a>
+     */
     public static void seedFromPrivate(@NonNull final byte[] dstSeed,
-                                       @NonNull final byte[] srcPrivateKey) {
+                                       @NonNull final byte[] srcPrivateKey)
+            throws SecurityException {
         Stodium.checkSize(srcPrivateKey.length, PRIVATEKEYBYTES, "Sign.PRIVATEKEYBYTES");
         Stodium.checkSize(dstSeed.length, SEEDBYTES, "Sign.SEEDBYTES");
         Stodium.checkStatus(Sodium.crypto_sign_ed25519_sk_to_seed(dstSeed,
@@ -68,6 +109,23 @@ public final class Sign {
     // crypto_sign*
     //
 
+    /**
+     * sign calculates the signature for the given message, and writes the
+     * result to dstSignedMsg (which includes both the message and the
+     * signature). Though the signature could potentially be smaller than
+     * SIGNBYTES, it is required for dstSignedMsg to be big enough to hold the
+     * maximum signature size on top of the size of the original message. The
+     * actual size of the signed message is returned, it is up to the called to
+     * copy the result into an appropriately sized byte array.
+     *
+     * @param dstSignedMsg
+     * @param srcMsg
+     * @param localPrivKey
+     * @return The actual size of the signature plus the original message.
+     * @throws SecurityException
+     *
+     * @see <a href="https://download.libsodium.org/doc/public-key_cryptography/public-key_signatures.html#combined-mode">libsodium docs</a>
+     */
     public static int sign(@NonNull final byte[] dstSignedMsg,
                            @NonNull final byte[] srcMsg,
                            @NonNull final byte[] localPrivKey)
@@ -81,6 +139,23 @@ public final class Sign {
         return dstSize[0];
     }
 
+    /**
+     * open verifies the signarure of a given signed message, and writes the
+     * original message to dstMsg, stripped of the signature.
+     *
+     * dstMsg should be able to hold srcSignedMsg.length bytes as the size of
+     * the signature is unknown. The real size of the unsigned message is
+     * returned, and it is up to the caller to copy this result into an
+     * appropriately sized byte array.
+     *
+     * @param dstMsg
+     * @param srcSignedMsg
+     * @param remotePubKey
+     * @return The actual size of the original message without the signature.
+     * @throws SecurityException
+     *
+     * @see <a href="https://download.libsodium.org/doc/public-key_cryptography/public-key_signatures.html#combined-mode">libsodium docs</a>
+     */
     public static int open(@NonNull final byte[] dstMsg,
                            @NonNull final byte[] srcSignedMsg,
                            @NonNull final byte[] remotePubKey)
@@ -97,6 +172,17 @@ public final class Sign {
     // *_detached
     //
 
+    /**
+     *
+     * @param dstSignature
+     * @param srcMsg
+     * @param localPrivKey
+     * @return The real size of dstSignature as calculated by
+     *         {@link org.abstractj.kalium.Sodium#crypto_sign_detached(byte[], int[], byte[], int, byte[])}
+     * @throws SecurityException
+     *
+     * @see <a href="https://download.libsodium.org/doc/public-key_cryptography/public-key_signatures.html#detached-mode">libsodium docs</a>
+     */
     public static int signDetached(@NonNull final byte[] dstSignature,
                                    @NonNull final byte[] srcMsg,
                                    @NonNull final byte[] localPrivKey)
@@ -109,6 +195,15 @@ public final class Sign {
         return dstSize[0];
     }
 
+    /**
+     *
+     * @param srcSignature
+     * @param srcMsg
+     * @param remotePubKey
+     * @throws SecurityException
+     *
+     * @see <a href="https://download.libsodium.org/doc/public-key_cryptography/public-key_signatures.html#detached-mode">libsodium docs</a>
+     */
     public static void verifyDetached(@NonNull final byte[] srcSignature,
                                       @NonNull final byte[] srcMsg,
                                       @NonNull final byte[] remotePubKey)
