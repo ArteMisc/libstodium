@@ -15,6 +15,8 @@ public class SodiumJNI {
   public final static native void randombytes_buf(byte[] jarg1, int jarg2);
   public final static native int randombytes_close();
   public final static native void randombytes_stir();
+  public final static native int sodium_memcmp(long jarg1, long jarg2, int jarg3);
+  public final static native void sodium_increment(byte[] jarg1, int jarg2);
   public final static native int crypto_secretbox_easy(byte[] jarg1, byte[] jarg2, int jarg3, byte[] jarg4, byte[] jarg5);
   public final static native int crypto_secretbox_open_easy(byte[] jarg1, byte[] jarg2, int jarg3, byte[] jarg4, byte[] jarg5);
   public final static native int crypto_secretbox_detached(byte[] jarg1, byte[] jarg2, byte[] jarg3, int jarg4, byte[] jarg5, byte[] jarg6);
@@ -46,8 +48,8 @@ public class SodiumJNI {
   public final static native int crypto_aead_chacha20poly1305_decrypt(byte[] jarg1, int[] jarg2, byte[] jarg3, byte[] jarg4, int jarg5, byte[] jarg6, int jarg7, byte[] jarg8, byte[] jarg9);
   public final static native int crypto_hash_sha256(byte[] jarg1, byte[] jarg2, int jarg3);
   public final static native int crypto_hash_sha512(byte[] jarg1, byte[] jarg2, int jarg3);
-  public final static native int crypto_generichash_blake2b(byte[] jarg1, long jarg2, byte[] jarg3, int jarg4, byte[] jarg5, long jarg6);
-  public final static native int crypto_pwhash_scryptsalsa208sha256(byte[] jarg1, int jarg2, String jarg3, int jarg4, byte[] jarg5, int jarg6, long jarg7);
+  public final static native int crypto_generichash_blake2b(byte[] jarg1, int jarg2, byte[] jarg3, int jarg4, byte[] jarg5, int jarg6);
+  public final static native int crypto_pwhash_scryptsalsa208sha256(byte[] jarg1, int jarg2, String jarg3, int jarg4, byte[] jarg5, int jarg6, int jarg7);
   public final static native int crypto_box_curve25519xsalsa20poly1305_keypair(byte[] jarg1, byte[] jarg2);
   public final static native int crypto_box_curve25519xsalsa20poly1305_seed_keypair(byte[] jarg1, byte[] jarg2, byte[] jarg3);
   public final static native int crypto_box_curve25519xsalsa20poly1305(byte[] jarg1, byte[] jarg2, int jarg3, byte[] jarg4, byte[] jarg5, byte[] jarg6);

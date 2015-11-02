@@ -1,5 +1,6 @@
-/* example.i */
- %module Sodium
+/* sodium.i */
+%module Sodium
+
 %include "typemaps.i"
 %include "stdint.i"
 %include "arrays_java.i"
@@ -8,7 +9,9 @@
 
 %apply int {unsigned long long};
 %apply long[] {unsigned long long *};
+%apply long {size_t};
 
+/* TODO map void* to byteArray */
 
 %typemap(jni) unsigned char *"jbyteArray"
 %typemap(jtype) unsigned char *"byte[]"
@@ -62,12 +65,13 @@
  /* Put header files here or function declarations like below */
 #include "sodium.h"
 
- %}
+%}
 
 /*
     Runtime API
 */
 int sodium_init(void);
+
 const char *sodium_version_string(void);
 
 /* void randombytes(unsigned char * const buf, const unsigned long long buf_len); */
@@ -80,11 +84,21 @@ void randombytes(unsigned char *dst_buf,
 
 /*void randombytes_buf(void * const buf, const size_t size);*/
 void randombytes_buf(unsigned char * const buff,
-                    const unsigned long long buff_len);
+                     const unsigned long long buff_len);
 
 int randombytes_close(void);
 
 void randombytes_stir(void);
+
+/*
+    helpers API
+*/
+int sodium_memcmp(const void * const b1_,
+                  const void * const b2_,
+                  size_t len);
+
+void sodium_increment(unsigned char *src_dst_number,
+                      const size_t number_len);
 
 /*
     crypto_secretbox API

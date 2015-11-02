@@ -33,6 +33,14 @@ public class Sodium {
     SodiumJNI.randombytes_stir();
   }
 
+  public static int sodium_memcmp(SWIGTYPE_p_void b1_, SWIGTYPE_p_void b2_, int len) {
+    return SodiumJNI.sodium_memcmp(SWIGTYPE_p_void.getCPtr(b1_), SWIGTYPE_p_void.getCPtr(b2_), len);
+  }
+
+  public static void sodium_increment(byte[] src_dst_number, int number_len) {
+    SodiumJNI.sodium_increment(src_dst_number, number_len);
+  }
+
   public static int crypto_secretbox_easy(byte[] dst_cipher, byte[] src_plain, int plain_len, byte[] nonce, byte[] secret_key) {
     return SodiumJNI.crypto_secretbox_easy(dst_cipher, src_plain, plain_len, nonce, secret_key);
   }
@@ -125,8 +133,8 @@ public class Sodium {
     return SodiumJNI.crypto_sign_detached(dst_signature, signature_len, src_msg, msg_len, local_private_key);
   }
 
-  public static int crypto_sign_verify_detached(byte[] src_signed_msg, byte[] src_msg, int msg_len, byte[] remote_public_key) {
-    return SodiumJNI.crypto_sign_verify_detached(src_signed_msg, src_msg, msg_len, remote_public_key);
+  public static int crypto_sign_verify_detached(byte[] src_signature, byte[] src_msg, int msg_len, byte[] remote_public_key) {
+    return SodiumJNI.crypto_sign_verify_detached(src_signature, src_msg, msg_len, remote_public_key);
   }
 
   public static int crypto_sign_ed25519_sk_to_seed(byte[] dst_seed, byte[] src_private_key) {
@@ -157,11 +165,11 @@ public class Sodium {
     return SodiumJNI.crypto_hash_sha512(out, in, inlen);
   }
 
-  public static int crypto_generichash_blake2b(byte[] out, long outlen, byte[] in, int inlen, byte[] key, long keylen) {
+  public static int crypto_generichash_blake2b(byte[] out, int outlen, byte[] in, int inlen, byte[] key, int keylen) {
     return SodiumJNI.crypto_generichash_blake2b(out, outlen, in, inlen, key, keylen);
   }
 
-  public static int crypto_pwhash_scryptsalsa208sha256(byte[] out, int outlen, String passwd, int passwdlen, byte[] salt, int opslimit, long memlimit) {
+  public static int crypto_pwhash_scryptsalsa208sha256(byte[] out, int outlen, String passwd, int passwdlen, byte[] salt, int opslimit, int memlimit) {
     return SodiumJNI.crypto_pwhash_scryptsalsa208sha256(out, outlen, passwd, passwdlen, salt, opslimit, memlimit);
   }
 

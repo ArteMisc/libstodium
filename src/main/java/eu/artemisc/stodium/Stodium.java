@@ -75,5 +75,14 @@ public final class Stodium {
     public static void StodiumInit() {
         new Stodium().runInit();
     }
+
+    /**
+     * SodiumVersionString returns the value of sodium_version_string().
+     *
+     * @return libsodium's version string
+     */
+    public static String SodiumVersionString() {
+        return Sodium.sodium_version_string();
+    }
 }
 
