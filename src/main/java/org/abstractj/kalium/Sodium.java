@@ -145,6 +145,22 @@ public class Sodium {
     return SodiumJNI.crypto_generichash(dst_hash, dst_len, src_input, input_len, src_key, key_len);
   }
 
+  public static int crypto_auth(byte[] out, byte[] in, int inlen, byte[] k) {
+    return SodiumJNI.crypto_auth(out, in, inlen, k);
+  }
+
+  public static int crypto_auth_verify(byte[] h, byte[] in, int inlen, byte[] k) {
+    return SodiumJNI.crypto_auth_verify(h, in, inlen, k);
+  }
+
+  public static int crypto_onetimeauth(byte[] out, byte[] in, int inlen, byte[] k) {
+    return SodiumJNI.crypto_onetimeauth(out, in, inlen, k);
+  }
+
+  public static int crypto_onetimeauth_verify(byte[] h, byte[] in, int inlen, byte[] k) {
+    return SodiumJNI.crypto_onetimeauth_verify(h, in, inlen, k);
+  }
+
   public static int crypto_aead_chacha20poly1305_encrypt(byte[] c, int[] clen, byte[] m, int mlen, byte[] ad, int adlen, byte[] nsec, byte[] npub, byte[] k) {
     return SodiumJNI.crypto_aead_chacha20poly1305_encrypt(c, clen, m, mlen, ad, adlen, nsec, npub, k);
   }

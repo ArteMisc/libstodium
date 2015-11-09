@@ -52,6 +52,24 @@ public final class Stodium {
     }
 
     /**
+     * isEqual implements a Java-implementation of constant-time,
+     * length-independent equality checking for sensitive values.
+     *
+     * @return true iff a == b
+     */
+    public static boolean isEqual(@NonNull final byte[] a,
+                                  @NonNull final byte[] b) {
+        if (a.length != b.length) {
+            return false;
+        }
+        int result = 0;
+        for (int i = 0; i < a.length; i++) {
+            result |= a[i] ^ b[i];
+        }
+        return result == 0;
+    }
+
+    /**
      * runInit wraps a call to sodium_init().
      */
     private void runInit()

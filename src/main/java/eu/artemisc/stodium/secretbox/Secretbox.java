@@ -1,6 +1,7 @@
 package eu.artemisc.stodium.secretbox;
 
 import android.support.annotation.NonNull;
+import android.util.Log;
 
 import org.abstractj.kalium.Sodium;
 

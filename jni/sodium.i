@@ -270,6 +270,32 @@ int crypto_generichash(unsigned char *dst_hash,
                        const unsigned char *src_key,
                        unsigned long long key_len);
 
+/*
+    crypto_auth API
+*/
+int crypto_auth(unsigned char *out,
+                const unsigned char *in,
+                unsigned long long inlen,
+                const unsigned char *k);
+
+int crypto_auth_verify(const unsigned char *h,
+                       const unsigned char *in,
+                       unsigned long long inlen,
+                       const unsigned char *k);
+
+/*
+    crypto_onetimeauth API
+    TODO streaming interface
+*/
+int crypto_onetimeauth(unsigned char *out,
+                       const unsigned char *in,
+                       unsigned long long inlen,
+                       const unsigned char *k);
+
+int crypto_onetimeauth_verify(const unsigned char *h,
+                              const unsigned char *in,
+                              unsigned long long inlen,
+                              const unsigned char *k);
 
 /*
 

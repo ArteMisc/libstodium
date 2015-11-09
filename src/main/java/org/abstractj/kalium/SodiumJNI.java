@@ -43,6 +43,10 @@ public class SodiumJNI {
   public final static native int crypto_sign_ed25519_sk_to_seed(byte[] jarg1, byte[] jarg2);
   public final static native int crypto_sign_ed25519_sk_to_pk(byte[] jarg1, byte[] jarg2);
   public final static native int crypto_generichash(byte[] jarg1, int jarg2, byte[] jarg3, int jarg4, byte[] jarg5, int jarg6);
+  public final static native int crypto_auth(byte[] jarg1, byte[] jarg2, int jarg3, byte[] jarg4);
+  public final static native int crypto_auth_verify(byte[] jarg1, byte[] jarg2, int jarg3, byte[] jarg4);
+  public final static native int crypto_onetimeauth(byte[] jarg1, byte[] jarg2, int jarg3, byte[] jarg4);
+  public final static native int crypto_onetimeauth_verify(byte[] jarg1, byte[] jarg2, int jarg3, byte[] jarg4);
   public final static native int crypto_aead_chacha20poly1305_encrypt(byte[] jarg1, int[] jarg2, byte[] jarg3, int jarg4, byte[] jarg5, int jarg6, byte[] jarg7, byte[] jarg8, byte[] jarg9);
   public final static native int crypto_aead_chacha20poly1305_decrypt(byte[] jarg1, int[] jarg2, byte[] jarg3, byte[] jarg4, int jarg5, byte[] jarg6, int jarg7, byte[] jarg8, byte[] jarg9);
   public final static native int crypto_hash_sha256(byte[] jarg1, byte[] jarg2, int jarg3);
