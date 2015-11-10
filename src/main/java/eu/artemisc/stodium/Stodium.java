@@ -51,6 +51,20 @@ public final class Stodium {
                         constant, expected, src));
     }
 
+    public static void checkSize(final int src,
+                                 final int lower,
+                                 final int upper,
+                                 @NonNull final String lowerC,
+                                 @NonNull final String upperC)
+            throws SecurityException {
+        if (src <= upper && src >= lower) {
+            return;
+        }
+        throw new SecurityException(
+                String.format("CheckSize failed on bounds [%s, %s] [lower: %d, upper: %d, read: %d]",
+                        lowerC, upperC, lower, upper, src));
+    }
+
     /**
      * isEqual implements a Java-implementation of constant-time,
      * length-independent equality checking for sensitive values.

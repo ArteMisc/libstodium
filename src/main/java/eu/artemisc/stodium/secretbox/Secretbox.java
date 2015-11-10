@@ -65,7 +65,7 @@ public final class Secretbox {
      *
      * @see <a href="https://download.libsodium.org/doc/secret-key_cryptography/authenticated_encryption.html">libsodium documentation</a>
      */
-    public static void OpenEasy(@NonNull final byte[] dstPlain,
+    public static void openEasy(@NonNull final byte[] dstPlain,
                                 @NonNull final byte[] srcCipher,
                                 @NonNull final byte[] nonce,
                                 @NonNull final byte[] secretKey)
