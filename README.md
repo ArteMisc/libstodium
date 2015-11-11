@@ -27,11 +27,9 @@ The supported Android API versions are:
 *When you plan to use libstodium in an Android Studio project, I would recommend
 cloning the repository into a subdirectory of the project root.*
 
-1. To start, download this repository and its submodules (libsodium):
+1. To start, download this repository (there is no need to download libsodium, the setup script handles this):
   ```bash
   $ git clone https://github.com/ArteMisc/libstodium.git
-  $ git submodule init 
-  $ git submodule update
   ```
 
 2. (Optional) on Ubuntu, you can run this command to make sure everything is setup on your machine:

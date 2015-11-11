@@ -69,6 +69,10 @@ function setup_libsodium {
     pwd
 
     cd libsodium
+
+    # use stable branch
+    git fetch && git checkout stable
+
     ./autogen.sh
     ./dist-build/android-arm.sh
     ./dist-build/android-armv7-a.sh
@@ -83,6 +87,7 @@ function compile_jni {
     ./compile.sh
 
     export PATH=$PATH:$ANDROID_NDK_HOME
+    ndk-build clean
     ndk-build
     cd ..
 }

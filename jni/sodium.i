@@ -271,15 +271,15 @@ int crypto_generichash(unsigned char *dst_hash,
 /*
     crypto_auth API
 */
-int crypto_auth(unsigned char *out,
-                const unsigned char *in,
-                unsigned long long inlen,
-                const unsigned char *k);
+int crypto_auth(unsigned char *dst_mac,
+                const unsigned char *src_input,
+                unsigned long long input_len,
+                const unsigned char *src_key);
 
-int crypto_auth_verify(const unsigned char *h,
-                       const unsigned char *in,
-                       unsigned long long inlen,
-                       const unsigned char *k);
+int crypto_auth_verify(const unsigned char *src_mac,
+                       const unsigned char *src_input,
+                       unsigned long long input_len,
+                       const unsigned char *src_key);
 
 /*
     crypto_onetimeauth API

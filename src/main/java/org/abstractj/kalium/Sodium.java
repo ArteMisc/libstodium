@@ -145,12 +145,12 @@ public class Sodium {
     return SodiumJNI.crypto_generichash(dst_hash, dst_len, src_input, input_len, src_key, key_len);
   }
 
-  public static int crypto_auth(byte[] out, byte[] in, int inlen, byte[] k) {
-    return SodiumJNI.crypto_auth(out, in, inlen, k);
+  public static int crypto_auth(byte[] dst_mac, byte[] src_input, int input_len, byte[] src_key) {
+    return SodiumJNI.crypto_auth(dst_mac, src_input, input_len, src_key);
   }
 
-  public static int crypto_auth_verify(byte[] h, byte[] in, int inlen, byte[] k) {
-    return SodiumJNI.crypto_auth_verify(h, in, inlen, k);
+  public static int crypto_auth_verify(byte[] src_mac, byte[] src_input, int input_len, byte[] src_key) {
+    return SodiumJNI.crypto_auth_verify(src_mac, src_input, input_len, src_key);
   }
 
   public static int crypto_onetimeauth(byte[] out, byte[] in, int inlen, byte[] k) {
