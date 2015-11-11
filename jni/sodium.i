@@ -9,9 +9,7 @@
 
 %apply int {unsigned long long};
 %apply long[] {unsigned long long *};
-%apply long {size_t};
-
-/* TODO map void* to byteArray */
+%apply int {size_t};
 
 %typemap(jni) unsigned char *"jbyteArray"
 %typemap(jtype) unsigned char *"byte[]"
@@ -304,6 +302,21 @@ crypto_generichash_state type. TODO
 
 Note: Some instances of size_t have been replaced by unsigned long long.
 
+*/
+
+/* NOTE EXPERIMENTAL CODE FOLLOWS */
+
+%inline %{
+struct crypto_generichash_state {
+    uint64_t h[8];
+    uint64_t t[2];
+    uint64_t f[2];
+    uint8_t  buf[2 * 128];
+    size_t   buflen;
+    uint8_t  last_node;
+};
+%}
+
 int crypto_generichash_init(crypto_generichash_state *state,
                             const unsigned char *key,
                             const unsigned long long keylen,
@@ -316,7 +329,8 @@ int crypto_generichash_update(crypto_generichash_state *state,
 int crypto_generichash_final(crypto_generichash_state *state,
                              unsigned char *out,
                              const unsigned long long outlen);
-*/
+
+/* END OF DANGER ZONE */
 
 /* TODO update these methods */
 

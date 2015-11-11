@@ -1,6 +1,7 @@
 package eu.artemisc.stodium.box;
 
 import android.support.annotation.NonNull;
+import android.support.annotation.Size;
 
 import org.abstractj.kalium.Sodium;
 
