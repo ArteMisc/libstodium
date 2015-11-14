@@ -13,7 +13,7 @@ public class Sodium {
     return SodiumJNI.sodium_init();
   }
 
-  public static String sodium_version_string() {
+  public static byte[] sodium_version_string() {
     return SodiumJNI.sodium_version_string();
   }
 
@@ -145,6 +145,10 @@ public class Sodium {
     return SodiumJNI.crypto_generichash(dst_hash, dst_len, src_input, input_len, src_key, key_len);
   }
 
+  public static int crypto_shorthash(byte[] dst_out, byte[] src_input, int input_len, byte[] src_key) {
+    return SodiumJNI.crypto_shorthash(dst_out, src_input, input_len, src_key);
+  }
+
   public static int crypto_auth(byte[] dst_mac, byte[] src_input, int input_len, byte[] src_key) {
     return SodiumJNI.crypto_auth(dst_mac, src_input, input_len, src_key);
   }
@@ -153,24 +157,28 @@ public class Sodium {
     return SodiumJNI.crypto_auth_verify(src_mac, src_input, input_len, src_key);
   }
 
-  public static int crypto_onetimeauth(byte[] out, byte[] in, int inlen, byte[] k) {
-    return SodiumJNI.crypto_onetimeauth(out, in, inlen, k);
+  public static int crypto_onetimeauth(byte[] dst_out, byte[] src_input, int input_len, byte[] src_key) {
+    return SodiumJNI.crypto_onetimeauth(dst_out, src_input, input_len, src_key);
   }
 
-  public static int crypto_onetimeauth_verify(byte[] h, byte[] in, int inlen, byte[] k) {
-    return SodiumJNI.crypto_onetimeauth_verify(h, in, inlen, k);
+  public static int crypto_onetimeauth_verify(byte[] src_mac, byte[] src_input, int input_len, byte[] src_key) {
+    return SodiumJNI.crypto_onetimeauth_verify(src_mac, src_input, input_len, src_key);
   }
 
-  public static int crypto_generichash_init(crypto_generichash_state state, byte[] key, int keylen, int outlen) {
-    return SodiumJNI.crypto_generichash_init(crypto_generichash_state.getCPtr(state), state, key, keylen, outlen);
+  public static int crypto_generichash_init(crypto_generichash_state state, byte[] src_key, int key_len, int out_len) {
+    return SodiumJNI.crypto_generichash_init(crypto_generichash_state.getCPtr(state), state, src_key, key_len, out_len);
   }
 
-  public static int crypto_generichash_update(crypto_generichash_state state, byte[] in, int inlen) {
-    return SodiumJNI.crypto_generichash_update(crypto_generichash_state.getCPtr(state), state, in, inlen);
+  public static int crypto_generichash_update(crypto_generichash_state state, byte[] src_input, int input_len) {
+    return SodiumJNI.crypto_generichash_update(crypto_generichash_state.getCPtr(state), state, src_input, input_len);
   }
 
-  public static int crypto_generichash_final(crypto_generichash_state state, byte[] out, int outlen) {
-    return SodiumJNI.crypto_generichash_final(crypto_generichash_state.getCPtr(state), state, out, outlen);
+  public static int crypto_generichash_final(crypto_generichash_state state, byte[] dst_out, int out_len) {
+    return SodiumJNI.crypto_generichash_final(crypto_generichash_state.getCPtr(state), state, dst_out, out_len);
+  }
+
+  public static int crypto_pwhash_scryptsalsa208sha256(byte[] out, int outlen, byte[] passwd, int passwdlen, byte[] salt, int opslimit, int memlimit) {
+    return SodiumJNI.crypto_pwhash_scryptsalsa208sha256(out, outlen, passwd, passwdlen, salt, opslimit, memlimit);
   }
 
   public static int crypto_aead_chacha20poly1305_encrypt(byte[] c, int[] clen, byte[] m, int mlen, byte[] ad, int adlen, byte[] nsec, byte[] npub, byte[] k) {
@@ -191,10 +199,6 @@ public class Sodium {
 
   public static int crypto_generichash_blake2b(byte[] out, int outlen, byte[] in, int inlen, byte[] key, int keylen) {
     return SodiumJNI.crypto_generichash_blake2b(out, outlen, in, inlen, key, keylen);
-  }
-
-  public static int crypto_pwhash_scryptsalsa208sha256(byte[] out, int outlen, String passwd, int passwdlen, byte[] salt, int opslimit, int memlimit) {
-    return SodiumJNI.crypto_pwhash_scryptsalsa208sha256(out, outlen, passwd, passwdlen, salt, opslimit, memlimit);
   }
 
   public static int crypto_box_curve25519xsalsa20poly1305_keypair(byte[] pk, byte[] sk) {

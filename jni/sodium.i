@@ -11,22 +11,33 @@
 %apply long[] {unsigned long long *};
 %apply int {size_t};
 
+/* unsigned char */
 %typemap(jni) unsigned char *"jbyteArray"
 %typemap(jtype) unsigned char *"byte[]"
 %typemap(jstype) unsigned char *"byte[]"
 %typemap(in) unsigned char *{
     $1 = (unsigned char *) JCALL2(GetByteArrayElements, jenv, $input, 0);
 }
-
 %typemap(argout) unsigned char *{
     JCALL3(ReleaseByteArrayElements, jenv, $input, (jbyte *) $1, 0);
 }
-
 %typemap(javain) unsigned char *"$javainput"
-
 /* Prevent default freearg typemap from being used */
 %typemap(freearg) unsigned char *""
 
+/* Strings */
+%typemap(jni) char *"jbyteArray"
+%typemap(jtype) char *"byte[]"
+%typemap(jstype) char *"byte[]"
+%typemap(in) char *{
+    $1 = (char *) JCALL2(GetByteArrayElements, jenv, $input, 0);
+}
+%typemap(argout) char *{
+    JCALL3(ReleaseByteArrayElements, jenv, $input, (jbyte *) $1, 0);
+}
+%typemap(javain) char *"$javainput"
+/* Prevent default freearg typemap from being used */
+%typemap(freearg) char *""
 
 
 /* char types */
@@ -36,13 +47,10 @@
 %typemap(in) char *BYTE {
     $1 = (char *) JCALL2(GetByteArrayElements, jenv, $input, 0);
 }
-
 %typemap(argout) char *BYTE {
     JCALL3(ReleaseByteArrayElements, jenv, $input, (jbyte *) $1, 0);
 }
-
 %typemap(javain) char *BYTE "$javainput"
-
 /* Prevent default freearg typemap from being used */
 %typemap(freearg) char *BYTE ""
 
@@ -268,6 +276,11 @@ int crypto_generichash(unsigned char *dst_hash,
                        const unsigned char *src_key,
                        unsigned long long key_len);
 
+int crypto_shorthash(unsigned char *dst_out,
+                     const unsigned char *src_input,
+                     unsigned long long input_len,
+                     const unsigned char *src_key);
+
 /*
     crypto_auth API
 */
@@ -285,15 +298,15 @@ int crypto_auth_verify(const unsigned char *src_mac,
     crypto_onetimeauth API
     TODO streaming interface
 */
-int crypto_onetimeauth(unsigned char *out,
-                       const unsigned char *in,
-                       unsigned long long inlen,
-                       const unsigned char *k);
+int crypto_onetimeauth(unsigned char *dst_out,
+                       const unsigned char *src_input,
+                       unsigned long long input_len,
+                       const unsigned char *src_key);
 
-int crypto_onetimeauth_verify(const unsigned char *h,
-                              const unsigned char *in,
-                              unsigned long long inlen,
-                              const unsigned char *k);
+int crypto_onetimeauth_verify(const unsigned char *src_mac,
+                              const unsigned char *src_input,
+                              unsigned long long input_len,
+                              const unsigned char *src_key);
 
 /*
 
@@ -318,19 +331,31 @@ struct crypto_generichash_state {
 %}
 
 int crypto_generichash_init(crypto_generichash_state *state,
-                            const unsigned char *key,
-                            const unsigned long long keylen,
-                            const unsigned long long outlen);
+                            const unsigned char *src_key,
+                            const unsigned long long key_len,
+                            const unsigned long long out_len);
 
 int crypto_generichash_update(crypto_generichash_state *state,
-                              const unsigned char *in,
-                              unsigned long long inlen);
+                              const unsigned char *src_input,
+                              unsigned long long input_len);
 
 int crypto_generichash_final(crypto_generichash_state *state,
-                             unsigned char *out,
-                             const unsigned long long outlen);
+                             unsigned char *dst_out,
+                             const unsigned long long out_len);
 
 /* END OF DANGER ZONE */
+
+int crypto_pwhash_scryptsalsa208sha256(unsigned char * const out,
+                                       unsigned long long outlen,
+                                       const char * const passwd,
+                                       unsigned long long passwdlen,
+                                       const unsigned char * const salt,
+                                       unsigned long long opslimit,
+                                       size_t memlimit);
+
+
+
+
 
 /* TODO update these methods */
 
@@ -365,14 +390,6 @@ int crypto_generichash_blake2b(unsigned char *out, size_t outlen,
                                unsigned long long inlen,
                                const unsigned char *key, size_t keylen);
                            
-int crypto_pwhash_scryptsalsa208sha256(unsigned char * const out,
-                                    unsigned long long outlen,
-                                    const char * const passwd,
-                                    unsigned long long passwdlen,
-                                    const unsigned char * const salt,
-                                    unsigned long long opslimit,
-                                    size_t memlimit);
-
 int crypto_box_curve25519xsalsa20poly1305_keypair(unsigned char *pk,
                                                   unsigned char *sk);
 

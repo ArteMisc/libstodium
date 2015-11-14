@@ -10,7 +10,7 @@ package org.abstractj.kalium;
 
 public class SodiumJNI {
   public final static native int sodium_init();
-  public final static native String sodium_version_string();
+  public final static native byte[] sodium_version_string();
   public final static native void randombytes(byte[] jarg1, int jarg2);
   public final static native void randombytes_buf(byte[] jarg1, int jarg2);
   public final static native int randombytes_close();
@@ -43,6 +43,7 @@ public class SodiumJNI {
   public final static native int crypto_sign_ed25519_sk_to_seed(byte[] jarg1, byte[] jarg2);
   public final static native int crypto_sign_ed25519_sk_to_pk(byte[] jarg1, byte[] jarg2);
   public final static native int crypto_generichash(byte[] jarg1, int jarg2, byte[] jarg3, int jarg4, byte[] jarg5, int jarg6);
+  public final static native int crypto_shorthash(byte[] jarg1, byte[] jarg2, int jarg3, byte[] jarg4);
   public final static native int crypto_auth(byte[] jarg1, byte[] jarg2, int jarg3, byte[] jarg4);
   public final static native int crypto_auth_verify(byte[] jarg1, byte[] jarg2, int jarg3, byte[] jarg4);
   public final static native int crypto_onetimeauth(byte[] jarg1, byte[] jarg2, int jarg3, byte[] jarg4);
@@ -64,12 +65,12 @@ public class SodiumJNI {
   public final static native int crypto_generichash_init(long jarg1, crypto_generichash_state jarg1_, byte[] jarg2, int jarg3, int jarg4);
   public final static native int crypto_generichash_update(long jarg1, crypto_generichash_state jarg1_, byte[] jarg2, int jarg3);
   public final static native int crypto_generichash_final(long jarg1, crypto_generichash_state jarg1_, byte[] jarg2, int jarg3);
+  public final static native int crypto_pwhash_scryptsalsa208sha256(byte[] jarg1, int jarg2, byte[] jarg3, int jarg4, byte[] jarg5, int jarg6, int jarg7);
   public final static native int crypto_aead_chacha20poly1305_encrypt(byte[] jarg1, int[] jarg2, byte[] jarg3, int jarg4, byte[] jarg5, int jarg6, byte[] jarg7, byte[] jarg8, byte[] jarg9);
   public final static native int crypto_aead_chacha20poly1305_decrypt(byte[] jarg1, int[] jarg2, byte[] jarg3, byte[] jarg4, int jarg5, byte[] jarg6, int jarg7, byte[] jarg8, byte[] jarg9);
   public final static native int crypto_hash_sha256(byte[] jarg1, byte[] jarg2, int jarg3);
   public final static native int crypto_hash_sha512(byte[] jarg1, byte[] jarg2, int jarg3);
   public final static native int crypto_generichash_blake2b(byte[] jarg1, int jarg2, byte[] jarg3, int jarg4, byte[] jarg5, int jarg6);
-  public final static native int crypto_pwhash_scryptsalsa208sha256(byte[] jarg1, int jarg2, String jarg3, int jarg4, byte[] jarg5, int jarg6, int jarg7);
   public final static native int crypto_box_curve25519xsalsa20poly1305_keypair(byte[] jarg1, byte[] jarg2);
   public final static native int crypto_box_curve25519xsalsa20poly1305_seed_keypair(byte[] jarg1, byte[] jarg2, byte[] jarg3);
   public final static native int crypto_box_curve25519xsalsa20poly1305(byte[] jarg1, byte[] jarg2, int jarg3, byte[] jarg4, byte[] jarg5, byte[] jarg6);
