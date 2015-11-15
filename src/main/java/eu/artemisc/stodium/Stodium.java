@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import org.abstractj.kalium.Sodium;
 
 import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 
 /**
  * Stodium is an abstract class with static methods. It is an attempt to
@@ -112,6 +113,10 @@ public final class Stodium {
             result |= a[i] ^ b[i];
         }
         return result == 0;
+    }
+
+    public static void wipeBytes(@NonNull final byte[] a) {
+        Arrays.fill(a, (byte) 0x00);
     }
 
     /**
