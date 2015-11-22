@@ -1,6 +1,7 @@
 package eu.artemisc.stodium.hash;
 
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import org.abstractj.kalium.Sodium;
 import org.abstractj.kalium.crypto_generichash_state;
@@ -37,16 +38,49 @@ public final class GenericHash {
     //
     // Simple API
     //
+
+    /**
+     * genericHash calculates the hash of the input using the key. The result
+     * will be placed in dstHash
+     *
+     * @param dstHash the destination array the hash will be written to
+     * @param srcInput the value that will be hashed
+     * @param srcKey the key used to calculate the hash
+     * @throws SecurityException
+     */
     public static void genericHash(@NonNull final byte[] dstHash,
                                    @NonNull final byte[] srcInput,
-                                   @NonNull final byte[] srcKey)
+                                   @Nullable final byte[] srcKey)
             throws SecurityException {
+        if (srcKey == null || srcKey.length == 0) {
+            genericHash(dstHash, srcInput);
+            return;
+        }
+
         Stodium.checkSize(dstHash.length, BYTES_MIN, BYTES_MAX,
                 "GenericHash.BYTES_MIN", "GenericHash.BYTES_MAX");
         Stodium.checkSize(srcKey.length, KEYBYTES_MIN, KEYBYTES_MAX,
                 "GenericHash.KEYBYTES_MIN", "GenericHash.KEYBYTES_MAX");
         Stodium.checkStatus(Sodium.crypto_generichash(dstHash, dstHash.length,
                 srcInput, srcInput.length, srcKey, srcKey.length));
+    }
+
+    /**
+     * genericHash without key, equivalent to calling
+     * {@link #genericHash(byte[], byte[], byte[])} with {@code srcKey == null}
+     * or {@code srcKey.length == 0}.
+     *
+     * @param dstHash the destination array the hash will be written to
+     * @param srcInput the value that will be hashed
+     * @throws SecurityException
+     */
+    public static void genericHash(@NonNull final byte[] dstHash,
+                                   @NonNull final byte[] srcInput)
+            throws SecurityException {
+        Stodium.checkSize(dstHash.length, BYTES_MIN, BYTES_MAX,
+                "GenericHash.BYTES_MIN", "GenericHash.BYTES_MAX");
+        Stodium.checkStatus(Sodium.crypto_generichash(dstHash, dstHash.length,
+                srcInput, srcInput.length, new byte[0], 0));
     }
 
     //
