@@ -64,7 +64,7 @@ public final class Stodium {
             return;
         }
         throw new SecurityException(
-                String.format("CheckSize failed on bounds [%s, %s] [lower: %d, upper: %d, read: %d]",
+                String.format("CheckSize failed on bounds [%s, %s] [lower: %d, upper: %d, real: %d]",
                         lowerC, upperC, lower, upper, src));
     }
 

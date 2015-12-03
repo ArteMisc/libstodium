@@ -63,16 +63,6 @@ public final class ScalarMult {
     // convert curve
     //
 
-    /**
-     * curve25519PrivateToPublic is a simple wrapper that calls curve25519's
-     * scalar_mult function, but with a more descriptive name.
-     *
-     * @param dstPublic the destination array where the computed public key will
-     *                  be written to
-     * @param srcPrivate The source private key for which the public key will be
-     *                   calculated
-     * @throws SecurityException If any of the operations fail
-     */
     public static void curve25519PrivateToPublic(@NonNull final byte[] dstPublic,
                                                  @NonNull final byte[] srcPrivate)
             throws SecurityException {

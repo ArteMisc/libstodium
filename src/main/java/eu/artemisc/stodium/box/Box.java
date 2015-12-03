@@ -24,14 +24,14 @@ public final class Box {
     private Box() {}
 
     // constants
-    public static final int PUBLICKEYBYTES = 32;
-    public static final int SECRETKEYBYTES = 32;
-    public static final int MACBYTES = 16;
-    public static final int NONCEBYTES = 24;
-    public static final int SEEDBYTES = 32;
-    public static final int BEFORENMBYTES = 32;
+    public static final int PUBLICKEYBYTES = Sodium.crypto_box_publickeybytes();
+    public static final int SECRETKEYBYTES = Sodium.crypto_box_secretkeybytes();
+    public static final int MACBYTES = Sodium.crypto_box_macbytes();
+    public static final int NONCEBYTES = Sodium.crypto_box_noncebytes();
+    public static final int SEEDBYTES = Sodium.crypto_box_seedbytes();
+    public static final int BEFORENMBYTES = Sodium.crypto_box_beforenmbytes();
 
-    public static final int SEALBYTES = PUBLICKEYBYTES + MACBYTES;
+    public static final int SEALBYTES = Sodium.crypto_box_sealbytes();
 
     // wrappers
 
