@@ -1,4 +1,4 @@
-package eu.artemisc.stodium.sign;
+package eu.artemisc.stodium;
 
 import android.support.annotation.NonNull;
 

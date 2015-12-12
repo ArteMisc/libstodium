@@ -27,9 +27,9 @@ if uname -a | grep -q -i darwin; then
       sudo mkdir $destlib
   fi
 fi
-echo $jnilib
-echo $destlib
-echo $destlib/$jnilib 
+#echo $jnilib
+#echo $destlib
+#echo $destlib/$jnilib 
 
 sudo cp /usr/local/lib/libsodium.* /usr/lib
 

@@ -1,35 +1,29 @@
-package eu.artemisc.stodium.auth;
+package eu.artemisc.stodium;
 
 import android.support.annotation.NonNull;
-import android.support.annotation.Size;
 
 import org.abstractj.kalium.Sodium;
 
-import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 
 import eu.artemisc.stodium.Stodium;
 
 /**
- * OneTimeAuth wraps calls to crypto_onetimeauth, a message authentication code
- * based on Poly1305.
+ * Poly1305 wraps the crypto_onetimeauth_poly1305 methods.
  *
  * @author Jan van de Molengraft [jan@artemisc.eu]
  */
-public class OneTimeAuth {
+public class Poly1305 {
     static {
         // Require sodium_init();
         Stodium.StodiumInit();
     }
 
-    // block the constructor
-    private OneTimeAuth() {}
-
     // constants
-    public static final int BYTES = Sodium.crypto_onetimeauth_bytes();
-    public static final int KEYBYTES = Sodium.crypto_onetimeauth_keybytes();
+    public static final int BYTES = Sodium.crypto_onetimeauth_poly1305_bytes();
+    public static final int KEYBYTES = Sodium.crypto_onetimeauth_poly1305_keybytes();
 
-    public static final int STATEBYTES = Sodium.crypto_generichash_statebytes();
+    public static final int STATEBYTES = Sodium.crypto_onetimeauth_poly1305_statebytes();
 
     public static final String PRIMITIVE = new String(Sodium.crypto_onetimeauth_primitive());
 
@@ -50,8 +44,8 @@ public class OneTimeAuth {
                             @NonNull final byte[] srcIn,
                             @NonNull final byte[] srcKey)
             throws SecurityException {
-        Stodium.checkSize(dstOut.length, BYTES, "OneTimeAuth.BYTES");
-        Stodium.checkSize(srcKey.length, KEYBYTES, "OneTimeAuth.KEYBYTES");
+        Stodium.checkSize(dstOut.length, BYTES, "Poly1305.BYTES");
+        Stodium.checkSize(srcKey.length, KEYBYTES, "Poly1305.KEYBYTES");
         Stodium.checkStatus(
                 Sodium.crypto_onetimeauth(dstOut, srcIn, srcIn.length, srcKey));
     }
@@ -68,8 +62,8 @@ public class OneTimeAuth {
                                      @NonNull final byte[] srcIn,
                                      @NonNull final byte[] srcKey)
             throws SecurityException {
-        Stodium.checkSize(srcTag.length, BYTES, "OneTimeAuth.BYTES");
-        Stodium.checkSize(srcKey.length, KEYBYTES, "OneTimeAuth.KEYBYTES");
+        Stodium.checkSize(srcTag.length, BYTES, "Poly1305.BYTES");
+        Stodium.checkSize(srcKey.length, KEYBYTES, "Poly1305.KEYBYTES");
         return Sodium.crypto_onetimeauth_verify(
                 srcTag, srcIn, srcIn.length, srcKey) == 0;
     }
@@ -79,8 +73,8 @@ public class OneTimeAuth {
      */
     public final static class State {
         /**
-         * state holds the binary representation of the crypto_onetimeauth_state
-         * value.
+         * state holds the binary representation of the
+         * crypto_onetimeauth_poly1305_state value.
          */
         @NonNull private final byte[] state;
         /**
@@ -112,7 +106,7 @@ public class OneTimeAuth {
     public static void authInit(@NonNull final State state,
                                 @NonNull final byte[] key)
             throws SecurityException {
-        Stodium.checkSize(key.length, KEYBYTES, "OneTimeAuth.KEYBYTES");
+        Stodium.checkSize(key.length, KEYBYTES, "Poly1305.KEYBYTES");
         Stodium.checkStatus(Sodium.crypto_onetimeauth_init(state.state, key));
     }
 
@@ -132,11 +126,33 @@ public class OneTimeAuth {
     /**
      *
      * @param state
+     * @param in
+     * @param offset
+     * @param length
+     * @throws SecurityException
+     */
+    public static void authUpdate(@NonNull final State state,
+                                  @NonNull final byte[] in,
+                                  final int offset,
+                                  final int length)
+            throws SecurityException {
+        if (offset == 0 && length == in.length) {
+            authUpdate(state, in);
+            return;
+        }
+        final byte[] cpy = new byte[length];
+        System.arraycopy(in, offset, cpy, 0, length);
+        authUpdate(state, cpy);
+    }
+
+    /**
+     *
+     * @param state
      * @param out
      */
     public static void authFinal(@NonNull final State state,
                                  @NonNull final byte[] out) {
-        Stodium.checkSize(out.length, BYTES, "OneTimeAuth.BYTES");
+        Stodium.checkSize(out.length, BYTES, "Poly1305.BYTES");
         Stodium.checkStatus(Sodium.crypto_onetimeauth_final(state.state, out));
     }
 }

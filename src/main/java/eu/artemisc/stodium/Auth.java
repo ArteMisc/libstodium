@@ -1,4 +1,4 @@
-package eu.artemisc.stodium.auth;
+package eu.artemisc.stodium;
 
 import android.support.annotation.NonNull;
 

@@ -1,4 +1,4 @@
-package eu.artemisc.stodium.hash;
+package eu.artemisc.stodium;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Size;

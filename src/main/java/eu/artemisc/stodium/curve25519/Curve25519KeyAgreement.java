@@ -16,8 +16,6 @@ import javax.crypto.KeyAgreementSpi;
 import javax.crypto.SecretKey;
 import javax.crypto.ShortBufferException;
 
-import eu.artemisc.stodium.box.Box;
-
 /**
  * @author Jan van de Molengraft [jan@artemisc.eu]
  */

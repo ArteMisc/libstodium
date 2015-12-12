@@ -1,12 +1,11 @@
 #!/bin/bash
 set -e
+set -x
 
-#
 # Android NDK r10e
-#
 export NDK_VERSION="android-ndk-r10e"
-# Require JAVA_HOME
 
+# Require JAVA_HOME
 if [ -z "$JAVA_HOME" ]; then
     echo "ERROR You should set JAVA_HOME"
     echo "example: \`export JAVA_HOME=/usr/lib/jvm/java-7-openjdk-amd64\`"
@@ -40,18 +39,24 @@ function ndk_cleanup {
 #
 function swig_setup {
     cd jni
+
     wget http://prdownloads.sourceforge.net/swig/swig-2.0.10.tar.gz
     tar -xvf swig-2.0.10.tar.gz
+    
     cd swig-2.0.10
+
     ./configure
     make -j 5
     sudo make install
+
     cd ../..
 }
 
 function swig_cleanup {
     cd jni
-    rm -r swig-2.0.10*
+
+    rm -rf swig-2.0.10*
+
     cd ..
 }
 
@@ -59,14 +64,10 @@ function swig_cleanup {
 # install libsodium from the repository
 #
 function setup_libsodium {
-    set -x
     rm -rf libsodium
 
     git submodule init
     git submodule update
-
-    ls
-    pwd
 
     cd libsodium
 
@@ -74,6 +75,13 @@ function setup_libsodium {
     git fetch && git checkout stable
 
     ./autogen.sh
+
+    # Build local
+    ./configure
+    make && make check
+    sudo make install
+
+    # Build android
     ./dist-build/android-arm.sh
     ./dist-build/android-armv7-a.sh
     ./dist-build/android-mips32.sh
@@ -92,11 +100,18 @@ function compile_jni {
     cd ..
 }
 
+# Add auto-cleanup before the script runs
+ndk_cleanup
+swig_cleanup
+
+# Download and install
 ndk_setup
 swig_setup
 
+# Compile the libraries
 setup_libsodium
 compile_jni
 
+# Cleanup
 ndk_cleanup
 swig_cleanup
