@@ -72,7 +72,7 @@ function setup_libsodium {
     cd libsodium
 
     # use stable branch
-    git fetch && git checkout stable
+    # git fetch && git checkout origin/stable
 
     ./autogen.sh
 
