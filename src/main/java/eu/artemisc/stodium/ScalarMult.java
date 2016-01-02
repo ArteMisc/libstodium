@@ -19,7 +19,10 @@ public final class ScalarMult {
     private ScalarMult() {}
 
     // constants
-    public static int SCALAR_BYTES = 32;
+    public static final int BYTES = Sodium.crypto_scalarmult_bytes();
+    public static final int SCALAR_BYTES = Sodium.crypto_scalarmult_scalarbytes();
+
+    public static final String PRIMITIVE = new String(Sodium.crypto_scalarmult_primitive());
 
     // wrappers
 

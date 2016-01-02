@@ -7,8 +7,6 @@ import org.abstractj.kalium.Sodium;
 
 import java.util.Arrays;
 
-import eu.artemisc.stodium.Stodium;
-
 /**
  * GenericHash wraps calls to crypto_generichash, based on BLAKE2b.
  *
@@ -33,10 +31,7 @@ public final class GenericHash {
 
     public static final int STATE_BYTES = Sodium.crypto_generichash_statebytes();
 
-    public static final int SALTBYTES = Sodium.crypto_pwhash_scryptsalsa208sha256_saltbytes();
-    public static final int PERSONALBYTES = 16;
-
-    public static final String PRIMITIVE = new String(Sodium.crypto_onetimeauth_primitive());
+    public static final String PRIMITIVE = new String(Sodium.crypto_generichash_primitive());
 
     // wrappers
 

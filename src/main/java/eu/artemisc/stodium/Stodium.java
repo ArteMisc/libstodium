@@ -4,8 +4,8 @@ import android.support.annotation.NonNull;
 
 import org.abstractj.kalium.Sodium;
 
-import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * Stodium is an abstract class with static methods. It is an attempt to
@@ -129,11 +129,13 @@ public final class Stodium {
         }
     }
 
+    @NonNull
+    private static final AtomicBoolean initialized = new AtomicBoolean(false);
+
     // Load the library.
     static {
         System.loadLibrary("kaliumjni");
     }
-
 
     /**
      * Stodium constructor should be called once per application, or at least

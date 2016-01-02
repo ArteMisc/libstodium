@@ -1,14 +1,11 @@
 package eu.artemisc.stodium;
 
 import android.support.annotation.NonNull;
-import android.support.annotation.Size;
 
 import org.abstractj.kalium.Sodium;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
-
-import eu.artemisc.stodium.Stodium;
 
 /**
  * ShortHash wraps calls to sodium's crypto_shorthash API.
@@ -25,12 +22,22 @@ public class ShortHash {
     private ShortHash() {}
 
     // constants
-    public static final int BYTES = 8;
-    public static final int KEYBYTES = 16;
+    public static final int BYTES = Sodium.crypto_shorthash_bytes();
+    public static final int KEYBYTES = Sodium.crypto_shorthash_keybytes();
 
+    public static final String PRIMITIVE = new String(Sodium.crypto_shorthash_primitive());
+
+    /**
+     *
+     * @param srcIn
+     * @param srcKey
+     * @return a Long that holds the (BigEndian) representation of the resulting
+     *         64-bit Hash value.
+     * @throws SecurityException
+     */
     @NonNull
     static Long shorthash(@NonNull final byte[] srcIn,
-                          @NonNull @Size(KEYBYTES) final byte[] srcKey)
+                          @NonNull final byte[] srcKey)
             throws SecurityException {
         Stodium.checkSize(srcKey.length, KEYBYTES, "ShortHash.KEYBYTES");
 
@@ -44,9 +51,17 @@ public class ShortHash {
                 .getLong();
     }
 
-    static void shorthash(@NonNull @Size(BYTES) final byte[] dstHash,
+    /**
+     *
+     * @param dstHash The destination array to which the resulting 8-byte hash.
+     *                The bytes are considered to be BigEndian.
+     * @param srcIn
+     * @param srcKey
+     * @throws SecurityException
+     */
+    static void shorthash(@NonNull final byte[] dstHash,
                           @NonNull final byte[] srcIn,
-                          @NonNull @Size(KEYBYTES) final byte[] srcKey)
+                          @NonNull final byte[] srcKey)
             throws SecurityException {
         Stodium.checkSize(dstHash.length, BYTES, "ShortHash.BYTES");
         Stodium.checkSize(srcKey.length, KEYBYTES, "ShortHash.KEYBYTES");
