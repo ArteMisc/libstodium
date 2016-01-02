@@ -4,19 +4,17 @@ import android.support.annotation.NonNull;
 
 import org.abstractj.kalium.Sodium;
 
-import eu.artemisc.stodium.Stodium;
-
 /**
  * @author Jan van de Molengraft [jan@artemisc.eu]
  */
-public final class PwHashSCrypt {
+public final class Scrypt {
     static {
         // Require sodium_init();
         Stodium.StodiumInit();
     }
 
     // block the constructor
-    private PwHashSCrypt() {}
+    private Scrypt() {}
 
     // constants
     public static final int SALTBYTES = 32;

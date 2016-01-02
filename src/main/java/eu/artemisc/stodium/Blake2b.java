@@ -2,6 +2,7 @@ package eu.artemisc.stodium;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.Size;
 
 import org.abstractj.kalium.Sodium;
 
@@ -48,9 +49,9 @@ public class Blake2b {
      * @param srcKey the key used to calculate the hash
      * @throws SecurityException
      */
-    public static void genericHash(@NonNull final byte[] dstHash,
+    public static void genericHash(@NonNull @Size(min = 16, max = 64) final byte[] dstHash,
                                    @NonNull final byte[] srcInput,
-                                   @Nullable final byte[] srcKey)
+                                   @Nullable @Size(min = 16, max = 64) final byte[] srcKey)
             throws SecurityException {
         if (srcKey == null || srcKey.length == 0) {
             genericHash(dstHash, srcInput);
@@ -61,8 +62,9 @@ public class Blake2b {
                 "Blake2b.BYTES_MIN", "Blake2b.BYTES_MAX");
         Stodium.checkSize(srcKey.length, KEYBYTES_MIN, KEYBYTES_MAX,
                 "Blake2b.KEYBYTES_MIN", "Blake2b.KEYBYTES_MAX");
-        Stodium.checkStatus(Sodium.crypto_generichash(dstHash, dstHash.length,
-                srcInput, srcInput.length, srcKey, srcKey.length));
+        Stodium.checkStatus(Sodium.crypto_generichash_blake2b(dstHash,
+                dstHash.length, srcInput, srcInput.length,
+                srcKey, srcKey.length));
     }
 
     /**
@@ -74,13 +76,13 @@ public class Blake2b {
      * @param srcInput the value that will be hashed
      * @throws SecurityException
      */
-    public static void genericHash(@NonNull final byte[] dstHash,
+    public static void genericHash(@NonNull @Size(min = 16, max = 64) final byte[] dstHash,
                                    @NonNull final byte[] srcInput)
             throws SecurityException {
         Stodium.checkSize(dstHash.length, BYTES_MIN, BYTES_MAX,
                 "Blake2b.BYTES_MIN", "Blake2b.BYTES_MAX");
-        Stodium.checkStatus(Sodium.crypto_generichash(dstHash, dstHash.length,
-                srcInput, srcInput.length, null, 0));
+        Stodium.checkStatus(Sodium.crypto_generichash_blake2b(dstHash,
+                dstHash.length, srcInput, srcInput.length, null, 0));
     }
 
     /**
@@ -92,16 +94,16 @@ public class Blake2b {
      * @param personal
      * @throws SecurityException
      */
-    public static void genericHashSaltPersonal(@NonNull final byte[] dstHash,
+    public static void genericHashSaltPersonal(@NonNull @Size(min = 16, max = 64) final byte[] dstHash,
                                                @NonNull final byte[] srcInput,
-                                               @NonNull final byte[] key,
-                                               @NonNull final byte[] salt,
-                                               @NonNull final byte[] personal)
+                                               @NonNull @Size(min = 16, max = 64) final byte[] key,
+                                               @NonNull @Size(16) final byte[] salt,
+                                               @NonNull @Size(16) final byte[] personal)
             throws SecurityException {
         Stodium.checkSize(dstHash.length, BYTES_MIN, BYTES_MAX,
                 "Blake2b.BYTES_MIN", "Blake2b.BYTES_MAX");
         Stodium.checkSize(key.length, KEYBYTES_MIN, KEYBYTES_MAX,
-                "Blake2b.KEYBYTES_MIN", "Blake2b.GenericHash.KEYBYTES_MAX");
+                "Blake2b.KEYBYTES_MIN", "Blake2b.KEYBYTES_MAX");
         Stodium.checkSize(salt.length, SALTBYTES,
                 "Blake2b.SALTBYTES");
         Stodium.checkSize(personal.length, PERSONALBYTES,
@@ -117,8 +119,8 @@ public class Blake2b {
 
     public final static class State {
         /**
-         * state holds the binary representation of the crypto_generichash_state
-         * value.
+         * state holds the binary representation of the
+         * crypto_generichash_blake2b_state value.
          */
         @NonNull private final byte[] state;
 
@@ -154,7 +156,7 @@ public class Blake2b {
          *
          * @param key
          */
-        public void init(@NonNull final byte[] key)
+        public void init(@Nullable @Size(min = 16, max = 64) final byte[] key)
                 throws SecurityException {
             genericHashInit(this, key);
         }
@@ -172,10 +174,23 @@ public class Blake2b {
          *
          * @param out
          */
-        public void doFinal(@NonNull final byte[] out)
+        public void doFinal(@NonNull @Size(min = 1, max = 64) final byte[] out)
                 throws SecurityException {
             genericHashFinal(this, out);
         }
+    }
+
+    /**
+     *
+     * @param state
+     * @throws SecurityException
+     */
+    public static void genericHashInit(@NonNull final State state)
+            throws SecurityException {
+        Stodium.checkSize(state.outlen, BYTES_MIN, BYTES_MAX,
+                "Blake2b.BYTES_MIN", "Blake2b.BYTES_MAX");
+        Stodium.checkStatus(Sodium.crypto_generichash_blake2b_init(state.state,
+                null, 0, state.outlen));
     }
 
     /**
@@ -185,13 +200,18 @@ public class Blake2b {
      * @throws SecurityException
      */
     public static void genericHashInit(@NonNull final State state,
-                                       @NonNull final byte[] key)
+                                       @Nullable @Size(min = 16, max = 64) final byte[] key)
             throws SecurityException {
+        if (key == null) {
+            genericHashInit(state);
+            return;
+        }
+
         Stodium.checkSize(key.length, KEYBYTES_MIN, KEYBYTES_MAX,
-                "GenericHash.KEYBYTES_MIN", "GenericHash.KEYBYTES_MAX");
+                "Blake2b.KEYBYTES_MIN", "Blake2b.KEYBYTES_MAX");
         Stodium.checkSize(state.outlen, BYTES_MIN, BYTES_MAX,
-                "GenericHash.BYTES_MIN", "GenericHash.BYTES_MAX");
-        Stodium.checkStatus(Sodium.crypto_generichash_init(state.state,
+                "Blake2b.BYTES_MIN", "Blake2b.BYTES_MAX");
+        Stodium.checkStatus(Sodium.crypto_generichash_blake2b_init(state.state,
                 key, key.length, state.outlen));
     }
 
@@ -206,22 +226,27 @@ public class Blake2b {
      * FIXME this API should allow null-values for key (at least) and maybe for salt/personal
      */
     public static void genericHashInitSaltPersonal(@NonNull final State state,
-                                                   @NonNull final byte[] key,
-                                                   @NonNull final byte[] salt,
-                                                   @NonNull final byte[] personal)
+                                                   @NonNull @Size(min = 16, max = 64) final byte[] key,
+                                                   @Nullable @Size(16) final byte[] salt,
+                                                   @Nullable @Size(16) final byte[] personal)
             throws SecurityException {
         Stodium.checkSize(state.outlen, BYTES_MIN, BYTES_MAX,
                 "Blake2b.BYTES_MIN", "Blake2b.BYTES_MAX");
         Stodium.checkSize(key.length, KEYBYTES_MIN, KEYBYTES_MAX,
-                "Blake2b.KEYBYTES_MIN", "Blake2b.GenericHash.KEYBYTES_MAX");
-        Stodium.checkSize(salt.length, SALTBYTES,
-                "Blake2b.SALTBYTES");
-        Stodium.checkSize(personal.length, PERSONALBYTES,
-                "Blake2b.PERSONALBYTES");
+                "Blake2b.KEYBYTES_MIN", "Blake2b.KEYBYTES_MAX");
+
+        if (salt != null) {
+            Stodium.checkSize(salt.length, SALTBYTES,
+                    "Blake2b.SALTBYTES");
+        }
+        if (personal != null) {
+            Stodium.checkSize(personal.length, PERSONALBYTES,
+                    "Blake2b.PERSONALBYTES");
+        }
+
         Stodium.checkStatus(
                 Sodium.crypto_generichash_blake2b_init_salt_personal(
-                        state.state, key, key.length, state.outlen,
-                        salt, personal));
+                        state.state, key, key.length, state.outlen, salt, personal));
     }
 
     /**
@@ -233,7 +258,7 @@ public class Blake2b {
     public static void genericHashUpdate(@NonNull final State state,
                                          @NonNull final byte[] in)
             throws SecurityException {
-        Stodium.checkStatus(Sodium.crypto_generichash_update(
+        Stodium.checkStatus(Sodium.crypto_generichash_blake2b_update(
                 state.state, in, in.length));
     }
 
@@ -244,10 +269,10 @@ public class Blake2b {
      * @throws SecurityException
      */
     public static void genericHashFinal(@NonNull final State state,
-                                        @NonNull final byte[] out)
+                                        @NonNull @Size(min = 1, max = 64) final byte[] out)
             throws SecurityException {
-        Stodium.checkSize(out.length, 0, state.outlen, "0", "State.outlen");
-        Stodium.checkStatus(Sodium.crypto_generichash_final(
+        Stodium.checkSize(out.length, 1, state.outlen, "1", "Blake2b.State.outlen");
+        Stodium.checkStatus(Sodium.crypto_generichash_blake2b_final(
                 state.state, out, out.length));
     }
 }
