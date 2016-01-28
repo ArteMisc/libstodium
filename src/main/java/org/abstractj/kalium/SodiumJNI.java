@@ -10,7 +10,7 @@ package org.abstractj.kalium;
 
 public class SodiumJNI {
   public final static native int sodium_init();
-  public final static native byte[] sodium_version_string();
+  public final static native String sodium_version_string();
   public final static native void randombytes(byte[] jarg1, int jarg2);
   public final static native int randombytes_random();
   public final static native int randombytes_uniform(int jarg1);
@@ -23,14 +23,14 @@ public class SodiumJNI {
   public final static native int crypto_secretbox_macbytes();
   public final static native int crypto_secretbox_zerobytes();
   public final static native int crypto_secretbox_boxzerobytes();
-  public final static native byte[] crypto_secretbox_primitive();
+  public final static native String crypto_secretbox_primitive();
   public final static native int crypto_secretbox_easy(byte[] jarg1, byte[] jarg2, int jarg3, byte[] jarg4, byte[] jarg5);
   public final static native int crypto_secretbox_open_easy(byte[] jarg1, byte[] jarg2, int jarg3, byte[] jarg4, byte[] jarg5);
   public final static native int crypto_secretbox_detached(byte[] jarg1, byte[] jarg2, byte[] jarg3, int jarg4, byte[] jarg5, byte[] jarg6);
   public final static native int crypto_secretbox_open_detached(byte[] jarg1, byte[] jarg2, byte[] jarg3, int jarg4, byte[] jarg5, byte[] jarg6);
   public final static native int crypto_scalarmult_bytes();
   public final static native int crypto_scalarmult_scalarbytes();
-  public final static native byte[] crypto_scalarmult_primitive();
+  public final static native String crypto_scalarmult_primitive();
   public final static native int crypto_scalarmult_base(byte[] jarg1, byte[] jarg2);
   public final static native int crypto_scalarmult(byte[] jarg1, byte[] jarg2, byte[] jarg3);
   public final static native int crypto_box_seedbytes();
@@ -38,7 +38,7 @@ public class SodiumJNI {
   public final static native int crypto_box_secretkeybytes();
   public final static native int crypto_box_noncebytes();
   public final static native int crypto_box_macbytes();
-  public final static native byte[] crypto_box_primitive();
+  public final static native String crypto_box_primitive();
   public final static native int crypto_box_keypair(byte[] jarg1, byte[] jarg2);
   public final static native int crypto_box_seed_keypair(byte[] jarg1, byte[] jarg2, byte[] jarg3);
   public final static native int crypto_box_easy(byte[] jarg1, byte[] jarg2, int jarg3, byte[] jarg4, byte[] jarg5, byte[] jarg6);
@@ -64,7 +64,7 @@ public class SodiumJNI {
   public final static native int crypto_sign_seedbytes();
   public final static native int crypto_sign_publickeybytes();
   public final static native int crypto_sign_secretkeybytes();
-  public final static native byte[] crypto_sign_primitive();
+  public final static native String crypto_sign_primitive();
   public final static native int crypto_sign_keypair(byte[] jarg1, byte[] jarg2);
   public final static native int crypto_sign_seed_keypair(byte[] jarg1, byte[] jarg2, byte[] jarg3);
   public final static native int crypto_sign(byte[] jarg1, int[] jarg2, byte[] jarg3, int jarg4, byte[] jarg5);
@@ -79,7 +79,7 @@ public class SodiumJNI {
   public final static native int crypto_generichash_keybytes();
   public final static native int crypto_generichash_keybytes_min();
   public final static native int crypto_generichash_keybytes_max();
-  public final static native byte[] crypto_generichash_primitive();
+  public final static native String crypto_generichash_primitive();
   public final static native int crypto_generichash(byte[] jarg1, int jarg2, byte[] jarg3, int jarg4, byte[] jarg5, int jarg6);
   public final static native int crypto_generichash_statebytes();
   public final static native int crypto_generichash_init(byte[] jarg1, byte[] jarg2, int jarg3, int jarg4);
@@ -87,16 +87,16 @@ public class SodiumJNI {
   public final static native int crypto_generichash_final(byte[] jarg1, byte[] jarg2, int jarg3);
   public final static native int crypto_shorthash_bytes();
   public final static native int crypto_shorthash_keybytes();
-  public final static native byte[] crypto_shorthash_primitive();
+  public final static native String crypto_shorthash_primitive();
   public final static native int crypto_shorthash(byte[] jarg1, byte[] jarg2, int jarg3, byte[] jarg4);
   public final static native int crypto_auth_bytes();
   public final static native int crypto_auth_keybytes();
-  public final static native byte[] crypto_auth_primitive();
+  public final static native String crypto_auth_primitive();
   public final static native int crypto_auth(byte[] jarg1, byte[] jarg2, int jarg3, byte[] jarg4);
   public final static native int crypto_auth_verify(byte[] jarg1, byte[] jarg2, int jarg3, byte[] jarg4);
   public final static native int crypto_onetimeauth_bytes();
   public final static native int crypto_onetimeauth_keybytes();
-  public final static native byte[] crypto_onetimeauth_primitive();
+  public final static native String crypto_onetimeauth_primitive();
   public final static native int crypto_onetimeauth(byte[] jarg1, byte[] jarg2, int jarg3, byte[] jarg4);
   public final static native int crypto_onetimeauth_verify(byte[] jarg1, byte[] jarg2, int jarg3, byte[] jarg4);
   public final static native int crypto_onetimeauth_statebytes();
@@ -197,7 +197,7 @@ public class SodiumJNI {
   public final static native int crypto_onetimeauth_poly1305_final(byte[] jarg1, byte[] jarg2);
   public final static native int crypto_pwhash_scryptsalsa208sha256_saltbytes();
   public final static native int crypto_pwhash_scryptsalsa208sha256_strbytes();
-  public final static native byte[] crypto_pwhash_scryptsalsa208sha256_strprefix();
+  public final static native String crypto_pwhash_scryptsalsa208sha256_strprefix();
   public final static native int crypto_pwhash_scryptsalsa208sha256_opslimit_interactive();
   public final static native int crypto_pwhash_scryptsalsa208sha256_memlimit_interactive();
   public final static native int crypto_pwhash_scryptsalsa208sha256_opslimit_sensitive();

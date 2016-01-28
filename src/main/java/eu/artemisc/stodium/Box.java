@@ -33,7 +33,7 @@ public final class Box {
 
     public static final int SEALBYTES = Sodium.crypto_box_sealbytes();
 
-    public static final String PRIMITIVE = new String(Sodium.crypto_box_primitive());
+    public static final String PRIMITIVE = Sodium.crypto_box_primitive();
 
     // wrappers
 

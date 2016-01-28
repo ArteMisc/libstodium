@@ -1,4 +1,4 @@
-package eu.artemisc.stodium.crypto;
+package eu.artemisc.stodium.crypto.poly1305;
 
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
@@ -12,7 +12,6 @@ import java.security.spec.AlgorithmParameterSpec;
 import javax.crypto.MacSpi;
 
 import eu.artemisc.stodium.Poly1305;
-import eu.artemisc.stodium.poly1305.Poly1305Key;
 
 /**
  * Poly1305Spi implements the {@link javax.crypto.MacSpi} interface, built on

@@ -31,7 +31,7 @@ public class OneTimeAuth {
 
     public static final int STATEBYTES = Sodium.crypto_onetimeauth_statebytes();
 
-    public static final String PRIMITIVE = new String(Sodium.crypto_onetimeauth_primitive());
+    public static final String PRIMITIVE = Sodium.crypto_onetimeauth_primitive();
 
     // wrappers
 

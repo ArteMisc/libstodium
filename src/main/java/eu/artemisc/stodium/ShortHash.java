@@ -25,7 +25,7 @@ public class ShortHash {
     public static final int BYTES = Sodium.crypto_shorthash_bytes();
     public static final int KEYBYTES = Sodium.crypto_shorthash_keybytes();
 
-    public static final String PRIMITIVE = new String(Sodium.crypto_shorthash_primitive());
+    public static final String PRIMITIVE = Sodium.crypto_shorthash_primitive();
 
     /**
      *

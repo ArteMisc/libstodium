@@ -24,6 +24,8 @@ public class Auth {
     public static final int BYTES = 32;
     public static final int KEYBYTES = 32;
 
+    public static final String PRIMITIVE = Sodium.crypto_auth_primitive();
+
     // wrappers
 
     /**

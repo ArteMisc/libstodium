@@ -24,7 +24,7 @@ public final class Sign {
     public static final int PRIVATEKEYBYTES = Sodium.crypto_sign_secretkeybytes();
     public static final int SEEDBYTES = Sodium.crypto_box_seedbytes();
 
-    public static final String PRIMITIVE = new String(Sodium.crypto_sign_primitive());
+    public static final String PRIMITIVE = Sodium.crypto_sign_primitive();
 
     // wrappers
 

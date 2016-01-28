@@ -41,6 +41,11 @@
 %typemap(javain) uint8_t *"$javainput"
 %typemap(freearg) uint8_t *""
 
+/* String return values, from *_primitive methods */
+%typemap(jni) const char *"jstring"
+%typemap(jtype) const char *"String"
+%typemap(jstype) const char *"String"
+
 /* Strings */
 %typemap(jni) char *"jbyteArray"
 %typemap(jtype) char *"byte[]"

@@ -13,7 +13,7 @@ public class Sodium {
     return SodiumJNI.sodium_init();
   }
 
-  public static byte[] sodium_version_string() {
+  public static String sodium_version_string() {
     return SodiumJNI.sodium_version_string();
   }
 
@@ -65,7 +65,7 @@ public class Sodium {
     return SodiumJNI.crypto_secretbox_boxzerobytes();
   }
 
-  public static byte[] crypto_secretbox_primitive() {
+  public static String crypto_secretbox_primitive() {
     return SodiumJNI.crypto_secretbox_primitive();
   }
 
@@ -93,7 +93,7 @@ public class Sodium {
     return SodiumJNI.crypto_scalarmult_scalarbytes();
   }
 
-  public static byte[] crypto_scalarmult_primitive() {
+  public static String crypto_scalarmult_primitive() {
     return SodiumJNI.crypto_scalarmult_primitive();
   }
 
@@ -125,7 +125,7 @@ public class Sodium {
     return SodiumJNI.crypto_box_macbytes();
   }
 
-  public static byte[] crypto_box_primitive() {
+  public static String crypto_box_primitive() {
     return SodiumJNI.crypto_box_primitive();
   }
 
@@ -229,7 +229,7 @@ public class Sodium {
     return SodiumJNI.crypto_sign_secretkeybytes();
   }
 
-  public static byte[] crypto_sign_primitive() {
+  public static String crypto_sign_primitive() {
     return SodiumJNI.crypto_sign_primitive();
   }
 
@@ -289,7 +289,7 @@ public class Sodium {
     return SodiumJNI.crypto_generichash_keybytes_max();
   }
 
-  public static byte[] crypto_generichash_primitive() {
+  public static String crypto_generichash_primitive() {
     return SodiumJNI.crypto_generichash_primitive();
   }
 
@@ -321,7 +321,7 @@ public class Sodium {
     return SodiumJNI.crypto_shorthash_keybytes();
   }
 
-  public static byte[] crypto_shorthash_primitive() {
+  public static String crypto_shorthash_primitive() {
     return SodiumJNI.crypto_shorthash_primitive();
   }
 
@@ -337,7 +337,7 @@ public class Sodium {
     return SodiumJNI.crypto_auth_keybytes();
   }
 
-  public static byte[] crypto_auth_primitive() {
+  public static String crypto_auth_primitive() {
     return SodiumJNI.crypto_auth_primitive();
   }
 
@@ -357,7 +357,7 @@ public class Sodium {
     return SodiumJNI.crypto_onetimeauth_keybytes();
   }
 
-  public static byte[] crypto_onetimeauth_primitive() {
+  public static String crypto_onetimeauth_primitive() {
     return SodiumJNI.crypto_onetimeauth_primitive();
   }
 
@@ -761,7 +761,7 @@ public class Sodium {
     return SodiumJNI.crypto_pwhash_scryptsalsa208sha256_strbytes();
   }
 
-  public static byte[] crypto_pwhash_scryptsalsa208sha256_strprefix() {
+  public static String crypto_pwhash_scryptsalsa208sha256_strprefix() {
     return SodiumJNI.crypto_pwhash_scryptsalsa208sha256_strprefix();
   }
 

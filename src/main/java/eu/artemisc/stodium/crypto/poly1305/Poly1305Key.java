@@ -1,4 +1,4 @@
-package eu.artemisc.stodium.poly1305;
+package eu.artemisc.stodium.crypto.poly1305;
 
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
@@ -7,7 +7,6 @@ import java.security.Key;
 import java.util.Arrays;
 
 import eu.artemisc.stodium.OneTimeAuth;
-import eu.artemisc.stodium.crypto.Poly1305Spi;
 
 /**
  * @author Jan van de Molengraft [jan@artemisc.eu]

@@ -1,4 +1,4 @@
-package eu.artemisc.stodium.curve25519;
+package eu.artemisc.stodium.crypto.curve25519;
 
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;

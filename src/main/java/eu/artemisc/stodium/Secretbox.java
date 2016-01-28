@@ -30,7 +30,7 @@ public final class Secretbox {
     public static final int BOXZEROBYTES = Sodium.crypto_secretbox_boxzerobytes();
     public static final int ZEROBYTES = Sodium.crypto_secretbox_zerobytes();
 
-    public static final String PRIMITIVE = new String(Sodium.crypto_secretbox_primitive());
+    public static final String PRIMITIVE = Sodium.crypto_secretbox_primitive();
 
     // wrappers
 

@@ -22,7 +22,7 @@ public final class ScalarMult {
     public static final int BYTES = Sodium.crypto_scalarmult_bytes();
     public static final int SCALAR_BYTES = Sodium.crypto_scalarmult_scalarbytes();
 
-    public static final String PRIMITIVE = new String(Sodium.crypto_scalarmult_primitive());
+    public static final String PRIMITIVE = Sodium.crypto_scalarmult_primitive();
 
     // wrappers
 
