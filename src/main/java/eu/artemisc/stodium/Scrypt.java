@@ -17,15 +17,15 @@ public final class Scrypt {
     private Scrypt() {}
 
     // constants
-    public static final int SALTBYTES = 32;
+    public static final int SALTBYTES = Sodium.crypto_pwhash_scryptsalsa208sha256_saltbytes();
 
-    public static final int STRBYTES = 102;
-    public static final String STRPREFIX = "$7$";
+    public static final int STRBYTES = Sodium.crypto_pwhash_scryptsalsa208sha256_strbytes();
+    public static final String STRPREFIX = Sodium.crypto_pwhash_scryptsalsa208sha256_strprefix();
 
-    public static final int OPSLIMIT_INTERACTIVE = 524288;
-    public static final int MEMLIMIT_INTERACTIVE = 16777216;
-    public static final int OPSLIMIT_SENSITIVE = 33554432;
-    public static final int MEMLIMIT_SENSITIVE = 1073741824;
+    public static final int OPSLIMIT_INTERACTIVE = Sodium.crypto_pwhash_scryptsalsa208sha256_opslimit_interactive();
+    public static final int MEMLIMIT_INTERACTIVE = Sodium.crypto_pwhash_scryptsalsa208sha256_memlimit_interactive();
+    public static final int OPSLIMIT_SENSITIVE = Sodium.crypto_pwhash_scryptsalsa208sha256_opslimit_sensitive();
+    public static final int MEMLIMIT_SENSITIVE = Sodium.crypto_pwhash_scryptsalsa208sha256_memlimit_sensitive();
 
     // wrappers
 

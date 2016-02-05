@@ -19,10 +19,14 @@
 %typemap(jtype) unsigned char *"byte[]"
 %typemap(jstype) unsigned char *"byte[]"
 %typemap(in) unsigned char *{
-    $1 = (unsigned char *) JCALL2(GetByteArrayElements, jenv, $input, 0);
+    if ($input != NULL) {
+        $1 = (unsigned char *) JCALL2(GetByteArrayElements, jenv, $input, 0);
+    }
 }
 %typemap(argout) unsigned char *{
-    JCALL3(ReleaseByteArrayElements, jenv, $input, (jbyte *) $1, 0);
+    if ($input != NULL) {
+        JCALL3(ReleaseByteArrayElements, jenv, $input, (jbyte *) $1, 0);
+    }
 }
 %typemap(javain) unsigned char *"$javainput"
 /* Prevent default freearg typemap from being used */
@@ -99,7 +103,7 @@
 %typemap(jni) crypto_generichash_state *"jbyteArray"
 %typemap(jtype) crypto_generichash_state *"byte[]"
 %typemap(jstype) crypto_generichash_state *"byte[]"
-%typemap(in) crypto_generichash_state{
+%typemap(in) crypto_generichash_state *{
     $1 = (crypto_generichash_state *) JCALL2(GetByteArrayElements, jenv, $input, 0);
 }
 %typemap(argout) crypto_generichash_state *{
@@ -111,10 +115,10 @@
 /*
     crypto_generichash_blake2b_state
 */
-%typemap(jni) crypto_generichash_blake2b_state*"jbyteArray"
+%typemap(jni) crypto_generichash_blake2b_state *"jbyteArray"
 %typemap(jtype) crypto_generichash_blake2b_state *"byte[]"
 %typemap(jstype) crypto_generichash_blake2b_state *"byte[]"
-%typemap(in) crypto_generichash_blake2b_state{
+%typemap(in) crypto_generichash_blake2b_state *{
     $1 = (crypto_generichash_blake2b_state *) JCALL2(GetByteArrayElements, jenv, $input, 0);
 }
 %typemap(argout) crypto_generichash_blake2b_state *{
@@ -129,7 +133,7 @@
 %typemap(jni) crypto_hash_sha256_state *"jbyteArray"
 %typemap(jtype) crypto_hash_sha256_state *"byte[]"
 %typemap(jstype) crypto_hash_sha256_state *"byte[]"
-%typemap(in) crypto_hash_sha256_state{
+%typemap(in) crypto_hash_sha256_state *{
     $1 = (crypto_hash_sha256_state *) JCALL2(GetByteArrayElements, jenv, $input, 0);
 }
 %typemap(argout) crypto_hash_sha256_state *{
@@ -144,7 +148,7 @@
 %typemap(jni) crypto_hash_sha512_state *"jbyteArray"
 %typemap(jtype) crypto_hash_sha512_state *"byte[]"
 %typemap(jstype) crypto_hash_sha512_state *"byte[]"
-%typemap(in) crypto_hash_sha512_state{
+%typemap(in) crypto_hash_sha512_state *{
     $1 = (crypto_hash_sha512_state *) JCALL2(GetByteArrayElements, jenv, $input, 0);
 }
 %typemap(argout) crypto_hash_sha512_state *{
@@ -159,7 +163,7 @@
 %typemap(jni) crypto_onetimeauth_state *"jbyteArray"
 %typemap(jtype) crypto_onetimeauth_state *"byte[]"
 %typemap(jstype) crypto_onetimeauth_state *"byte[]"
-%typemap(in) crypto_onetimeauth_state{
+%typemap(in) crypto_onetimeauth_state *{
     $1 = (crypto_onetimeauth_state *) JCALL2(GetByteArrayElements, jenv, $input, 0);
 }
 %typemap(argout) crypto_onetimeauth_state *{
@@ -174,7 +178,7 @@
 %typemap(jni) crypto_onetimeauth_poly1305_state *"jbyteArray"
 %typemap(jtype) crypto_onetimeauth_poly1305_state *"byte[]"
 %typemap(jstype) crypto_onetimeauth_poly1305_state *"byte[]"
-%typemap(in) crypto_onetimeauth_poly1305_state{
+%typemap(in) crypto_onetimeauth_poly1305_state *{
     $1 = (crypto_onetimeauth_poly1305_state *) JCALL2(GetByteArrayElements, jenv, $input, 0);
 }
 %typemap(argout) crypto_onetimeauth_poly1305_state *{
@@ -189,7 +193,7 @@
 %typemap(jni) crypto_auth_hmacsha256_state *"jbyteArray"
 %typemap(jtype) crypto_auth_hmacsha256_state *"byte[]"
 %typemap(jstype) crypto_auth_hmacsha256_state *"byte[]"
-%typemap(in) crypto_auth_hmacsha256_state{
+%typemap(in) crypto_auth_hmacsha256_state *{
     $1 = (crypto_auth_hmacsha256_state *) JCALL2(GetByteArrayElements, jenv, $input, 0);
 }
 %typemap(argout) crypto_auth_hmacsha256_state *{
@@ -204,7 +208,7 @@
 %typemap(jni) crypto_auth_hmacsha512_state *"jbyteArray"
 %typemap(jtype) crypto_auth_hmacsha512_state *"byte[]"
 %typemap(jstype) crypto_auth_hmacsha512_state *"byte[]"
-%typemap(in) crypto_auth_hmacsha512_state{
+%typemap(in) crypto_auth_hmacsha512_state *{
     $1 = (crypto_auth_hmacsha512_state *) JCALL2(GetByteArrayElements, jenv, $input, 0);
 }
 %typemap(argout) crypto_auth_hmacsha512_state *{
@@ -219,7 +223,7 @@
 %typemap(jni) crypto_auth_hmacsha512256_state *"jbyteArray"
 %typemap(jtype) crypto_auth_hmacsha512256_state *"byte[]"
 %typemap(jstype) crypto_auth_hmacsha512256_state *"byte[]"
-%typemap(in) crypto_auth_hmacsha512256_state{
+%typemap(in) crypto_auth_hmacsha512256_state *{
     $1 = (crypto_auth_hmacsha512256_state *) JCALL2(GetByteArrayElements, jenv, $input, 0);
 }
 %typemap(argout) crypto_auth_hmacsha512256_state *{
