@@ -897,6 +897,15 @@ size_t crypto_generichash_blake2b_keybytes(void);
 size_t crypto_generichash_blake2b_saltbytes(void);
 size_t crypto_generichash_blake2b_personalbytes(void);
 
+/* FIX when the next update to the stable branch is released, change this inline
+   to the native implementation call. */
+/* size_t crypto_generichash_blake2b_statebytes(void); */
+%inline %{
+size_t crypto_generichash_blake2b_statebytes(void) {
+    return crypto_generichash_statebytes();
+}
+%}
+
 int crypto_generichash_blake2b(unsigned char *out,
                                size_t outlen,
                                const unsigned char *in,
@@ -1302,3 +1311,94 @@ int crypto_stream_xsalsa20_xor_ic(unsigned char *c,
                                   const unsigned char *n,
                                   uint64_t ic,
                                   const unsigned char *k);
+
+/*
+
+    Due to Java's way of handling byte arrays and stream API's, in order to use
+    the method(array, offset, length) setup for methods such as the streaming
+    API found in the MAC/Hash code, a lot of manual copying is required. To get
+    around these inefficiencies, a few special methods are added to the JNI
+    interface to wrap pointer-operations.
+
+    NOTE memory/overflow safety for these functions is provided by the JAVA
+    methods, and assumes correctness of the libsodium implementations.
+
+*/
+
+/* GenericHash offset methods */
+
+%inline %{
+
+int crypto_generichash_update_offset(crypto_generichash_state *state,
+                                     const unsigned char *in,
+                                     unsigned long long in_offset,
+                                     unsigned long long inlen) {
+    return crypto_generichash_update(state, in + in_offset, inlen);
+}
+
+int crypto_generichash_final_offset(crypto_generichash_state *state,
+                                    unsigned char *out,
+                                    unsigned long long out_offset,
+                                    const size_t outlen) {
+    return crypto_generichash_final(state, out + out_offset, outlen);
+}
+
+%}
+
+/* BLAKE2b offset methods */
+
+%inline %{
+
+int crypto_generichash_blake2b_update_offset(crypto_generichash_blake2b_state *state,
+                                             const unsigned char *in,
+                                             unsigned long long in_offset,
+                                             unsigned long long inlen) {
+    return crypto_generichash_blake2b_update(state, in + in_offset, inlen);
+}
+
+int crypto_generichash_blake2b_final_offset(crypto_generichash_blake2b_state *state,
+                                            unsigned char *out,
+                                            unsigned long long out_offset,
+                                            const size_t outlen) {
+    return crypto_generichash_blake2b_final(state, out + out_offset, outlen);
+}
+
+%}
+
+/* onetimeauth offset methods */
+
+%inline %{
+
+int crypto_onetimeauth_update_offset(crypto_onetimeauth_state *state,
+                                     const unsigned char *in,
+                                     unsigned long long in_offset,
+                                     unsigned long long inlen) {
+    return crypto_onetimeauth_update(state, in + in_offset, inlen);
+}
+
+int crypto_onetimeauth_final_offset(crypto_onetimeauth_state *state,
+                                    unsigned char *out,
+                                    unsigned long long out_offset) {
+    return crypto_onetimeauth_final(state, out + out_offset);
+}
+
+%}
+
+/* Poly1305 offset methods */
+
+%inline %{
+
+int crypto_onetimeauth_poly1305_update_offset(crypto_onetimeauth_poly1305_state *state,
+                                              const unsigned char *in,
+                                              unsigned long long in_offset,
+                                              unsigned long long inlen) {
+    return crypto_onetimeauth_poly1305_update(state, in + in_offset, inlen);
+}
+
+int crypto_onetimeauth_poly1305_final_offset(crypto_onetimeauth_poly1305_state *state,
+                                             unsigned char *out,
+                                             unsigned long long out_offset) {
+    return crypto_onetimeauth_poly1305_final(state, out + out_offset);
+}
+
+%}

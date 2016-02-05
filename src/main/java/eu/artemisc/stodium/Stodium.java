@@ -68,6 +68,31 @@ public final class Stodium {
                         lowerC, upperC, lower, upper, src));
     }
 
+    public static void checkPositive(final int src)
+            throws SecurityException {
+        if (src >= 0) {
+            return;
+        }
+        throw new SecurityException(
+                String.format("checkPositice failed [real: %d]", src));
+    }
+
+    /**
+     * checkOffsetParams is a shorthand for the combined verification calls
+     * required when using an API based on the (in, offset, len) format.
+     *
+     * @param dataLen
+     * @param offset
+     * @param len
+     */
+    public static void checkOffsetParams(final int dataLen,
+                                         final int offset,
+                                         final int len) {
+        Stodium.checkSize(offset, 0, dataLen, "0", "dataLen");
+        Stodium.checkSize(offset + len, 0, dataLen, "0", "dataLen");
+        Stodium.checkPositive(len);
+    }
+
     /**
      * checkPow2 checks whether the given integer src is a power of 2, and
      * throws an exception otherwise.

@@ -19,9 +19,6 @@ public final class GenericHash {
         Stodium.StodiumInit();
     }
 
-    // block the constructor
-    private GenericHash() {}
-
     // constants
     public static final int BYTES = Sodium.crypto_generichash_bytes();
     public static final int BYTES_MIN = Sodium.crypto_generichash_bytes_min();
@@ -33,6 +30,146 @@ public final class GenericHash {
     public static final int STATE_BYTES = Sodium.crypto_generichash_statebytes();
 
     public static final String PRIMITIVE = Sodium.crypto_generichash_primitive();
+
+    // Implementation of the stream API
+
+    /**
+     * state holds the binary representation of the crypto_generichash_state
+     * value.
+     */
+    @NonNull private final byte[] state;
+    /**
+     * outlen is the number of output bytes the state should produce. It is
+     * used byte genericHashFinal to validate that the number of
+     * output-bytes read from the state is &lt;= State.outlen.
+     */
+    private final int outlen;
+
+
+    /**
+     * State allocates a byte array that holds the raw packed value of the C
+     * crypto_generichash_state bytes. This constructor does NOT call
+     * {@code init()}.
+     */
+    public GenericHash(final int outlen)
+            throws SecurityException {
+        Stodium.checkSize(outlen, BYTES_MIN, BYTES_MAX,
+                "GenericHash.BYTES_MIN", "GenericHash.BYTES_MAX");
+        this.state = new byte[STATE_BYTES];
+        this.outlen = outlen;
+    }
+
+    /**
+     * This constructor calls {@link #init(byte[])}.
+     *
+     * @param outlen
+     * @param key
+     * @throws SecurityException
+     */
+    public GenericHash(final int outlen,
+                       @Nullable @Size(min = 16, max = 64) final byte[] key)
+            throws SecurityException {
+        this(outlen);
+        init(key);
+    }
+
+    /**
+     * State copy-constructor. If _finish should be called on multiple
+     * occasions during the streaming without losing the state, it can be
+     * copied.
+     *
+     * @param original The original State that should be copied
+     */
+    public GenericHash(@NonNull final GenericHash original) {
+        this.state = Arrays.copyOf(original.state, original.state.length);
+        this.outlen = original.outlen;
+    }
+
+    /**
+     *
+     */
+    public void init() {
+        init(null);
+    }
+
+    /**
+     *
+     * @param key
+     */
+    public void init(@Nullable @Size(min = 16, max = 64) final byte[] key)
+            throws SecurityException {
+        if (key != null) {
+            Stodium.checkSize(key.length, KEYBYTES_MIN, KEYBYTES_MAX,
+                    "GenericHash.KEYBYTES_MIN", "GenericHash.KEYBYTES_MAX");
+        }
+
+        Stodium.checkStatus(Sodium.crypto_generichash_init(
+                state, key, key == null ? 0 : key.length, outlen));
+    }
+
+    /**
+     *
+     * @param in
+     */
+    public void update(@NonNull final byte[] in)
+            throws SecurityException {
+        update(in, 0, in.length);
+    }
+
+    /**
+     *
+     * @param in
+     * @param offset
+     * @param length
+     * @throws SecurityException
+     */
+    public void update(@NonNull final byte[] in,
+                       final int offset,
+                       final int length)
+            throws SecurityException {
+        Stodium.checkOffsetParams(in.length, offset, length);
+            Stodium.checkStatus(Sodium.crypto_generichash_update_offset(
+                    state, in, offset, length));
+    }
+
+    /**
+     *
+     * @param out
+     */
+    public void doFinal(@NonNull @Size(min = 1, max = 64) final byte[] out)
+            throws SecurityException {
+        doFinal(out, 0, outlen);
+    }
+
+    /**
+     *
+     * @param out
+     * @param offset
+     * @throws SecurityException
+     */
+    public void doFinal(@NonNull @Size(min = 1) final byte[] out,
+                        final int offset)
+            throws SecurityException {
+        doFinal(out, offset, outlen);
+    }
+
+    /**
+     * Can be used to truncate the output if {@code length < state.outlen}.
+     *
+     * @param out
+     * @param offset
+     * @param length
+     * @throws SecurityException
+     */
+    public void doFinal(@NonNull @Size(min = 1) final byte[] out,
+                        final int offset,
+                        final int length)
+            throws SecurityException {
+        Stodium.checkSize(length, 1, outlen, "1", "Blake2b.outlen");
+        Stodium.checkOffsetParams(out.length, offset, outlen);
+        Stodium.checkStatus(Sodium.crypto_generichash_blake2b_final_offset(
+                state, out, offset, length));
+    }
 
     // wrappers
 
@@ -53,17 +190,9 @@ public final class GenericHash {
                                    @NonNull final byte[] srcInput,
                                    @Nullable @Size(min = 16, max = 64) final byte[] srcKey)
             throws SecurityException {
-        if (srcKey == null || srcKey.length == 0) {
-            genericHash(dstHash, srcInput);
-            return;
-        }
-
-        Stodium.checkSize(dstHash.length, BYTES_MIN, BYTES_MAX,
-                "GenericHash.BYTES_MIN", "GenericHash.BYTES_MAX");
-        Stodium.checkSize(srcKey.length, KEYBYTES_MIN, KEYBYTES_MAX,
-                "GenericHash.KEYBYTES_MIN", "GenericHash.KEYBYTES_MAX");
-        Stodium.checkStatus(Sodium.crypto_generichash(dstHash, dstHash.length,
-                srcInput, srcInput.length, srcKey, srcKey.length));
+        final GenericHash hash = new GenericHash(dstHash.length, srcKey);
+        hash.update(srcInput);
+        hash.doFinal(dstHash);
     }
 
     /**
@@ -78,137 +207,6 @@ public final class GenericHash {
     public static void genericHash(@NonNull @Size(min = 16, max = 64) final byte[] dstHash,
                                    @NonNull final byte[] srcInput)
             throws SecurityException {
-        Stodium.checkSize(dstHash.length, BYTES_MIN, BYTES_MAX,
-                "GenericHash.BYTES_MIN", "GenericHash.BYTES_MAX");
-        Stodium.checkStatus(Sodium.crypto_generichash(dstHash, dstHash.length,
-                srcInput, srcInput.length, new byte[0], 0));
-    }
-
-    //
-    // Streaming API
-    //
-
-    public final static class State {
-        /**
-         * state holds the binary representation of the crypto_generichash_state
-         * value.
-         */
-        @NonNull private final byte[] state;
-        /**
-         * outlen is the number of output bytes the state should produce. It is
-         * used byte genericHashFinal to validate that the number of
-         * output-bytes read from the state is &lt;= State.outlen.
-         */
-        private final int outlen;
-
-        /**
-         * State allocates a byte array that holds the raw packed value of the C
-         * crypto_generichash_state bytes.
-         */
-        public State(final int outlen) {
-            this.state = new byte[STATE_BYTES];
-            this.outlen = outlen;
-        }
-
-        /**
-         * State copy-constructor. If _finish should be called on multiple
-         * occasions during the streaming without losing the state, it can be
-         * copied.
-         *
-         * @param original The original State that should be copied
-         */
-        public State(@NonNull final State original) {
-            this.state = Arrays.copyOf(original.state, original.state.length);
-            this.outlen = original.outlen;
-        }
-
-        /**
-         *
-         * @param key
-         */
-        public void init(@Nullable @Size(min = 16, max = 64) final byte[] key)
-                throws SecurityException {
-            genericHashInit(this, key);
-        }
-
-        /**
-         *
-         * @param in
-         */
-        public void update(@NonNull final byte[] in)
-                throws SecurityException {
-            genericHashUpdate(this, in);
-        }
-
-        /**
-         *
-         * @param out
-         */
-        public void doFinal(@NonNull @Size(min = 1, max = 64) final byte[] out)
-                throws SecurityException {
-            genericHashFinal(this, out);
-        }
-    }
-
-    /**
-     *
-     * @param state
-     * @throws SecurityException
-     */
-    public static void genericHashInit(@NonNull final State state)
-            throws SecurityException {
-        Stodium.checkSize(state.outlen, BYTES_MIN, BYTES_MAX,
-                "GenericHash.BYTES_MIN", "GenericHash.BYTES_MAX");
-        Stodium.checkStatus(Sodium.crypto_generichash_init(state.state,
-                null, 0, state.outlen));
-    }
-
-    /**
-     *
-     * @param state
-     * @param key
-     * @throws SecurityException
-     */
-    public static void genericHashInit(@NonNull final State state,
-                                       @Nullable @Size(min = 16, max = 64) final byte[] key)
-            throws SecurityException {
-        if (key == null) {
-            genericHashInit(state);
-            return;
-        }
-        Stodium.checkSize(key.length, KEYBYTES_MIN, KEYBYTES_MAX,
-                "GenericHash.KEYBYTES_MIN", "GenericHash.KEYBYTES_MAX");
-        Stodium.checkSize(state.outlen, BYTES_MIN, BYTES_MAX,
-                "GenericHash.BYTES_MIN", "GenericHash.BYTES_MAX");
-        Stodium.checkStatus(Sodium.crypto_generichash_init(state.state,
-                key, key.length, state.outlen));
-    }
-
-    /**
-     *
-     * @param state
-     * @param in
-     * @throws SecurityException
-     */
-    public static void genericHashUpdate(@NonNull final State state,
-                                         @NonNull final byte[] in)
-            throws SecurityException {
-        Stodium.checkStatus(Sodium.crypto_generichash_update(
-                state.state, in, in.length));
-    }
-
-    /**
-     *
-     * @param state
-     * @param out
-     * @throws SecurityException
-     */
-    public static void genericHashFinal(@NonNull final State state,
-                                        @NonNull @Size(min = 1, max = 64) final byte[] out)
-            throws SecurityException {
-        Stodium.checkSize(out.length, 1, state.outlen,
-                "1", "GenericHash.State.outlen");
-        Stodium.checkStatus(Sodium.crypto_generichash_final(
-                state.state, out, out.length));
+        genericHash(dstHash, srcInput, null);
     }
 }

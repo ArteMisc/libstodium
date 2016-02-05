@@ -27,7 +27,7 @@ public class Poly1305Spi
     @NonNull
     private final byte[] key = new byte[KeyBytes];
     @Nullable
-    private Poly1305.State state = null;
+    private Poly1305 state = null;
 
     /**
      * engineGetMacLength returns the length of a Poly1305 Tag, which is 16
@@ -73,7 +73,7 @@ public class Poly1305Spi
         if (state == null) {
             throw new NullPointerException("Poly1305 State is null");
         }
-        Poly1305.authUpdate(state, input, offset, len);
+        state.update(input, offset, len);
     }
 
     @NonNull
@@ -85,14 +85,13 @@ public class Poly1305Spi
         }
         final byte[] out = new byte[TagBytes];
 
-        Poly1305.authFinal(state, out);
+        state.doFinal(out);
         state = null;
         return out;
     }
 
     @Override
     protected void engineReset() {
-        state = new Poly1305.State();
-        Poly1305.authInit(state, this.key);
+        state = new Poly1305(this.key);
     }
 }

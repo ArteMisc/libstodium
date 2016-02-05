@@ -169,6 +169,7 @@ public class SodiumJNI {
   public final static native int crypto_generichash_blake2b_keybytes();
   public final static native int crypto_generichash_blake2b_saltbytes();
   public final static native int crypto_generichash_blake2b_personalbytes();
+  public final static native int crypto_generichash_blake2b_statebytes();
   public final static native int crypto_generichash_blake2b(byte[] jarg1, int jarg2, byte[] jarg3, int jarg4, byte[] jarg5, int jarg6);
   public final static native int crypto_generichash_blake2b_salt_personal(byte[] jarg1, int jarg2, byte[] jarg3, int jarg4, byte[] jarg5, int jarg6, byte[] jarg7, byte[] jarg8);
   public final static native int crypto_generichash_blake2b_init(byte[] jarg1, byte[] jarg2, int jarg3, int jarg4);
@@ -251,4 +252,12 @@ public class SodiumJNI {
   public final static native int crypto_stream_xsalsa20(byte[] jarg1, int jarg2, byte[] jarg3, byte[] jarg4);
   public final static native int crypto_stream_xsalsa20_xor(byte[] jarg1, byte[] jarg2, int jarg3, byte[] jarg4, byte[] jarg5);
   public final static native int crypto_stream_xsalsa20_xor_ic(byte[] jarg1, byte[] jarg2, int jarg3, byte[] jarg4, int jarg5, byte[] jarg6);
+  public final static native int crypto_generichash_update_offset(byte[] jarg1, byte[] jarg2, int jarg3, int jarg4);
+  public final static native int crypto_generichash_final_offset(byte[] jarg1, byte[] jarg2, int jarg3, int jarg4);
+  public final static native int crypto_generichash_blake2b_update_offset(byte[] jarg1, byte[] jarg2, int jarg3, int jarg4);
+  public final static native int crypto_generichash_blake2b_final_offset(byte[] jarg1, byte[] jarg2, int jarg3, int jarg4);
+  public final static native int crypto_onetimeauth_update_offset(byte[] jarg1, byte[] jarg2, int jarg3, int jarg4);
+  public final static native int crypto_onetimeauth_final_offset(byte[] jarg1, byte[] jarg2, int jarg3);
+  public final static native int crypto_onetimeauth_poly1305_update_offset(byte[] jarg1, byte[] jarg2, int jarg3, int jarg4);
+  public final static native int crypto_onetimeauth_poly1305_final_offset(byte[] jarg1, byte[] jarg2, int jarg3);
 }

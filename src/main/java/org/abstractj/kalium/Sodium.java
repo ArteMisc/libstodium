@@ -649,6 +649,10 @@ public class Sodium {
     return SodiumJNI.crypto_generichash_blake2b_personalbytes();
   }
 
+  public static int crypto_generichash_blake2b_statebytes() {
+    return SodiumJNI.crypto_generichash_blake2b_statebytes();
+  }
+
   public static int crypto_generichash_blake2b(byte[] out, int outlen, byte[] in, int inlen, byte[] key, int keylen) {
     return SodiumJNI.crypto_generichash_blake2b(out, outlen, in, inlen, key, keylen);
   }
@@ -975,6 +979,38 @@ public class Sodium {
 
   public static int crypto_stream_xsalsa20_xor_ic(byte[] c, byte[] m, int mlen, byte[] n, int ic, byte[] k) {
     return SodiumJNI.crypto_stream_xsalsa20_xor_ic(c, m, mlen, n, ic, k);
+  }
+
+  public static int crypto_generichash_update_offset(byte[] state, byte[] in, int in_offset, int inlen) {
+    return SodiumJNI.crypto_generichash_update_offset(state, in, in_offset, inlen);
+  }
+
+  public static int crypto_generichash_final_offset(byte[] state, byte[] out, int out_offset, int outlen) {
+    return SodiumJNI.crypto_generichash_final_offset(state, out, out_offset, outlen);
+  }
+
+  public static int crypto_generichash_blake2b_update_offset(byte[] state, byte[] in, int in_offset, int inlen) {
+    return SodiumJNI.crypto_generichash_blake2b_update_offset(state, in, in_offset, inlen);
+  }
+
+  public static int crypto_generichash_blake2b_final_offset(byte[] state, byte[] out, int out_offset, int outlen) {
+    return SodiumJNI.crypto_generichash_blake2b_final_offset(state, out, out_offset, outlen);
+  }
+
+  public static int crypto_onetimeauth_update_offset(byte[] state, byte[] in, int in_offset, int inlen) {
+    return SodiumJNI.crypto_onetimeauth_update_offset(state, in, in_offset, inlen);
+  }
+
+  public static int crypto_onetimeauth_final_offset(byte[] state, byte[] out, int out_offset) {
+    return SodiumJNI.crypto_onetimeauth_final_offset(state, out, out_offset);
+  }
+
+  public static int crypto_onetimeauth_poly1305_update_offset(byte[] state, byte[] in, int in_offset, int inlen) {
+    return SodiumJNI.crypto_onetimeauth_poly1305_update_offset(state, in, in_offset, inlen);
+  }
+
+  public static int crypto_onetimeauth_poly1305_final_offset(byte[] state, byte[] out, int out_offset) {
+    return SodiumJNI.crypto_onetimeauth_poly1305_final_offset(state, out, out_offset);
   }
 
 }
