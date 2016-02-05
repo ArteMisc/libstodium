@@ -2,11 +2,8 @@ package eu.artemisc.stodium;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Size;
-import android.util.Log;
 
 import org.abstractj.kalium.Sodium;
-
-import eu.artemisc.stodium.Stodium;
 
 /**
  * Secretbox is a static class that maps all calls to the corresponding native
