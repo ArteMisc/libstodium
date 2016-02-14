@@ -1,17 +1,16 @@
 # libstodium
 
-*This project is very young and as such the API is not yet stable or complete.*
+*Though the API is reaching a stable point, there may still be breaking changes between commits.*
 
-libstodium was born a fork of
-[Robosodium](https://github.com/GerardSoleCa/Robosodium), which was born as a
-fork of [kalium-jni](https://github.com/joshjdevl/kalium-jni/). The goal of this
-library is to improve the API, documentation, and better intergration with
-Android Studio.
+The goal of this library is to provide complete bindings of libsodium using JNI
+for the Android platform. It also provides implementations that try to handle
+the passing of data between the JVM and native code in a more efficient way, by
+supporting Java's method(array, offset, length) style for native methods.
 
 Credits to:
 * [**Libsodium**](https://github.com/jedisct1/libsodium): author [Frank Denis](https://github.com/jedisct1) and [Contributors](https://github.com/jedisct1/libsodium/graphs/contributors)
-* [**Kalium-jni**](https://github.com/joshjdevl/kalium-jni/): author [joshjdevl](https://github.com/joshjdevl) and [Contributors](https://github.com/joshjdevl/kalium-jni/graphs/contributors)
-* [**Robosodium**](https://github.com/GerardSoleCa/Robosodium): author [GerardSoleCa](https://github.com/GerardSoleCa)
+* [**libsodium-jni**](https://github.com/joshjdevl/libsodium-jni): author [joshjdevl](https://github.com/joshjdevl) and [Contributors](https://github.com/joshjdevl/libsodium-jni/graphs/contributors)
+* [**Robosodium**](https://github.com/GerardSoleCa/Robosodium): author [GerardSoleCa](https://github.com/GerardSoleCa) and [Contributors](https://github.com/GerardSoleCa/Robosodium/graphs/contributors)
 
 ### Target platform
 
@@ -61,12 +60,12 @@ $ JAVA_HOME=/path/to/java ./setup.sh
 
 Each part has its own software license, including:
 * **Libsodium** [ISC License](https://github.com/jedisct1/libsodium/blob/master/LICENSE)
-* **kalium-jni** [Apache License. Version 2.0](https://github.com/joshjdevl/kalium-jni/blob/master/LICENSE.txt)
+* **libsodium-jni** [Apache License. Version 2.0](https://github.com/joshjdevl/libsodium-jni/blob/master/LICENSE.txt)
 * **Robosodium** [Apache License. Version 2.0](https://github.com/GerardSoleCa/Robosodium/blob/master/LICENSE.txt)
 * **libstodium** [Apache License. Version 2.0](https://github.com/ArteMisc/libstodium/blob/master/LICENSE.txt)
 
 ### TODO
-* Imporove the API, provide more docs.
+* Improve the API, provide more docs.
 * Make the API compatible with Java's native Security interfaces.
 * Add tests.
 * Support more architectures as they come along (mainly 64-bits archs).
