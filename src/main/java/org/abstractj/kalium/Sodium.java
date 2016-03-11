@@ -313,6 +313,34 @@ public class Sodium {
     return SodiumJNI.crypto_generichash_final(state, dst_out, out_len);
   }
 
+  public static int crypto_hash_bytes() {
+    return SodiumJNI.crypto_hash_bytes();
+  }
+
+  public static String crypto_hash_primitive() {
+    return SodiumJNI.crypto_hash_primitive();
+  }
+
+  public static int crypto_hash(byte[] dst_out, byte[] src_in, int in_len) {
+    return SodiumJNI.crypto_hash(dst_out, src_in, in_len);
+  }
+
+  public static int crypto_hash_statebytes() {
+    return SodiumJNI.crypto_hash_statebytes();
+  }
+
+  public static int crypto_hash_init(byte[] state) {
+    return SodiumJNI.crypto_hash_init(state);
+  }
+
+  public static int crypto_hash_update(byte[] state, byte[] src_in, int in_len) {
+    return SodiumJNI.crypto_hash_update(state, src_in, in_len);
+  }
+
+  public static int crypto_hash_final(byte[] state, byte[] dst_out) {
+    return SodiumJNI.crypto_hash_final(state, dst_out);
+  }
+
   public static int crypto_shorthash_bytes() {
     return SodiumJNI.crypto_shorthash_bytes();
   }
@@ -995,6 +1023,18 @@ public class Sodium {
 
   public static int crypto_generichash_blake2b_final_offset(byte[] state, byte[] out, int out_offset, int outlen) {
     return SodiumJNI.crypto_generichash_blake2b_final_offset(state, out, out_offset, outlen);
+  }
+
+  public static int crypto_hash_offset(byte[] dst_out, int out_offset, byte[] src_in, int in_offset, int in_len) {
+    return SodiumJNI.crypto_hash_offset(dst_out, out_offset, src_in, in_offset, in_len);
+  }
+
+  public static int crypto_hash_update_offset(byte[] state, byte[] src_in, int in_offset, int in_len) {
+    return SodiumJNI.crypto_hash_update_offset(state, src_in, in_offset, in_len);
+  }
+
+  public static int crypto_hash_final_offset(byte[] state, byte[] dst_out, int out_offset) {
+    return SodiumJNI.crypto_hash_final_offset(state, dst_out, out_offset);
   }
 
   public static int crypto_onetimeauth_update_offset(byte[] state, byte[] in, int in_offset, int inlen) {

@@ -128,6 +128,21 @@
 %typemap(freearg) crypto_generichash_blake2b_state *""
 
 /*
+    crypto_hash_state
+*/
+%typemap(jni) crypto_hash_state *"jbyteArray"
+%typemap(jtype) crypto_hash_state *"byte[]"
+%typemap(jstype) crypto_hash_state *"byte[]"
+%typemap(in) crypto_hash_state *{
+    $1 = (crypto_hash_state *) JCALL2(GetByteArrayElements, jenv, $input, 0);
+}
+%typemap(argout) crypto_hash_state *{
+    JCALL3(ReleaseByteArrayElements, jenv, $input, (jbyte *) $1, 0);
+}
+%typemap(javain) crypto_hash_state *"$javainput"
+%typemap(freearg) crypto_hash_state *""
+
+/*
     crypto_hash_sha256_state
 */
 %typemap(jni) crypto_hash_sha256_state *"jbyteArray"
@@ -519,7 +534,7 @@ int crypto_sign_ed25519_sk_to_pk(unsigned char *dst_public_key,
                                  const unsigned char *src_private_key);
 
 /*
-    crypto_hash API
+    crypto_generichash API
 */
 size_t crypto_generichash_bytes(void);
 size_t crypto_generichash_bytes_min(void);
@@ -536,7 +551,6 @@ int crypto_generichash(unsigned char *dst_hash,
                        unsigned long long input_len,
                        const unsigned char *src_key,
                        unsigned long long key_len);
-/* TODO NOTE EXPERIMENTAL CODE FOLLOWS */
 
 size_t crypto_generichash_statebytes(void);
 
@@ -553,7 +567,44 @@ int crypto_generichash_final(crypto_generichash_state *state,
                              unsigned char *dst_out,
                              const unsigned long long out_len);
 
-/* TODO END OF DANGER ZONE */
+/*
+    crypto_hash API
+*/
+size_t crypto_hash_bytes(void);
+
+const char *crypto_hash_primitive(void);
+
+int crypto_hash(unsigned char *dst_out,
+                const unsigned char *src_in,
+                unsigned long long in_len);
+
+%inline %{
+
+typedef crypto_hash_sha512_state crypto_hash_state;
+
+size_t crypto_hash_statebytes(void) {
+    return crypto_hash_sha512_statebytes();
+}
+
+int crypto_hash_init(crypto_hash_state *state) {
+    return crypto_hash_sha512_init(
+        (crypto_hash_sha512_state *) state);
+}
+
+int crypto_hash_update(crypto_hash_state *state,
+                       const unsigned char *src_in,
+                       unsigned long long in_len) {
+    return crypto_hash_sha512_update(
+        (crypto_hash_sha512_state *) state, src_in, in_len);
+}
+
+int crypto_hash_final(crypto_hash_state *state,
+                      unsigned char *dst_out) {
+    return crypto_hash_sha512_final(
+        (crypto_hash_sha512_state *) state, dst_out);
+}
+
+%}
 
 /*
     crypto_shorthash API
@@ -1368,6 +1419,36 @@ int crypto_generichash_blake2b_final_offset(crypto_generichash_blake2b_state *st
 }
 
 %}
+
+/* hash offset methods */
+%inline %{
+
+int crypto_hash_offset(unsigned char *dst_out,
+                       unsigned long long out_offset,
+                       const unsigned char *src_in,
+                       unsigned long long in_offset,
+                       unsigned long long in_len) {
+    return crypto_hash(dst_out + out_offset, src_in + in_offset, in_len);
+}
+
+int crypto_hash_update_offset(crypto_hash_state *state,
+                              const unsigned char *src_in,
+                              unsigned long long in_offset,
+                              unsigned long long in_len) {
+    return crypto_hash_update(state, src_in + in_offset, in_len);
+}
+
+int crypto_hash_final_offset(crypto_hash_state *state,
+                             unsigned char *dst_out,
+                             unsigned long long out_offset) {
+    return crypto_hash_final(state, dst_out + out_offset);
+}
+
+%}
+
+/* sha256 offset methods */
+
+/* sha512 offset methods */
 
 /* onetimeauth offset methods */
 

@@ -85,6 +85,13 @@ public class SodiumJNI {
   public final static native int crypto_generichash_init(byte[] jarg1, byte[] jarg2, int jarg3, int jarg4);
   public final static native int crypto_generichash_update(byte[] jarg1, byte[] jarg2, int jarg3);
   public final static native int crypto_generichash_final(byte[] jarg1, byte[] jarg2, int jarg3);
+  public final static native int crypto_hash_bytes();
+  public final static native String crypto_hash_primitive();
+  public final static native int crypto_hash(byte[] jarg1, byte[] jarg2, int jarg3);
+  public final static native int crypto_hash_statebytes();
+  public final static native int crypto_hash_init(byte[] jarg1);
+  public final static native int crypto_hash_update(byte[] jarg1, byte[] jarg2, int jarg3);
+  public final static native int crypto_hash_final(byte[] jarg1, byte[] jarg2);
   public final static native int crypto_shorthash_bytes();
   public final static native int crypto_shorthash_keybytes();
   public final static native String crypto_shorthash_primitive();
@@ -256,6 +263,9 @@ public class SodiumJNI {
   public final static native int crypto_generichash_final_offset(byte[] jarg1, byte[] jarg2, int jarg3, int jarg4);
   public final static native int crypto_generichash_blake2b_update_offset(byte[] jarg1, byte[] jarg2, int jarg3, int jarg4);
   public final static native int crypto_generichash_blake2b_final_offset(byte[] jarg1, byte[] jarg2, int jarg3, int jarg4);
+  public final static native int crypto_hash_offset(byte[] jarg1, int jarg2, byte[] jarg3, int jarg4, int jarg5);
+  public final static native int crypto_hash_update_offset(byte[] jarg1, byte[] jarg2, int jarg3, int jarg4);
+  public final static native int crypto_hash_final_offset(byte[] jarg1, byte[] jarg2, int jarg3);
   public final static native int crypto_onetimeauth_update_offset(byte[] jarg1, byte[] jarg2, int jarg3, int jarg4);
   public final static native int crypto_onetimeauth_final_offset(byte[] jarg1, byte[] jarg2, int jarg3);
   public final static native int crypto_onetimeauth_poly1305_update_offset(byte[] jarg1, byte[] jarg2, int jarg3, int jarg4);
