@@ -42,12 +42,13 @@ public final class Scrypt {
      * @param dstKey
      * @param srcPwd
      * @param srcSalt
-     * @throws SecurityException
+     * @throws ConstraintViolationException
+     * @throws StodiumException
      */
     public static void pwhashScrypt(@NonNull final byte[] dstKey,
                                     @NonNull final byte[] srcPwd,
                                     @NonNull final byte[] srcSalt)
-            throws SecurityException {
+            throws StodiumException {
         pwhashScrypt(dstKey, srcPwd, srcSalt, OPSLIMIT_INTERACTIVE, MEMLIMIT_INTERACTIVE);
     }
     /**
@@ -57,14 +58,15 @@ public final class Scrypt {
      * @param srcSalt
      * @param opsLimit
      * @param memLimit
-     * @throws SecurityException
+     * @throws ConstraintViolationException
+     * @throws StodiumException
      */
     public static void pwhashScrypt(@NonNull final byte[] dstKey,
                                     @NonNull final byte[] srcPwd,
                                     @NonNull final byte[] srcSalt,
                                     final int opsLimit,
                                     final int memLimit)
-            throws SecurityException {
+            throws StodiumException {
         Stodium.checkSize(srcSalt.length, SALTBYTES, "PwHashSCrypt.SALTBYTES");
         Stodium.checkPow2(memLimit, "PwHashSCrypt.pwhashScrypt(memLimit)");
         Stodium.checkStatus(Sodium.crypto_pwhash_scryptsalsa208sha256(
@@ -76,8 +78,10 @@ public final class Scrypt {
     // String based API
     //
 
+    // TODO implement
     public static void pwhashScryptStr() {}
 
+    // TODO implement
     public static boolean pwhashScryptStrVerify() {
         return false;
     }

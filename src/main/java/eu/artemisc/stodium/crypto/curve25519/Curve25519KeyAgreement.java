@@ -16,6 +16,8 @@ import javax.crypto.KeyAgreementSpi;
 import javax.crypto.SecretKey;
 import javax.crypto.ShortBufferException;
 
+import eu.artemisc.stodium.Curve25519;
+
 /**
  * @author Jan van de Molengraft [jan@artemisc.eu]
  */

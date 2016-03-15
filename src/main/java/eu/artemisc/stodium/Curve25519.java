@@ -5,18 +5,18 @@ import android.support.annotation.NonNull;
 import org.abstractj.kalium.Sodium;
 
 /**
- * ScalarMult wraps calls to crypto_scalarmult*.
+ * Curve25519 wraps calls to crypto_scalarmult*.
  *
  * @author Jan van de Molengraft [jan@artemisc.eu]
  */
-public final class ScalarMult {
+public final class Curve25519 {
     static {
         // Require sodium_init();
         Stodium.StodiumInit();
     }
 
     // block the constructor
-    private ScalarMult() {}
+    private Curve25519() {}
 
     // constants
     public static final int BYTES = Sodium.crypto_scalarmult_bytes();
@@ -35,15 +35,16 @@ public final class ScalarMult {
      * @param dst
      * @param src
      * @param groupElement
-     * @throws SecurityException
+     * @throws ConstraintViolationException
+     * @throws StodiumException
      */
     public static void scalarMult(@NonNull final byte[] dst,
                                   @NonNull final byte[] src,
                                   @NonNull final byte[] groupElement)
-            throws SecurityException {
-        Stodium.checkSize(dst.length, SCALAR_BYTES, "ScalarMult.SCALAR_BYTES");
-        Stodium.checkSize(src.length, SCALAR_BYTES, "ScalarMult.SCALAR_BYTES");
-        Stodium.checkSize(groupElement.length, SCALAR_BYTES, "ScalarMult.SCALAR_BYTES");
+            throws StodiumException {
+        Stodium.checkSize(dst.length, SCALAR_BYTES, "Curve25519.SCALAR_BYTES");
+        Stodium.checkSize(src.length, SCALAR_BYTES, "Curve25519.SCALAR_BYTES");
+        Stodium.checkSize(groupElement.length, SCALAR_BYTES, "Curve25519.SCALAR_BYTES");
         Stodium.checkStatus(Sodium.crypto_scalarmult_curve25519(dst, src,
                 groupElement));
     }
@@ -52,13 +53,14 @@ public final class ScalarMult {
      *
      * @param dst
      * @param src
-     * @throws SecurityException
+     * @throws ConstraintViolationException
+     * @throws StodiumException
      */
     public static void scalarMultBase(@NonNull final byte[] dst,
                                       @NonNull final byte[] src)
-            throws SecurityException {
-        Stodium.checkSize(dst.length, SCALAR_BYTES, "ScalarMult.SCALAR_BYTES");
-        Stodium.checkSize(src.length, SCALAR_BYTES, "ScalarMult.SCALAR_BYTES");
+            throws StodiumException {
+        Stodium.checkSize(dst.length, SCALAR_BYTES, "Curve25519.SCALAR_BYTES");
+        Stodium.checkSize(src.length, SCALAR_BYTES, "Curve25519.SCALAR_BYTES");
         Stodium.checkStatus(Sodium.crypto_scalarmult_base(dst, src));
     }
 
@@ -66,9 +68,16 @@ public final class ScalarMult {
     // convert curve
     //
 
-    public static void curve25519PrivateToPublic(@NonNull final byte[] dstPublic,
-                                                 @NonNull final byte[] srcPrivate)
-            throws SecurityException {
+    /**
+     *
+     * @param dstPublic
+     * @param srcPrivate
+     * @throws ConstraintViolationException
+     * @throws StodiumException
+     */
+    public static void x25519PrivateToPublic(@NonNull final byte[] dstPublic,
+                                             @NonNull final byte[] srcPrivate)
+            throws StodiumException {
         scalarMultBase(dstPublic, srcPrivate);
     }
 }

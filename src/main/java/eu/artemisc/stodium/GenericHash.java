@@ -2,7 +2,6 @@ package eu.artemisc.stodium;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.annotation.Size;
 
 import org.abstractj.kalium.Sodium;
 
@@ -50,9 +49,13 @@ public final class GenericHash {
      * State allocates a byte array that holds the raw packed value of the C
      * crypto_generichash_state bytes. This constructor does NOT call
      * {@code init()}.
+     *
+     * @param outlen
+     * @throws ConstraintViolationException
+     * @throws StodiumException
      */
     public GenericHash(final int outlen)
-            throws SecurityException {
+            throws StodiumException {
         Stodium.checkSize(outlen, BYTES_MIN, BYTES_MAX,
                 "GenericHash.BYTES_MIN", "GenericHash.BYTES_MAX");
         this.state = new byte[STATE_BYTES];
@@ -64,11 +67,12 @@ public final class GenericHash {
      *
      * @param outlen
      * @param key
-     * @throws SecurityException
+     * @throws ConstraintViolationException
+     * @throws StodiumException
      */
     public GenericHash(final int outlen,
-                       @Nullable @Size(min = 16, max = 64) final byte[] key)
-            throws SecurityException {
+                       @Nullable final byte[] key)
+            throws StodiumException {
         this(outlen);
         init(key);
     }
@@ -86,18 +90,22 @@ public final class GenericHash {
     }
 
     /**
-     *
+     * @throws ConstraintViolationException
+     * @throws StodiumException
      */
-    public void init() {
+    public void init()
+            throws StodiumException {
         init(null);
     }
 
     /**
      *
      * @param key
+     * @throws ConstraintViolationException
+     * @throws StodiumException
      */
-    public void init(@Nullable @Size(min = 16, max = 64) final byte[] key)
-            throws SecurityException {
+    public void init(@Nullable final byte[] key)
+            throws StodiumException {
         if (key != null) {
             Stodium.checkSize(key.length, KEYBYTES_MIN, KEYBYTES_MAX,
                     "GenericHash.KEYBYTES_MIN", "GenericHash.KEYBYTES_MAX");
@@ -110,9 +118,11 @@ public final class GenericHash {
     /**
      *
      * @param in
+     * @throws ConstraintViolationException
+     * @throws StodiumException
      */
     public void update(@NonNull final byte[] in)
-            throws SecurityException {
+            throws StodiumException {
         update(in, 0, in.length);
     }
 
@@ -121,12 +131,13 @@ public final class GenericHash {
      * @param in
      * @param offset
      * @param length
-     * @throws SecurityException
+     * @throws ConstraintViolationException
+     * @throws StodiumException
      */
     public void update(@NonNull final byte[] in,
                        final int offset,
                        final int length)
-            throws SecurityException {
+            throws StodiumException {
         Stodium.checkOffsetParams(in.length, offset, length);
             Stodium.checkStatus(Sodium.crypto_generichash_update_offset(
                     state, in, offset, length));
@@ -135,9 +146,11 @@ public final class GenericHash {
     /**
      *
      * @param out
+     * @throws ConstraintViolationException
+     * @throws StodiumException
      */
-    public void doFinal(@NonNull @Size(min = 1, max = 64) final byte[] out)
-            throws SecurityException {
+    public void doFinal(@NonNull final byte[] out)
+            throws StodiumException {
         doFinal(out, 0, outlen);
     }
 
@@ -145,11 +158,12 @@ public final class GenericHash {
      *
      * @param out
      * @param offset
-     * @throws SecurityException
+     * @throws ConstraintViolationException
+     * @throws StodiumException
      */
-    public void doFinal(@NonNull @Size(min = 1) final byte[] out,
+    public void doFinal(@NonNull final byte[] out,
                         final int offset)
-            throws SecurityException {
+            throws StodiumException {
         doFinal(out, offset, outlen);
     }
 
@@ -159,12 +173,13 @@ public final class GenericHash {
      * @param out
      * @param offset
      * @param length
-     * @throws SecurityException
+     * @throws ConstraintViolationException
+     * @throws StodiumException
      */
-    public void doFinal(@NonNull @Size(min = 1) final byte[] out,
+    public void doFinal(@NonNull final byte[] out,
                         final int offset,
                         final int length)
-            throws SecurityException {
+            throws StodiumException {
         Stodium.checkSize(length, 1, outlen, "1", "Blake2b.outlen");
         Stodium.checkOffsetParams(out.length, offset, outlen);
         Stodium.checkStatus(Sodium.crypto_generichash_blake2b_final_offset(
@@ -184,12 +199,13 @@ public final class GenericHash {
      * @param dstHash the destination array the hash will be written to
      * @param srcInput the value that will be hashed
      * @param srcKey the key used to calculate the hash
-     * @throws SecurityException
+     * @throws ConstraintViolationException
+     * @throws StodiumException
      */
-    public static void genericHash(@NonNull @Size(min = 16, max = 64) final byte[] dstHash,
+    public static void genericHash(@NonNull final byte[] dstHash,
                                    @NonNull final byte[] srcInput,
-                                   @Nullable @Size(min = 16, max = 64) final byte[] srcKey)
-            throws SecurityException {
+                                   @Nullable final byte[] srcKey)
+            throws StodiumException {
         final GenericHash hash = new GenericHash(dstHash.length, srcKey);
         hash.update(srcInput);
         hash.doFinal(dstHash);
@@ -202,11 +218,12 @@ public final class GenericHash {
      *
      * @param dstHash the destination array the hash will be written to
      * @param srcInput the value that will be hashed
-     * @throws SecurityException
+     * @throws ConstraintViolationException
+     * @throws StodiumException
      */
-    public static void genericHash(@NonNull @Size(min = 16, max = 64) final byte[] dstHash,
+    public static void genericHash(@NonNull final byte[] dstHash,
                                    @NonNull final byte[] srcInput)
-            throws SecurityException {
+            throws StodiumException {
         genericHash(dstHash, srcInput, null);
     }
 }

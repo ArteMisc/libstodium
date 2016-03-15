@@ -1,11 +1,14 @@
 package eu.artemisc.stodium;
 
+import android.os.Build;
 import android.support.annotation.NonNull;
 
 import org.abstractj.kalium.Sodium;
 
 import java.util.Arrays;
 import java.util.concurrent.atomic.AtomicBoolean;
+
+import javax.crypto.AEADBadTagException;
 
 /**
  * Stodium is an abstract class with static methods. It is an attempt to
@@ -24,15 +27,40 @@ public final class Stodium {
     /**
      *
      * @param status
-     * @throws SecurityException
+     * @throws StodiumException
      */
     public static void checkStatus(final int status)
-            throws SecurityException {
+            throws StodiumException {
         if (status == 0) {
             return;
         }
-        throw new SecurityException(
+        throw new StodiumException(
                 String.format("Stodium: operation returned non-zero status %d", status));
+    }
+
+    /**
+     *
+     * @param status
+     * @param methodDescription
+     * @throws AEADBadTagException If the status value does not equal 0,
+     *         indicating an invalid authentication tag was encountered.
+     * @throws StodiumException If the API level does not support
+     *         AEADBadTagException, the method will call
+     *         {@link #checkStatus(int)} instead.
+     */
+    public static void checkStatusSealOpen(final int status,
+                                           @NonNull final String methodDescription)
+            throws AEADBadTagException, StodiumException {
+        if (status == 0) {
+            return;
+        }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            throw new AEADBadTagException(
+                    methodDescription + ": cannot open sealed box (invalid tag?)");
+        } else {
+            checkStatus(status);
+        }
     }
 
     /**
@@ -40,12 +68,12 @@ public final class Stodium {
      * @param src
      * @param expected
      * @param constant
-     * @throws SecurityException
+     * @throws ConstraintViolationException
      */
     public static void checkSize(final int src,
                                  final int expected,
                                  @NonNull final String constant)
-            throws SecurityException {
+            throws ConstraintViolationException {
         if (src == expected) {
             return;
         }
@@ -54,26 +82,40 @@ public final class Stodium {
                         constant, expected, src));
     }
 
+    /**
+     *
+     * @param src
+     * @param lower
+     * @param upper
+     * @param lowerC
+     * @param upperC
+     * @throws ConstraintViolationException
+     */
     public static void checkSize(final int src,
                                  final int lower,
                                  final int upper,
                                  @NonNull final String lowerC,
                                  @NonNull final String upperC)
-            throws SecurityException {
+            throws ConstraintViolationException {
         if (src <= upper && src >= lower) {
             return;
         }
-        throw new SecurityException(
+        throw new ConstraintViolationException(
                 String.format("CheckSize failed on bounds [%s, %s] [lower: %d, upper: %d, real: %d]",
                         lowerC, upperC, lower, upper, src));
     }
 
+    /**
+     *
+     * @param src
+     * @throws ConstraintViolationException
+     */
     public static void checkPositive(final int src)
-            throws SecurityException {
+            throws ConstraintViolationException {
         if (src >= 0) {
             return;
         }
-        throw new SecurityException(
+        throw new ConstraintViolationException(
                 String.format("checkPositice failed [real: %d]", src));
     }
 
@@ -87,7 +129,8 @@ public final class Stodium {
      */
     public static void checkOffsetParams(final int dataLen,
                                          final int offset,
-                                         final int len) {
+                                         final int len)
+            throws ConstraintViolationException {
         Stodium.checkSize(offset, 0, dataLen, "0", "dataLen");
         Stodium.checkSize(offset + len, 0, dataLen, "0", "dataLen");
         Stodium.checkPositive(len);
@@ -102,25 +145,29 @@ public final class Stodium {
      */
     public static void checkPow2(final int src,
                                  @NonNull final String descr)
-            throws SecurityException {
+            throws ConstraintViolationException {
         if ((src > 0) && ((src & (~src + 1)) == src)) {
             return;
         }
-        throw new SecurityException(
+        throw new ConstraintViolationException(
                 String.format("checkPow2 failed on [%s: %d]", descr, src));
     }
 
+    /**
+     *
+     * @param src
+     * @param descr
+     * @throws ConstraintViolationException
+     */
     public static void checkPow2(final long src,
                                  @NonNull final String descr)
-            throws SecurityException {
+            throws ConstraintViolationException {
         if ((src > 0) && ((src & (~src + 1)) == src)) {
             return;
         }
-        throw new SecurityException(
+        throw new ConstraintViolationException(
                 String.format("checkPow2 failed on [%s: %d]", descr, src));
     }
-
-
 
     /**
      * isEqual implements a Java-implementation of constant-time,
@@ -145,19 +192,28 @@ public final class Stodium {
     }
 
     /**
+     *
+     */
+    @NonNull
+    private static final AtomicBoolean initialized = new AtomicBoolean(false);
+
+    /**
      * runInit wraps a call to sodium_init().
      */
     private void runInit()
             throws RuntimeException {
+        if (initialized.get()) {
+            return;
+        }
         if (Sodium.sodium_init() == -1) {
             throw new RuntimeException("StodiumInit: could not initialize Sodium library");
         }
+        initialized.set(true);
     }
 
-    @NonNull
-    private static final AtomicBoolean initialized = new AtomicBoolean(false);
-
-    // Load the library.
+    /**
+     * Load the native library
+     */
     static {
         System.loadLibrary("kaliumjni");
     }
@@ -177,7 +233,7 @@ public final class Stodium {
      * @return libsodium's version string
      */
     public static String SodiumVersionString() {
-        return new String(Sodium.sodium_version_string());
+        return Sodium.sodium_version_string();
     }
 }
 

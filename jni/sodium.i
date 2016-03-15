@@ -893,11 +893,26 @@ size_t crypto_core_hsalsa20_inputbytes(void);
 size_t crypto_core_hsalsa20_keybytes(void);
 size_t crypto_core_hsalsa20_constbytes(void);
 
-int crypto_core_hsalsa20(unsigned char *out,
-                         const unsigned char *in,
-                         const unsigned char *k,
-                         const unsigned char *c);
+int crypto_core_hsalsa20(unsigned char *dst_out,
+                         const unsigned char *src_in,
+                         const unsigned char *src_key,
+                         const unsigned char *src_const);
 
+/*
+    Core HChacha20
+    TODO linker can't find yet
+*/
+
+/*size_t crypto_core_hchacha20_outputbytes(void);
+size_t crypto_core_hchacha20_inputbytes(void);
+size_t crypto_core_hchacha20_keybytes(void);
+size_t crypto_core_hchacha20_constbytes(void);
+
+int crypto_core_hchacha20(unsigned char *dst_out,
+                          const unsigned char *src_in,
+                          const unsigned char *src_key,
+                          const unsigned char *src_const);
+*/
 /*
     Core Salsa20
 */
@@ -949,17 +964,11 @@ size_t crypto_generichash_blake2b_bytes(void);
 size_t crypto_generichash_blake2b_keybytes_min(void);
 size_t crypto_generichash_blake2b_keybytes_max(void);
 size_t crypto_generichash_blake2b_keybytes(void);
+
 size_t crypto_generichash_blake2b_saltbytes(void);
 size_t crypto_generichash_blake2b_personalbytes(void);
 
-/* FIX when the next update to the stable branch is released, change this inline
-   to the native implementation call. */
-/* size_t crypto_generichash_blake2b_statebytes(void); */
-%inline %{
-size_t crypto_generichash_blake2b_statebytes(void) {
-    return crypto_generichash_statebytes();
-}
-%}
+size_t crypto_generichash_blake2b_statebytes(void);
 
 int crypto_generichash_blake2b(unsigned char *out,
                                size_t outlen,

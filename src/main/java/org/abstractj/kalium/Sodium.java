@@ -621,8 +621,8 @@ public class Sodium {
     return SodiumJNI.crypto_core_hsalsa20_constbytes();
   }
 
-  public static int crypto_core_hsalsa20(byte[] out, byte[] in, byte[] k, byte[] c) {
-    return SodiumJNI.crypto_core_hsalsa20(out, in, k, c);
+  public static int crypto_core_hsalsa20(byte[] dst_out, byte[] src_in, byte[] src_key, byte[] src_const) {
+    return SodiumJNI.crypto_core_hsalsa20(dst_out, src_in, src_key, src_const);
   }
 
   public static int crypto_core_salsa20_outputbytes() {

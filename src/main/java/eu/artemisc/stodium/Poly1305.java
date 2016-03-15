@@ -1,7 +1,6 @@
 package eu.artemisc.stodium;
 
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.annotation.Size;
 
 import org.abstractj.kalium.Sodium;
@@ -48,7 +47,8 @@ public class Poly1305 {
      *
      * @param key
      */
-    public Poly1305(@NonNull @Size(32) final byte[] key) {
+    public Poly1305(@NonNull @Size(32) final byte[] key)
+            throws StodiumException {
         this();
         init(key);
     }
@@ -67,9 +67,11 @@ public class Poly1305 {
     /**
      *
      * @param key
+     * @throws ConstraintViolationException
+     * @throws StodiumException
      */
     public void init(@NonNull @Size(32) final byte[] key)
-            throws SecurityException {
+            throws StodiumException {
         Stodium.checkSize(key.length, KEYBYTES, "Poly1305.KEYBYTES");
         Stodium.checkStatus(
                 Sodium.crypto_onetimeauth_poly1305_init(state, key));
@@ -78,9 +80,11 @@ public class Poly1305 {
     /**
      *
      * @param in
+     * @throws ConstraintViolationException
+     * @throws StodiumException
      */
     public void update(@NonNull final byte[] in)
-            throws SecurityException {
+            throws StodiumException {
         update(in, 0, in.length);
     }
 
@@ -89,12 +93,13 @@ public class Poly1305 {
      * @param in
      * @param offset
      * @param length
-     * @throws SecurityException
+     * @throws ConstraintViolationException
+     * @throws StodiumException
      */
     public void update(@NonNull final byte[] in,
                        final int offset,
                        final int length)
-            throws SecurityException {
+            throws StodiumException {
         Stodium.checkOffsetParams(in.length, offset, length);
         Stodium.checkStatus(Sodium.crypto_onetimeauth_poly1305_update_offset(
                 state, in, offset, length));
@@ -105,9 +110,11 @@ public class Poly1305 {
      * {@code doFinal(out, 0)}.
      *
      * @param out
+     * @throws ConstraintViolationException
+     * @throws StodiumException
      */
     public void doFinal(@NonNull @Size(min = 16) final byte[] out)
-            throws SecurityException {
+            throws StodiumException {
         doFinal(out, 0);
     }
 
@@ -115,11 +122,12 @@ public class Poly1305 {
      *
      * @param out
      * @param offset
-     * @throws SecurityException
+     * @throws ConstraintViolationException
+     * @throws StodiumException
      */
     public void doFinal(@NonNull @Size(min = 16) final byte[] out,
                         final int offset)
-            throws SecurityException {
+            throws StodiumException {
         Stodium.checkOffsetParams(out.length, offset, BYTES);
         Stodium.checkStatus(Sodium.crypto_onetimeauth_poly1305_final_offset(
                 state, out, offset));
@@ -136,12 +144,13 @@ public class Poly1305 {
      * @param dstOut
      * @param srcIn
      * @param srcKey
-     * @throws SecurityException
+     * @throws ConstraintViolationException
+     * @throws StodiumException
      */
     public static void auth(@NonNull @Size(min = 16) final byte[] dstOut,
                             @NonNull final byte[] srcIn,
                             @NonNull @Size(32) final byte[] srcKey)
-            throws SecurityException {
+            throws StodiumException {
         final Poly1305 poly1305 = new Poly1305(srcKey);
         poly1305.update(srcIn);
         poly1305.doFinal(dstOut);
@@ -153,12 +162,13 @@ public class Poly1305 {
      * @param srcIn
      * @param srcKey
      * @return
-     * @throws SecurityException
+     * @throws ConstraintViolationException
+     * @throws StodiumException
      */
     public static boolean authVerify(@NonNull @Size(16) final byte[] srcTag,
                                      @NonNull final byte[] srcIn,
                                      @NonNull @Size(32) final byte[] srcKey)
-            throws SecurityException {
+            throws StodiumException {
         final byte[] verify = new byte[BYTES];
         auth(verify, srcIn, srcKey);
         return Stodium.isEqual(srcTag, verify);

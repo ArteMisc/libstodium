@@ -33,12 +33,13 @@ public class ShortHash {
      * @param srcKey
      * @return a Long that holds the (BigEndian) representation of the resulting
      *         64-bit Hash value.
-     * @throws SecurityException
+     * @throws ConstraintViolationException
+     * @throws StodiumException
      */
     @NonNull
     static Long shorthash(@NonNull final byte[] srcIn,
                           @NonNull final byte[] srcKey)
-            throws SecurityException {
+            throws StodiumException {
         Stodium.checkSize(srcKey.length, KEYBYTES, "ShortHash.KEYBYTES");
 
         byte[] dst = new byte[BYTES];
@@ -57,12 +58,13 @@ public class ShortHash {
      *                The bytes are considered to be BigEndian.
      * @param srcIn
      * @param srcKey
-     * @throws SecurityException
+     * @throws ConstraintViolationException
+     * @throws StodiumException
      */
     static void shorthash(@NonNull final byte[] dstHash,
                           @NonNull final byte[] srcIn,
                           @NonNull final byte[] srcKey)
-            throws SecurityException {
+            throws StodiumException {
         Stodium.checkSize(dstHash.length, BYTES, "ShortHash.BYTES");
         Stodium.checkSize(srcKey.length, KEYBYTES, "ShortHash.KEYBYTES");
         Stodium.checkStatus(

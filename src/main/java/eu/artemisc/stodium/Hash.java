@@ -32,10 +32,12 @@ public class Hash {
      * Hash constructor creates a new hash_state. It implicitly calls
      * {@link #init()}, so calling init manually should only be required when an
      * application would wish to reuse the Hash instance.
-     * @throws SecurityException
+     *
+     * @throws ConstraintViolationException
+     * @throws StodiumException
      */
     public Hash()
-            throws SecurityException {
+            throws StodiumException {
         this.state = new byte[STATE_BYTES];
         init();
     }
@@ -51,20 +53,22 @@ public class Hash {
 
     /**
      *
-     * @throws SecurityException
+     * @throws ConstraintViolationException
+     * @throws StodiumException
      */
     public void init()
-            throws SecurityException {
+            throws StodiumException {
         Stodium.checkStatus(Sodium.crypto_hash_init(state));
     }
 
     /**
      *
      * @param in
-     * @throws SecurityException
+     * @throws ConstraintViolationException
+     * @throws StodiumException
      */
     public void update(@NonNull final byte[] in)
-            throws SecurityException {
+            throws StodiumException {
         update(in, 0, in.length);
     }
 
@@ -73,12 +77,13 @@ public class Hash {
      * @param in
      * @param offset
      * @param len
-     * @throws SecurityException
+     * @throws ConstraintViolationException
+     * @throws StodiumException
      */
     public void update(@NonNull final byte[] in,
                        final int offset,
                        final int len)
-            throws SecurityException {
+            throws StodiumException {
         Stodium.checkOffsetParams(in.length, offset, len);
         Stodium.checkStatus(Sodium.crypto_hash_update_offset(state, in, offset, len));
     }
@@ -86,10 +91,11 @@ public class Hash {
     /**
      *
      * @param out
-     * @throws SecurityException
+     * @throws ConstraintViolationException
+     * @throws StodiumException
      */
     public void doFinal(@NonNull final byte[] out)
-            throws SecurityException {
+            throws StodiumException {
         doFinal(out, 0);
     }
 
@@ -97,11 +103,12 @@ public class Hash {
      *
      * @param out
      * @param offset
-     * @throws SecurityException
+     * @throws ConstraintViolationException
+     * @throws StodiumException
      */
     public void doFinal(@NonNull final byte[] out,
                         final int offset)
-            throws SecurityException {
+            throws StodiumException {
         Stodium.checkOffsetParams(out.length, offset, BYTES);
         Stodium.checkStatus(Sodium.crypto_hash_final_offset(state, out, offset));
     }
@@ -110,11 +117,12 @@ public class Hash {
      *
      * @param out
      * @param in
-     * @throws SecurityException
+     * @throws ConstraintViolationException
+     * @throws StodiumException
      */
     public static void hash(@NonNull final byte[] out,
                             @NonNull final byte[] in)
-            throws SecurityException {
+            throws StodiumException {
         hash(out, 0, in, 0, in.length);
     }
 
@@ -125,14 +133,15 @@ public class Hash {
      * @param in
      * @param inOffset
      * @param inLen
-     * @throws SecurityException
+     * @throws ConstraintViolationException
+     * @throws StodiumException
      */
     public static void hash(@NonNull final byte[] out,
                             final int outOffset,
                             @NonNull final byte[] in,
                             final int inOffset,
                             final int inLen)
-            throws SecurityException {
+            throws StodiumException {
         Stodium.checkOffsetParams(out.length, outOffset, BYTES);
         Stodium.checkOffsetParams(in.length, inOffset, inLen);
         Stodium.checkStatus(Sodium.crypto_hash_offset(out, outOffset, in, inOffset, inLen));

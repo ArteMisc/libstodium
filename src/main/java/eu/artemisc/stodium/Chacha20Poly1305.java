@@ -1,10 +1,10 @@
 package eu.artemisc.stodium;
 
-import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
-import android.support.annotation.Size;
 
 import org.abstractj.kalium.Sodium;
+
+import javax.crypto.AEADBadTagException;
 
 /**
  * Chacha20Poly1305 implements the crypto_aead_chacha20poly1305* API.
@@ -43,14 +43,15 @@ public class Chacha20Poly1305 {
      * @param nonce
      * @param key
      * @return The actual number of bytes written to dstCipher
-     * @throws SecurityException
+     * @throws ConstraintViolationException
+     * @throws StodiumException
      */
     public static int encrypt(@NonNull final byte[] dstCipher,
                               @NonNull final byte[] srcPlain,
                               @NonNull final byte[] ad,
-                              @NonNull @Size(8) final byte[] nonce,
-                              @NonNull @Size(32) final byte[] key)
-            throws SecurityException {
+                              @NonNull final byte[] nonce,
+                              @NonNull final byte[] key)
+            throws StodiumException {
         Stodium.checkSize(dstCipher.length, srcPlain.length + ABYTES, "Chacha20Poly1305.ABYTES + srcPlain.length");
         Stodium.checkSize(nonce.length, NPUBBYTES, "Chacha20Poly1305.NPUBBYTES");
         Stodium.checkSize(key.length, KEYBYTES, "Chacha20Poly1305.KEYBYTES");
@@ -70,22 +71,24 @@ public class Chacha20Poly1305 {
      * @param nonce
      * @param key
      * @return The actual number of bytes written to dstPlain
-     * @throws SecurityException
+     * @throws ConstraintViolationException
+     * @throws StodiumException
      */
     public static int decrypt(@NonNull final byte[] dstPlain,
                               @NonNull final byte[] srcCipher,
                               @NonNull final byte[] ad,
-                              @NonNull @Size(8) final byte[] nonce,
-                              @NonNull @Size(32) final byte[] key)
-            throws SecurityException {
+                              @NonNull final byte[] nonce,
+                              @NonNull final byte[] key)
+            throws StodiumException, AEADBadTagException {
         Stodium.checkSize(srcCipher.length, dstPlain.length + ABYTES, "dstPlain.length + Chacha20Poly1305.ABYTES");
         Stodium.checkSize(nonce.length, NPUBBYTES, "Chacha20Poly1305.NPUBBYTES");
         Stodium.checkSize(key.length, KEYBYTES, "Chacha20Poly1305.KEYBYTES");
 
         final int[] size = new int[1];
-        Stodium.checkStatus(Sodium.crypto_aead_chacha20poly1305_decrypt(
-                dstPlain, size, null, srcCipher, srcCipher.length, ad, ad.length,
-                nonce, key));
+        Stodium.checkStatusSealOpen(Sodium.crypto_aead_chacha20poly1305_decrypt(
+                        dstPlain, size, null, srcCipher, srcCipher.length, ad, ad.length,
+                        nonce, key),
+                "Chacha20Poly1305#decrypt");
         return size[0];
     }
 }

@@ -35,13 +35,14 @@ public final class Ed25519 {
      *
      * @param dstPublicKey
      * @param dstPrivateKey
-     * @throws SecurityException
+     * @throws ConstraintViolationException
+     * @throws StodiumException
      *
      * @see <a href="https://download.libsodium.org/doc/public-key_cryptography/public-key_signatures.html#key-pair-generation">libsodium docs</a>
      */
     public static void keypair(@NonNull @Size(32) final byte[] dstPublicKey,
                                @NonNull @Size(64) final byte[] dstPrivateKey)
-            throws SecurityException {
+            throws StodiumException {
         Stodium.checkSize(dstPublicKey.length, PUBLICKEYBYTES, "Ed25519.PUBLICKEYBYTES");
         Stodium.checkSize(dstPrivateKey.length, PRIVATEKEYBYTES, "Ed25519.PRIVATEKEYBYTES");
         Stodium.checkStatus(
@@ -55,14 +56,15 @@ public final class Ed25519 {
      * @param dstPublicKey
      * @param dstPrivateKey
      * @param srcSeed
-     * @throws SecurityException
+     * @throws ConstraintViolationException
+     * @throws StodiumException
      *
      * @see <a href="https://download.libsodium.org/doc/public-key_cryptography/public-key_signatures.html#key-pair-generation">libsodium docs</a>
      */
     public static void keypairSeed(@NonNull @Size(32) final byte[] dstPublicKey,
                                    @NonNull @Size(64) final byte[] dstPrivateKey,
                                    @NonNull @Size(32) final byte[] srcSeed)
-            throws SecurityException {
+            throws StodiumException {
         Stodium.checkSize(dstPublicKey.length, PUBLICKEYBYTES, "Ed25519.PUBLICKEYBYTES");
         Stodium.checkSize(dstPrivateKey.length, PRIVATEKEYBYTES, "Ed25519.PRIVATEKEYBYTES");
         Stodium.checkSize(srcSeed.length, SEEDBYTES, "Ed25519.SEEDBYTES");
@@ -80,13 +82,14 @@ public final class Ed25519 {
      *
      * @param dstPublicKey
      * @param srcPrivateKey
-     * @throws SecurityException
+     * @throws ConstraintViolationException
+     * @throws StodiumException
      *
      * @see <a href="https://download.libsodium.org/doc/public-key_cryptography/public-key_signatures.html#extracting-the-seed-and-the-public-key-from-the-secret-key">libsodium docs</a>
      */
     public static void publicFromPrivate(@Size(32) @NonNull final byte[] dstPublicKey,
                                          @Size(64) @NonNull final byte[] srcPrivateKey)
-            throws SecurityException {
+            throws StodiumException {
         Stodium.checkSize(dstPublicKey.length, PUBLICKEYBYTES, "Ed25519.PUBLICKEYBYTES");
         Stodium.checkSize(srcPrivateKey.length, PRIVATEKEYBYTES, "Ed25519.PRIVATEKEYBYTES");
         Stodium.checkStatus(
@@ -98,13 +101,14 @@ public final class Ed25519 {
      *
      * @param dstSeed
      * @param srcPrivateKey
-     * @throws SecurityException
+     * @throws ConstraintViolationException
+     * @throws StodiumException
      *
      * @see <a href="https://download.libsodium.org/doc/public-key_cryptography/public-key_signatures.html#extracting-the-seed-and-the-public-key-from-the-secret-key">libsodium docs</a>
      */
     public static void seedFromPrivate(@Size(32) @NonNull final byte[] dstSeed,
                                        @Size(64) @NonNull final byte[] srcPrivateKey)
-            throws SecurityException {
+            throws StodiumException {
         Stodium.checkSize(srcPrivateKey.length, PRIVATEKEYBYTES, "Ed25519.PRIVATEKEYBYTES");
         Stodium.checkSize(dstSeed.length, SEEDBYTES, "Ed25519.SEEDBYTES");
         Stodium.checkStatus(Sodium.crypto_sign_ed25519_sk_to_seed(dstSeed,
@@ -128,14 +132,15 @@ public final class Ed25519 {
      * @param srcMsg
      * @param localPrivKey
      * @return The actual size of the signature plus the original message.
-     * @throws SecurityException
+     * @throws ConstraintViolationException
+     * @throws StodiumException
      *
      * @see <a href="https://download.libsodium.org/doc/public-key_cryptography/public-key_signatures.html#combined-mode">libsodium docs</a>
      */
     public static int sign(@NonNull final byte[] dstSignedMsg,
                            @NonNull final byte[] srcMsg,
                            @NonNull @Size(64) final byte[] localPrivKey)
-            throws SecurityException {
+            throws StodiumException {
         Stodium.checkSize(dstSignedMsg.length, srcMsg.length + SIGNBYTES, "Ed25519.SIGNBYTES + srcMsg.length");
         Stodium.checkSize(localPrivKey.length, PRIVATEKEYBYTES, "Ed25519.PRIVATEKEYBYTES");
         final int[] dstSize = new int[1];
@@ -157,14 +162,15 @@ public final class Ed25519 {
      * @param srcSignedMsg
      * @param remotePubKey
      * @return The actual size of the original message without the signature.
-     * @throws SecurityException
+     * @throws ConstraintViolationException
+     * @throws StodiumException
      *
      * @see <a href="https://download.libsodium.org/doc/public-key_cryptography/public-key_signatures.html#combined-mode">libsodium docs</a>
      */
     public static int open(@NonNull final byte[] dstMsg,
                            @NonNull final byte[] srcSignedMsg,
                            @NonNull @Size(32) final byte[] remotePubKey)
-            throws SecurityException {
+            throws StodiumException {
         Stodium.checkSize(srcSignedMsg.length, dstMsg.length + SIGNBYTES, "Ed25519.SIGNBYTES + dstMsg.length");
         Stodium.checkSize(remotePubKey.length, PUBLICKEYBYTES, "Ed25519.PUBLICKEYBYTES");
         final int[] dstSize = new int[1];
@@ -184,14 +190,15 @@ public final class Ed25519 {
      * @param localPrivKey
      * @return The real size of dstSignature as calculated by
      *         {@link org.abstractj.kalium.Sodium#crypto_sign_ed25519_detached(byte[], int[], byte[], int, byte[])}
-     * @throws SecurityException
+     * @throws ConstraintViolationException
+     * @throws StodiumException
      *
      * @see <a href="https://download.libsodium.org/doc/public-key_cryptography/public-key_signatures.html#detached-mode">libsodium docs</a>
      */
     public static int signDetached(@NonNull @Size(64) final byte[] dstSignature,
                                    @NonNull final byte[] srcMsg,
                                    @NonNull @Size(64) final byte[] localPrivKey)
-            throws SecurityException {
+            throws StodiumException {
         Stodium.checkSize(dstSignature.length, SIGNBYTES, "Ed25519.SIGNBYTES");
         Stodium.checkSize(localPrivKey.length, PRIVATEKEYBYTES, "Ed25519.PRIVATEKEYBYTES");
         final int[] dstSize = new int[1];
@@ -205,14 +212,15 @@ public final class Ed25519 {
      * @param srcSignature
      * @param srcMsg
      * @param remotePubKey
-     * @throws SecurityException
+     * @throws ConstraintViolationException
+     * @throws StodiumException
      *
      * @see <a href="https://download.libsodium.org/doc/public-key_cryptography/public-key_signatures.html#detached-mode">libsodium docs</a>
      */
     public static boolean verifyDetached(@NonNull @Size(64) final byte[] srcSignature,
                                          @NonNull final byte[] srcMsg,
                                          @NonNull @Size(32) final byte[] remotePubKey)
-            throws SecurityException {
+            throws StodiumException {
         Stodium.checkSize(srcSignature.length, SIGNBYTES, "Ed25519.SIGNBYTES");
         Stodium.checkSize(remotePubKey.length, PUBLICKEYBYTES, "Ed25519.PUBLICKEYBYTES");
         return Sodium.crypto_sign_ed25519_verify_detached(srcSignature, srcMsg,

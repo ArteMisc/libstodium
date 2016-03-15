@@ -12,6 +12,7 @@ import java.security.spec.AlgorithmParameterSpec;
 import javax.crypto.MacSpi;
 
 import eu.artemisc.stodium.Poly1305;
+import eu.artemisc.stodium.StodiumException;
 
 /**
  * Poly1305Spi implements the {@link javax.crypto.MacSpi} interface, built on
@@ -73,7 +74,11 @@ public class Poly1305Spi
         if (state == null) {
             throw new NullPointerException("Poly1305 State is null");
         }
-        state.update(input, offset, len);
+        try {
+            state.update(input, offset, len);
+        } catch (final StodiumException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @NonNull
@@ -85,13 +90,22 @@ public class Poly1305Spi
         }
         final byte[] out = new byte[TagBytes];
 
-        state.doFinal(out);
+        try {
+            state.doFinal(out);
+        } catch (final StodiumException e) {
+            throw new RuntimeException(e);
+        }
+
         state = null;
         return out;
     }
 
     @Override
     protected void engineReset() {
-        state = new Poly1305(this.key);
+        try {
+            state = new Poly1305(this.key);
+        } catch (final StodiumException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

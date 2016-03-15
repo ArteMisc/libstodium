@@ -1,7 +1,6 @@
 package eu.artemisc.stodium;
 
 import android.support.annotation.NonNull;
-import android.support.annotation.Size;
 
 import org.abstractj.kalium.Sodium;
 
@@ -49,8 +48,11 @@ public class OneTimeAuth {
      * the provided key.
      *
      * @param key
+     * @throws ConstraintViolationException
+     * @throws StodiumException
      */
-    public OneTimeAuth(@NonNull @Size(32) final byte[] key) {
+    public OneTimeAuth(@NonNull final byte[] key)
+            throws StodiumException {
         this();
         init(key);
     }
@@ -69,9 +71,11 @@ public class OneTimeAuth {
     /**
      *
      * @param key
+     * @throws ConstraintViolationException
+     * @throws StodiumException
      */
-    public void init(@NonNull @Size(32) final byte[] key)
-            throws SecurityException {
+    public void init(@NonNull final byte[] key)
+            throws StodiumException {
         Stodium.checkSize(key.length, KEYBYTES, "OneTimeAuth.KEYBYTES");
         Stodium.checkStatus(
                 Sodium.crypto_onetimeauth_init(state, key));
@@ -80,9 +84,11 @@ public class OneTimeAuth {
     /**
      *
      * @param in
+     * @throws ConstraintViolationException
+     * @throws StodiumException
      */
     public void update(@NonNull final byte[] in)
-            throws SecurityException {
+            throws StodiumException {
         update(in, 0, in.length);
     }
 
@@ -91,12 +97,13 @@ public class OneTimeAuth {
      * @param in
      * @param offset
      * @param length
-     * @throws SecurityException
+     * @throws ConstraintViolationException
+     * @throws StodiumException
      */
     public void update(@NonNull final byte[] in,
                        final int offset,
                        final int length)
-            throws SecurityException {
+            throws StodiumException {
         Stodium.checkOffsetParams(in.length, offset, length);
         Stodium.checkStatus(Sodium.crypto_onetimeauth_update_offset(
                 state, in, offset, length));
@@ -107,9 +114,11 @@ public class OneTimeAuth {
      * {@code doFinal(out, 0)}.
      *
      * @param out
+     * @throws ConstraintViolationException
+     * @throws StodiumException
      */
-    public void doFinal(@NonNull @Size(min = 16) final byte[] out)
-            throws SecurityException {
+    public void doFinal(@NonNull final byte[] out)
+            throws StodiumException {
         doFinal(out, 0);
     }
 
@@ -117,11 +126,12 @@ public class OneTimeAuth {
      *
      * @param out
      * @param offset
-     * @throws SecurityException
+     * @throws ConstraintViolationException
+     * @throws StodiumException
      */
-    public void doFinal(@NonNull @Size(min = 16) final byte[] out,
+    public void doFinal(@NonNull final byte[] out,
                         final int offset)
-            throws SecurityException {
+            throws StodiumException {
         Stodium.checkOffsetParams(out.length, offset, BYTES);
         Stodium.checkStatus(Sodium.crypto_onetimeauth_final_offset(
                 state, out, offset));
@@ -138,12 +148,13 @@ public class OneTimeAuth {
      * @param dstOut
      * @param srcIn
      * @param srcKey
-     * @throws SecurityException
+     * @throws ConstraintViolationException
+     * @throws StodiumException
      */
-    public static void auth(@NonNull @Size(min = 16) final byte[] dstOut,
+    public static void auth(@NonNull final byte[] dstOut,
                             @NonNull final byte[] srcIn,
-                            @NonNull @Size(32) final byte[] srcKey)
-            throws SecurityException {
+                            @NonNull final byte[] srcKey)
+            throws StodiumException {
         final OneTimeAuth auth = new OneTimeAuth(srcKey);
         auth.update(srcIn);
         auth.doFinal(dstOut);
@@ -155,12 +166,13 @@ public class OneTimeAuth {
      * @param srcIn
      * @param srcKey
      * @return
-     * @throws SecurityException
+     * @throws ConstraintViolationException
+     * @throws StodiumException
      */
-    public static boolean authVerify(@NonNull @Size(min = 16) final byte[] srcTag,
+    public static boolean authVerify(@NonNull final byte[] srcTag,
                                      @NonNull final byte[] srcIn,
-                                     @NonNull @Size(32) final byte[] srcKey)
-            throws SecurityException {
+                                     @NonNull final byte[] srcKey)
+            throws StodiumException {
         final byte[] verify = new byte[BYTES];
         auth(verify, srcIn, srcKey);
         return Stodium.isEqual(srcTag, verify);
