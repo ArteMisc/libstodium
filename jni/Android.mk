@@ -41,11 +41,11 @@ LOCAL_SRC_FILES :=  \
 	sodium_wrap.c \
 	sodium_jni_buffer.c
 
-LOCAL_CFLAGS   += -Wall -g -pedantic -std=c99
+LOCAL_CFLAGS   += -Wall -g -pedantic -Wno-variadic-macros -std=c99
 
 LOCAL_C_INCLUDES += ../libsodium/libsodium-android-$(MY_ARCH_FOLDER)/include ../libsodium/libsodium-android-$(MY_ARCH_FOLDER)/include/sodium
 LOCAL_STATIC_LIBRARIES += android_native_app_glue sodium
-#LOCAL_LDLIBS += -llog -lsodium
+# LOCAL_LDLIBS += -llog -lsodium
 
 
 include $(BUILD_SHARED_LIBRARY)

@@ -96,6 +96,10 @@ function setup_libsodium {
     ./configure
     make && make check
     sudo make install
+    sudo ldconfig
+
+    # Disable minimal in android builds
+    sed --in-place '/--enable-minimal/d' ./dist-build/android-build.sh
 
     # Build android
     ./dist-build/android-arm.sh

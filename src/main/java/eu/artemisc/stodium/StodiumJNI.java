@@ -18,7 +18,9 @@ public class StodiumJNI {
     //
     // Utility methods
     //
-    // randombyte() etc...
+    static native int randombytes_random();
+    static native int randombytes_uniform(int upper_bound);
+    static native void randombytes_buf(ByteBuffer dst);
 
     //
     // Core
@@ -29,6 +31,29 @@ public class StodiumJNI {
     static native int crypto_core_hsalsa20_constbytes();
     static native int crypto_core_hsalsa20(
             ByteBuffer dst, ByteBuffer src, ByteBuffer key, ByteBuffer constant);
+
+    //
+    // AEAD
+    //
+    static native int crypto_aead_chacha20poly1305_keybytes();
+    static native int crypto_aead_chacha20poly1305_nsecbytes();
+    static native int crypto_aead_chacha20poly1305_npubbytes();
+    static native int crypto_aead_chacha20poly1305_abytes();
+
+    static native int crypto_aead_chacha20poly1305_encrypt_detached(
+            ByteBuffer dstCipher, ByteBuffer srcPlain, ByteBuffer ad, ByteBuffer nonce, ByteBuffer key);
+    static native int crypto_aead_chacha20poly1305_decrypt_detached(
+            ByteBuffer dstPlain, ByteBuffer srcCipher, ByteBuffer ad, ByteBuffer nonce, ByteBuffer key);
+
+    static native int crypto_aead_xchacha20poly1305_encrypt_detached(
+            ByteBuffer dstCipher, ByteBuffer srcPlain, ByteBuffer ad, ByteBuffer nonce, ByteBuffer key);
+    static native int crypto_aead_xchacha20poly1305_decrypt_detached(
+            ByteBuffer dstPlain, ByteBuffer srcCipher, ByteBuffer ad, ByteBuffer nonce, ByteBuffer key);
+
+    static native int crypto_aead_xsalsa20poly1305_encrypt_detached(
+            ByteBuffer dstCipher, ByteBuffer srcPlain, ByteBuffer ad, ByteBuffer nonce, ByteBuffer key);
+    static native int crypto_aead_xsalsa20poly1305_decrypt_detached(
+            ByteBuffer dstPlain, ByteBuffer srcCipher, ByteBuffer ad, ByteBuffer nonce, ByteBuffer key);
 
     //
     // ScalarMult

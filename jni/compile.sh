@@ -44,6 +44,6 @@ sudo cp /usr/local/lib/libsodium.* /usr/lib
 #/installs/libsodium/android-toolchain-mips/mipsel-linux-android/bin/gcc -I${JAVA_HOME}/include -I${JAVA_HOME}/include/linux -I/installs/libsodium/libsodium-android-mips/include sodium_wrap.c -shared -fPIC -L/installs/libsodium/libsodium-android-mips/lib -lsodium -o $jnilib
 #Example(x86):
 #/installs/libsodium/android-toolchain-x86/i686-linux-android/bin/gcc -I${JAVA_HOME}/include -I${JAVA_HOME}/include/linux -I/installs/libsodium/libsodium-android-x86/include sodium_wrap.c -shared -fPIC -L/installs/libsodium/libsodium-android-x86/lib -lsodium -o $jnilib
-gcc -I${JAVA_HOME}/include -I${JAVA_HOME}/include/linux sodium_wrap.c sodium_jni_buffer.c -shared -fPIC -L/usr/lib -lsodium -o $jnilib
+gcc -I${JAVA_HOME}/include -I${JAVA_HOME}/include/linux sodium_wrap.c sodium_jni_buffer.c -Wno-variadic-macros -shared -fPIC -L/usr/lib -lsodium -o $jnilib
 sudo rm -f $destlib/$jnilib  
 sudo cp $jnilib $destlib
