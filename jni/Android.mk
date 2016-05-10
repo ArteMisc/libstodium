@@ -38,7 +38,8 @@ include $(CLEAR_VARS)
 
 LOCAL_MODULE    := kaliumjni
 LOCAL_SRC_FILES :=  \
-sodium_wrap.c
+	sodium_wrap.c \
+	sodium_jni_buffer.c
 
 LOCAL_CFLAGS   += -Wall -g -pedantic -std=c99
 

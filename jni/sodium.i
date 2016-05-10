@@ -263,7 +263,7 @@
 /*
     Runtime API
 */
-int sodium_init(void);
+/*int sodium_init(void);*/
 
 const char *sodium_version_string(void);
 
@@ -888,7 +888,7 @@ int crypto_box_curve25519xsalsa20poly1305_open_afternm(unsigned char *m,
     Core HSalsa20
 */
 
-size_t crypto_core_hsalsa20_outputbytes(void);
+/*size_t crypto_core_hsalsa20_outputbytes(void);
 size_t crypto_core_hsalsa20_inputbytes(void);
 size_t crypto_core_hsalsa20_keybytes(void);
 size_t crypto_core_hsalsa20_constbytes(void);
@@ -896,7 +896,7 @@ size_t crypto_core_hsalsa20_constbytes(void);
 int crypto_core_hsalsa20(unsigned char *dst_out,
                          const unsigned char *src_in,
                          const unsigned char *src_key,
-                         const unsigned char *src_const);
+                         const unsigned char *src_const);*/
 
 /*
     Core HChacha20

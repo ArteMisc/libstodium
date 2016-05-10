@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 
 import org.abstractj.kalium.Sodium;
 
+import java.nio.ByteBuffer;
 import java.util.Arrays;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -116,7 +117,7 @@ public final class Stodium {
             return;
         }
         throw new ConstraintViolationException(
-                String.format("checkPositice failed [real: %d]", src));
+                String.format("checkPositive failed [real: %d]", src));
     }
 
     /**
@@ -191,6 +192,35 @@ public final class Stodium {
         Arrays.fill(a, (byte) 0x00);
     }
 
+    private static byte[] emptyBuffer = new byte[8];
+    public static void wipeBytes(@NonNull final ByteBuffer a) {
+        if (a.hasArray()) {
+            wipeBytes(a.array());
+            return;
+        }
+
+        if (a.isReadOnly()) {
+            return; // ignore
+        }
+
+        while (a.hasRemaining()) {
+            a.put(emptyBuffer, 0, a.remaining() < 8 ? a.remaining() : 8);
+        }
+    }
+
+    @NonNull
+    static ByteBuffer ensureUsableByteBuffer(@NonNull final ByteBuffer buff) {
+        if ((buff.isDirect() || buff.hasArray()) && !buff.isReadOnly()) {
+            return buff;
+        }
+
+        final ByteBuffer direct = ByteBuffer.allocateDirect(buff.remaining());
+        direct.mark();
+        direct.put(buff);
+        direct.reset();
+        return direct;
+    }
+
     /**
      *
      */
@@ -205,7 +235,10 @@ public final class Stodium {
         if (initialized.get()) {
             return;
         }
-        if (Sodium.sodium_init() == -1) {
+        if (StodiumJNI.stodium_init() != 0) {
+            throw new RuntimeException("StodiumInit: could not initialize with stodium_init()");
+        }
+        if (StodiumJNI.sodium_init() == -1) {
             throw new RuntimeException("StodiumInit: could not initialize Sodium library");
         }
         initialized.set(true);

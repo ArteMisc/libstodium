@@ -9,10 +9,6 @@
 package org.abstractj.kalium;
 
 public class Sodium {
-  public static int sodium_init() {
-    return SodiumJNI.sodium_init();
-  }
-
   public static String sodium_version_string() {
     return SodiumJNI.sodium_version_string();
   }
@@ -603,26 +599,6 @@ public class Sodium {
 
   public static int crypto_box_curve25519xsalsa20poly1305_open_afternm(byte[] m, byte[] c, int clen, byte[] n, byte[] k) {
     return SodiumJNI.crypto_box_curve25519xsalsa20poly1305_open_afternm(m, c, clen, n, k);
-  }
-
-  public static int crypto_core_hsalsa20_outputbytes() {
-    return SodiumJNI.crypto_core_hsalsa20_outputbytes();
-  }
-
-  public static int crypto_core_hsalsa20_inputbytes() {
-    return SodiumJNI.crypto_core_hsalsa20_inputbytes();
-  }
-
-  public static int crypto_core_hsalsa20_keybytes() {
-    return SodiumJNI.crypto_core_hsalsa20_keybytes();
-  }
-
-  public static int crypto_core_hsalsa20_constbytes() {
-    return SodiumJNI.crypto_core_hsalsa20_constbytes();
-  }
-
-  public static int crypto_core_hsalsa20(byte[] dst_out, byte[] src_in, byte[] src_key, byte[] src_const) {
-    return SodiumJNI.crypto_core_hsalsa20(dst_out, src_in, src_key, src_const);
   }
 
   public static int crypto_core_salsa20_outputbytes() {

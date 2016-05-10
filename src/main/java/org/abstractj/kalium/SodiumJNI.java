@@ -9,7 +9,6 @@
 package org.abstractj.kalium;
 
 public class SodiumJNI {
-  public final static native int sodium_init();
   public final static native String sodium_version_string();
   public final static native void randombytes(byte[] jarg1, int jarg2);
   public final static native int randombytes_random();
@@ -158,11 +157,6 @@ public class SodiumJNI {
   public final static native int crypto_box_curve25519xsalsa20poly1305_beforenm(byte[] jarg1, byte[] jarg2, byte[] jarg3);
   public final static native int crypto_box_curve25519xsalsa20poly1305_afternm(byte[] jarg1, byte[] jarg2, int jarg3, byte[] jarg4, byte[] jarg5);
   public final static native int crypto_box_curve25519xsalsa20poly1305_open_afternm(byte[] jarg1, byte[] jarg2, int jarg3, byte[] jarg4, byte[] jarg5);
-  public final static native int crypto_core_hsalsa20_outputbytes();
-  public final static native int crypto_core_hsalsa20_inputbytes();
-  public final static native int crypto_core_hsalsa20_keybytes();
-  public final static native int crypto_core_hsalsa20_constbytes();
-  public final static native int crypto_core_hsalsa20(byte[] jarg1, byte[] jarg2, byte[] jarg3, byte[] jarg4);
   public final static native int crypto_core_salsa20_outputbytes();
   public final static native int crypto_core_salsa20_inputbytes();
   public final static native int crypto_core_salsa20_keybytes();

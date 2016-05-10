@@ -3,7 +3,7 @@ package eu.artemisc.stodium;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import org.abstractj.kalium.Sodium;
+import java.nio.ByteBuffer;
 
 /**
  * @author Jan van de Molengraft [jan@artemisc.eu]
@@ -15,10 +15,10 @@ public class HSalsa20 {
     }
 
     // constants
-    public static final int INPUTBYTES  = Sodium.crypto_core_hsalsa20_inputbytes();
-    public static final int OUTPUTBYTES = Sodium.crypto_core_hsalsa20_outputbytes();
-    public static final int CONSTBYTES  = Sodium.crypto_core_hsalsa20_constbytes();
-    public static final int KEYBYTES    = Sodium.crypto_core_hsalsa20_keybytes();
+    public static final int INPUTBYTES  = StodiumJNI.crypto_core_hsalsa20_inputbytes();
+    public static final int OUTPUTBYTES = StodiumJNI.crypto_core_hsalsa20_outputbytes();
+    public static final int CONSTBYTES  = StodiumJNI.crypto_core_hsalsa20_constbytes();
+    public static final int KEYBYTES    = StodiumJNI.crypto_core_hsalsa20_keybytes();
 
     /**
      *
@@ -26,21 +26,29 @@ public class HSalsa20 {
      * @param src
      * @param key
      * @param constant
-     * @throws ConstraintViolationException
      * @throws StodiumException
+     * @throws IllegalArgumentException
      */
-    public static void hsalsa20(@NonNull final byte[] dst,
-                                @NonNull final byte[] src,
-                                @NonNull final byte[] key,
-                                @Nullable final byte[] constant)
+    public static void hsalsa20(@NonNull  final ByteBuffer dst,
+                                @NonNull  final ByteBuffer src,
+                                @NonNull  final ByteBuffer key,
+                                @Nullable final ByteBuffer constant)
             throws StodiumException {
-        if (constant != null) {
-            Stodium.checkSize(constant.length, CONSTBYTES, "HSalsa20.CONSTBYTES");
+        if (dst.isReadOnly()) {
+            throw new IllegalArgumentException("dst is readonly");
         }
-        Stodium.checkSize(dst.length, OUTPUTBYTES, "HSalsa20.OUTPUTBYTES");
-        Stodium.checkSize(src.length, INPUTBYTES, "HSalsa20.INPUTBYTES");
-        Stodium.checkSize(key.length, KEYBYTES, "HSalsa20.KEYBYTES");
-        Stodium.checkStatus(Sodium.crypto_core_hsalsa20(
-                dst, src, key, constant));
+
+        Stodium.checkSize(dst.remaining(), OUTPUTBYTES, "HSalsa20.OUTPUTBYTES");
+        Stodium.checkSize(src.remaining(), INPUTBYTES,  "HSalsa20.INPUTBYTES");
+        Stodium.checkSize(key.remaining(), KEYBYTES,    "HSalsa20.KEYBYTES");
+        if (constant != null) {
+            Stodium.checkSize(constant.remaining(), CONSTBYTES, "HSalsa20.CONSTBYTES");
+        }
+
+        StodiumJNI.crypto_core_hsalsa20(
+                Stodium.ensureUsableByteBuffer(dst.slice()),
+                Stodium.ensureUsableByteBuffer(src.slice()),
+                Stodium.ensureUsableByteBuffer(key.slice()),
+                constant == null ? null : Stodium.ensureUsableByteBuffer(constant.slice()));
     }
 }
