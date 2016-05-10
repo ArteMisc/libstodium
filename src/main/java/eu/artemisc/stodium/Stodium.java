@@ -208,6 +208,21 @@ public final class Stodium {
         }
     }
 
+    /**
+     * ensureUsableByteBuffer returns a ByteBuffer instance that is guaranteed
+     * to work correctly with the implementation of stodium_buffers in the
+     * native code.
+     * <p>
+     * If the passed buff argument represents a JNI usable ByteBuffer, it is
+     * directly returned. Otherwise, the method allocates a direct buffer with
+     * the size of {@code buff.remaining()}, and copies the contents of buff.
+     * This copy is guaranteed to work with the native code (as it is a direct
+     * buffer) and therefore is returned.
+     *
+     * @param buff the original buffer
+     * @return a ByteBuffer that is guaranteed to function correctly in the
+     *         native code.
+     */
     @NonNull
     static ByteBuffer ensureUsableByteBuffer(@NonNull final ByteBuffer buff) {
         if ((buff.isDirect() || buff.hasArray()) && !buff.isReadOnly()) {

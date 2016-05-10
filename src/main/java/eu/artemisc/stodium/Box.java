@@ -4,6 +4,8 @@ import android.support.annotation.NonNull;
 
 import org.abstractj.kalium.Sodium;
 
+import java.nio.ByteBuffer;
+
 /**
  * ox is a static class that maps all calls to the corresponding native
  * implementations. All the methods are crypto_box_* functions.
@@ -78,11 +80,11 @@ public final class Box {
      * @throws ConstraintViolationException
      * @throws StodiumException
      */
-    public static void publicFromPrivate(@NonNull final byte[] dstPublicKey,
-                                         @NonNull final byte[] srcPrivateKey)
+    public static void publicFromPrivate(@NonNull final ByteBuffer dstPublicKey,
+                                         @NonNull final ByteBuffer srcPrivateKey)
             throws StodiumException {
-        Stodium.checkSize(dstPublicKey.length, PUBLICKEYBYTES, "Box.PUBLICKEYBYTES");
-        Stodium.checkSize(srcPrivateKey.length, SECRETKEYBYTES, "Box.SECRETKEYBYTES");
+        Stodium.checkSize(dstPublicKey.remaining(), PUBLICKEYBYTES, "Box.PUBLICKEYBYTES");
+        Stodium.checkSize(srcPrivateKey.remaining(), SECRETKEYBYTES, "Box.SECRETKEYBYTES");
         Curve25519.x25519PrivateToPublic(dstPublicKey, srcPrivateKey);
     }
 

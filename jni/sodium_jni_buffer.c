@@ -1,8 +1,8 @@
 /**
- *
  * This file wraps calls to methods in libsodium using ByteBuffer instances to
  * provide access to the data for the operations.
  *
+ * @author Jan van de Molengraft [jan@artemisc.eu]
  */
 
 // Required headers
@@ -25,6 +25,19 @@
     STODIUM_JNI(jint, crypto_1##group##_1##primitive##_1##constant) (JNIEnv *jenv, jclass jcls) { \
         return (jint) crypto_##group##_##primitive##_##constant (); }
 
+/**
+ * STODIUM_CONSTANT_STR does the same as STODIUM_CONSTANT, except it returns a
+ * Java String instead of a jint. Used for crypto_*_primitive() wrappers.
+ */
+#define STODIUM_CONSTANT_STR(group) \
+    STODIUM_JNI(jstring, crypto_1##group##_1primitive) (JNIEnv *jenv, jclass jcls) { \
+        return (*jenv)->NewStringUTF(jenv, crypto_##group##_primitive ()); }
+
+/**
+ * STODIUM_CONSTANT_HL does the same as STODIUM_CONSTANT, except it works for
+ * High Level API's (without explicit implementation identifiers), excluding the
+ * primitive from the argument list.
+ */
 #define STODIUM_CONSTANT_HL(group, constant) \
     STODIUM_JNI(jint, crypto_1##group##_1##constant) (JNIEnv *jenv, jclass jcls) { \
         return (jint) crypto_##group##_##constant (); }
@@ -215,7 +228,54 @@ STODIUM_JNI(jint, crypto_1core_1hsalsa20) (JNIEnv *jenv, jclass jcls,
     return result;
 }
 
+/** ****************************************************************************
+ *
+ * SCALARMULT - Curve25519
+ *
+ **************************************************************************** */
+STODIUM_CONSTANT_STR(scalarmult)
 
+STODIUM_CONSTANT(scalarmult, curve25519, bytes)
+STODIUM_CONSTANT(scalarmult, curve25519, scalarbytes)
+
+STODIUM_JNI(jint, crypto_1scalarmult_1curve25519) (JNIEnv *jenv, jclass jcls,
+        jobject dst,
+        jobject priv,
+        jobject pub) {
+    stodium_buffer dst_buffer, priv_buffer, pub_buffer;
+    stodium_get_buffer(jenv, &dst_buffer,  dst);
+    stodium_get_buffer(jenv, &priv_buffer, priv);
+    stodium_get_buffer(jenv, &pub_buffer,  pub);
+
+    jint result = (jint) crypto_scalarmult_curve25519(
+            AS_OUTPUT(unsigned char, dst_buffer),
+            AS_INPUT(unsigned char,  priv_buffer),
+            AS_INPUT(unsigned char,  pub_buffer));
+
+    stodium_release_output(jenv, dst, &dst_buffer);
+    stodium_release_input(jenv, priv, &priv_buffer);
+    stodium_release_input(jenv, pub, &pub_buffer);
+    
+    return result;
+}
+
+
+STODIUM_JNI(jint, crypto_1scalarmult_1curve25519_1base) (JNIEnv *jenv, jclass jcls,
+        jobject dst,
+        jobject src) {
+    stodium_buffer dst_buffer, src_buffer;
+    stodium_get_buffer(jenv, &dst_buffer, dst);
+    stodium_get_buffer(jenv, &src_buffer, src);
+    
+    jint result = (jint) crypto_scalarmult_curve25519_base(
+            AS_OUTPUT(unsigned char, dst_buffer),
+            AS_INPUT(unsigned char, src_buffer));
+
+    stodium_release_output(jenv, dst, &dst_buffer);
+    stodium_release_input(jenv, src, &src_buffer);
+    
+    return result;
+}
 
 #ifdef __cplusplus
 }
