@@ -22,16 +22,15 @@ public final class Box {
     private Box() {}
 
     // constants
-    public static final int PUBLICKEYBYTES = Sodium.crypto_box_publickeybytes();
-    public static final int SECRETKEYBYTES = Sodium.crypto_box_secretkeybytes();
-    public static final int MACBYTES = Sodium.crypto_box_macbytes();
-    public static final int NONCEBYTES = Sodium.crypto_box_noncebytes();
-    public static final int SEEDBYTES = Sodium.crypto_box_seedbytes();
-    public static final int BEFORENMBYTES = Sodium.crypto_box_beforenmbytes();
+    public static final int PUBLICKEYBYTES = StodiumJNI.crypto_box_publickeybytes();
+    public static final int SECRETKEYBYTES = StodiumJNI.crypto_box_secretkeybytes();
+    public static final int MACBYTES       = StodiumJNI.crypto_box_macbytes();
+    public static final int NONCEBYTES     = StodiumJNI.crypto_box_noncebytes();
+    public static final int SEEDBYTES      = StodiumJNI.crypto_box_seedbytes();
+    public static final int BEFORENMBYTES  = StodiumJNI.crypto_box_beforenmbytes();
+    public static final int SEALBYTES      = StodiumJNI.crypto_box_sealbytes();
 
-    public static final int SEALBYTES = Sodium.crypto_box_sealbytes();
-
-    public static final String PRIMITIVE = Sodium.crypto_box_primitive();
+    public static final String PRIMITIVE = StodiumJNI.crypto_box_primitive();
 
     // wrappers
 
@@ -330,17 +329,21 @@ public final class Box {
      * @param remotePubKey
      * @throws ConstraintViolationException
      * @throws StodiumException
+     * @throws ReadOnlyBufferException
      *
      * @see <a href="https://download.libsodium.org/doc/public-key_cryptography/sealed_boxes.html#usage">libsodium docs</a>
      */
-    public static void seal(@NonNull final byte[] dstCipher,
-                            @NonNull final byte[] srcPlain,
-                            @NonNull final byte[] remotePubKey)
-            throws StodiumException {
-        Stodium.checkSize(dstCipher.length, srcPlain.length + SEALBYTES, "srcPlain.length + Box.SEALBYTES");
-        Stodium.checkSize(remotePubKey.length, PUBLICKEYBYTES, "Box.PUBLICKEYBYTES");
-        Stodium.checkStatus(Sodium.crypto_box_seal(dstCipher, srcPlain,
-                srcPlain.length, remotePubKey));
+    public static void seal(@NonNull final ByteBuffer dstCipher,
+                            @NonNull final ByteBuffer srcPlain,
+                            @NonNull final ByteBuffer remotePubKey)
+            throws StodiumException, ReadOnlyBufferException {
+        Stodium.checkDestinationWritable(dstCipher, "Stodium.Box#seal(dstCipher)");
+
+        Stodium.checkSize(dstCipher.remaining(),    SEALBYTES + srcPlain.remaining(), "srcPlain.remaining() + Box#SEALBYTES");
+        Stodium.checkSize(remotePubKey.remaining(), PUBLICKEYBYTES,                   "Box#PUBLICKEYBYTES");
+
+        Stodium.checkStatus(
+                StodiumJNI.crypto_box_seal(dstCipher, srcPlain, remotePubKey));
     }
 
     /**
@@ -351,18 +354,22 @@ public final class Box {
      * @param localPrivKey
      * @throws ConstraintViolationException
      * @throws StodiumException
+     * @throws ReadOnlyBufferException
      *
      * @see <a href="https://download.libsodium.org/doc/public-key_cryptography/sealed_boxes.html#usage">libsodium docs</a>
      */
-    public static void sealOpen(@NonNull final byte[] dstPlain,
-                                @NonNull final byte[] srcCipher,
-                                @NonNull final byte[] localPubKey,
-                                @NonNull final byte[] localPrivKey)
-            throws StodiumException {
-        Stodium.checkSize(srcCipher.length, dstPlain.length + SEALBYTES, "dstPlain.length + Box.SEALBYTES");
-        Stodium.checkSize(localPubKey.length, PUBLICKEYBYTES, "Box.PUBLICKEYBYTES");
-        Stodium.checkSize(localPrivKey.length, SECRETKEYBYTES, "Box.SECRETKEYBYTES");
-        Stodium.checkStatus(Sodium.crypto_box_seal_open(dstPlain, srcCipher,
-                srcCipher.length, localPubKey, localPrivKey));
+    public static void sealOpen(@NonNull final ByteBuffer dstPlain,
+                                @NonNull final ByteBuffer srcCipher,
+                                @NonNull final ByteBuffer localPubKey,
+                                @NonNull final ByteBuffer localPrivKey)
+            throws StodiumException, ReadOnlyBufferException {
+        Stodium.checkDestinationWritable(dstPlain, "Stodium.Box#sealOpen(dstPlain)");
+
+        Stodium.checkSize(srcCipher.remaining(),    SEALBYTES + dstPlain.remaining(), "dstPlain. + Box.SEALBYTES");
+        Stodium.checkSize(localPubKey.remaining(),  PUBLICKEYBYTES, "Box.PUBLICKEYBYTES");
+        Stodium.checkSize(localPrivKey.remaining(), SECRETKEYBYTES, "Box.SECRETKEYBYTES");
+
+        Stodium.checkStatus(StodiumJNI.crypto_box_seal_open(
+                dstPlain, srcCipher, localPubKey, localPrivKey));
     }
 }

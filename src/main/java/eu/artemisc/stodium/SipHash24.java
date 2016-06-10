@@ -36,8 +36,8 @@ public class SipHash24 {
      * @throws StodiumException
      */
     @NonNull @CheckResult
-    static Long shorthash(@NonNull final byte[] srcIn,
-                          @NonNull final byte[] srcKey)
+    public static Long shorthash(@NonNull final byte[] srcIn,
+                                 @NonNull final byte[] srcKey)
             throws StodiumException {
         Stodium.checkSize(srcKey.length, KEYBYTES, "SipHash24.KEYBYTES");
 
@@ -59,9 +59,9 @@ public class SipHash24 {
      * @throws ConstraintViolationException
      * @throws StodiumException
      */
-    static void shorthash(@NonNull final byte[] dstHash,
-                          @NonNull final byte[] srcIn,
-                          @NonNull final byte[] srcKey)
+    public static void shorthash(@NonNull final byte[] dstHash,
+                                 @NonNull final byte[] srcIn,
+                                 @NonNull final byte[] srcKey)
             throws StodiumException {
         Stodium.checkSize(dstHash.length, BYTES, "SipHash24.BYTES");
         Stodium.checkSize(srcKey.length, KEYBYTES, "SipHash24.KEYBYTES");

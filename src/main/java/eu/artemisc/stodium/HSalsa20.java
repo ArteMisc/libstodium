@@ -34,9 +34,7 @@ public class HSalsa20 {
                                 @NonNull  final ByteBuffer key,
                                 @Nullable final ByteBuffer constant)
             throws StodiumException {
-        if (dst.isReadOnly()) {
-            throw new IllegalArgumentException("dst is readonly");
-        }
+        Stodium.checkDestinationWritable(dst, "Stodium.HSalsa20#hsalsa20(dst)");
 
         Stodium.checkSize(dst.remaining(), OUTPUTBYTES, "HSalsa20.OUTPUTBYTES");
         Stodium.checkSize(src.remaining(), INPUTBYTES,  "HSalsa20.INPUTBYTES");

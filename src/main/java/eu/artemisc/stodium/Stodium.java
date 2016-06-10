@@ -225,7 +225,7 @@ public final class Stodium {
      */
     @NonNull
     static ByteBuffer ensureUsableByteBuffer(@NonNull final ByteBuffer buff) {
-        if ((buff.isDirect() || buff.hasArray()) && !buff.isReadOnly()) {
+        if (buff.isDirect() || (buff.hasArray() && !buff.isReadOnly())) {
             return buff;
         }
 
@@ -234,6 +234,25 @@ public final class Stodium {
         direct.put(buff);
         direct.reset();
         return direct;
+    }
+
+    /**
+     * checkDestinationWritable throws an exception if the ByteBuffer passed to
+     * it is backed by an array and is read-only. If this is the case, the
+     * native code would not have a way to operate on the buffer's contents, and
+     * copying to it from Java's side would also be impossible.
+     *
+     * @param buff The ByteBuffer that needs to be verified
+     * @throws ReadOnlyBufferException if the buffer is incorrectly passed as a
+     *         read-only buffer, even while being the output for an operation.
+     */
+    static void checkDestinationWritable(@NonNull final ByteBuffer buff,
+                                         @NonNull final String     description) {
+        if (buff.isDirect() || !buff.isReadOnly()) {
+            return;
+        }
+        throw new ReadOnlyBufferException(
+                String.format("Stodion: output for [%s] is readonly", description));
     }
 
     /**

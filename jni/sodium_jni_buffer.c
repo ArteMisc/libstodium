@@ -40,7 +40,7 @@
  */
 #define STODIUM_CONSTANT_HL(group, constant) \
     STODIUM_JNI(jint, crypto_1##group##_1##constant) (JNIEnv *jenv, jclass jcls) { \
-        return (jint) crypto_##group##_##constant (); }
+        return (jint) crypto_##group##_##constant ; }
 
 /**
  * AS_INPUT, AS_OUTPUT, AS_INPUT_LEN and AS_OUTPUT_LEN are utility macros to
@@ -414,6 +414,73 @@ STODIUM_JNI(jint, crypto_1core_1hsalsa20) (JNIEnv *jenv, jclass jcls,
     stodium_release_input(jenv, key, &key_buffer);
     stodium_release_input(jenv, constant, &const_buffer);
     
+    return result;
+}
+
+/** ****************************************************************************
+ *
+ * BOX
+ *
+ **************************************************************************** */
+STODIUM_CONSTANT_STR(box)
+    
+STODIUM_CONSTANT_HL(box, SEEDBYTES)
+STODIUM_CONSTANT_HL(box, PUBLICKEYBYTES)
+STODIUM_CONSTANT_HL(box, SECRETKEYBYTES)
+STODIUM_CONSTANT_HL(box, NONCEBYTES)
+STODIUM_CONSTANT_HL(box, MACBYTES)
+STODIUM_CONSTANT_HL(box, BEFORENMBYTES)
+STODIUM_CONSTANT_HL(box, SEALBYTES)
+
+//
+// BOX_SEAL
+//
+
+STODIUM_JNI(jint, crypto_1box_1seal) (JNIEnv *jenv, jclass jcls,
+        jobject dst,
+        jobject src,
+        jobject pub) {
+    stodium_buffer dst_buffer, src_buffer, pub_buffer;
+    stodium_get_buffer(jenv, &dst_buffer, dst);
+    stodium_get_buffer(jenv, &src_buffer, src);
+    stodium_get_buffer(jenv, &pub_buffer, pub);
+
+    jint result = (jint) crypto_box_seal(
+            AS_OUTPUT(unsigned char, dst_buffer),
+            AS_INPUT(unsigned char, src_buffer),
+            AS_INPUT_LEN(unsigned long long, src_buffer),
+            AS_INPUT(unsigned char, pub_buffer));
+
+    stodium_release_output(jenv, dst, &dst_buffer);
+    stodium_release_input(jenv, src, &src_buffer);
+    stodium_release_input(jenv, pub, &pub_buffer);
+
+    return result;
+}
+
+STODIUM_JNI(jint, crypto_1box_1seal_1open) (JNIEnv *jenv, jclass jcls,
+        jobject dst,
+        jobject src,
+        jobject pub,
+        jobject priv) {
+    stodium_buffer dst_buffer, src_buffer, pub_buffer, priv_buffer;
+    stodium_get_buffer(jenv, &dst_buffer, dst);
+    stodium_get_buffer(jenv, &src_buffer, src);
+    stodium_get_buffer(jenv, &pub_buffer, pub);
+    stodium_get_buffer(jenv, &priv_buffer, priv);
+
+    jint result = (jint) crypto_box_seal_open(
+            AS_OUTPUT(unsigned char, dst_buffer),
+            AS_INPUT(unsigned char, src_buffer),
+            AS_INPUT_LEN(unsigned long long, src_buffer),
+            AS_INPUT(unsigned char, pub_buffer),
+            AS_INPUT(unsigned char, priv_buffer));
+
+    stodium_release_output(jenv, dst, &dst_buffer);
+    stodium_release_input(jenv, src, &src_buffer);
+    stodium_release_input(jenv, pub, &pub_buffer);
+    stodium_release_input(jenv, priv, &priv_buffer);
+
     return result;
 }
 

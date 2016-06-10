@@ -56,6 +56,29 @@ public class StodiumJNI {
             ByteBuffer dstPlain, ByteBuffer srcCipher, ByteBuffer ad, ByteBuffer nonce, ByteBuffer key);
 
     //
+    // Box
+    //
+    static native String crypto_box_primitive();
+
+    static native int crypto_box_seedbytes();
+    static native int crypto_box_publickeybytes();
+    static native int crypto_box_secretkeybytes();
+    static native int crypto_box_noncebytes();
+    static native int crypto_box_macbytes();
+    static native int crypto_box_beforenmbytes();
+    static native int crypto_box_sealbytes();
+
+    static native int crypto_box_keypair(
+            ByteBuffer publicKey, ByteBuffer privateKey);
+    static native int crypto_box_seed_keypair(
+            ByteBuffer publicKey, ByteBuffer privateKey, ByteBuffer seed);
+
+    static native int crypto_box_seal(
+            ByteBuffer dstCipher, ByteBuffer srcPlain, ByteBuffer publicKey);
+    static native int crypto_box_seal_open(
+            ByteBuffer dstPlain, ByteBuffer srcCipher, ByteBuffer publicKey, ByteBuffer privateKey);
+
+    //
     // ScalarMult
     //
     static native String crypto_scalarmult_primitive();
