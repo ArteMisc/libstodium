@@ -1,12 +1,15 @@
 package eu.artemisc.stodium;
 
+import android.annotation.SuppressLint;
 import android.os.Build;
+import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 
 import org.abstractj.kalium.Sodium;
 
 import java.nio.ByteBuffer;
 import java.util.Arrays;
+import java.util.Locale;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import javax.crypto.AEADBadTagException;
@@ -36,7 +39,7 @@ public final class Stodium {
             return;
         }
         throw new StodiumException(
-                String.format("Stodium: operation returned non-zero status %d", status));
+                String.format(Locale.ENGLISH, "Stodium: operation returned non-zero status %d", status));
     }
 
     /**
@@ -79,7 +82,7 @@ public final class Stodium {
             return;
         }
         throw new SecurityException(
-                String.format("Check size failed on [%s] [expected: %d, real: %d]",
+                String.format(Locale.ENGLISH, "Check size failed on [%s] [expected: %d, real: %d]",
                         constant, expected, src));
     }
 
@@ -102,7 +105,7 @@ public final class Stodium {
             return;
         }
         throw new ConstraintViolationException(
-                String.format("CheckSize failed on bounds [%s, %s] [lower: %d, upper: %d, real: %d]",
+                String.format(Locale.ENGLISH, "CheckSize failed on bounds [%s, %s] [lower: %d, upper: %d, real: %d]",
                         lowerC, upperC, lower, upper, src));
     }
 
@@ -117,7 +120,7 @@ public final class Stodium {
             return;
         }
         throw new ConstraintViolationException(
-                String.format("checkPositive failed [real: %d]", src));
+                String.format(Locale.ENGLISH, "checkPositive failed [real: %d]", src));
     }
 
     /**
@@ -151,7 +154,7 @@ public final class Stodium {
             return;
         }
         throw new ConstraintViolationException(
-                String.format("checkPow2 failed on [%s: %d]", descr, src));
+                String.format(Locale.ENGLISH, "checkPow2 failed on [%s: %d]", descr, src));
     }
 
     /**
@@ -167,7 +170,7 @@ public final class Stodium {
             return;
         }
         throw new ConstraintViolationException(
-                String.format("checkPow2 failed on [%s: %d]", descr, src));
+                String.format(Locale.ENGLISH, "checkPow2 failed on [%s: %d]", descr, src));
     }
 
     /**
@@ -299,6 +302,7 @@ public final class Stodium {
      *
      * @return libsodium's version string
      */
+    @NonNull @CheckResult
     public static String SodiumVersionString() {
         return Sodium.sodium_version_string();
     }

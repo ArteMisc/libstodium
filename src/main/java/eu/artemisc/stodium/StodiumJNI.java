@@ -79,6 +79,37 @@ public class StodiumJNI {
             ByteBuffer dstPlain, ByteBuffer srcCipher, ByteBuffer publicKey, ByteBuffer privateKey);
 
     //
+    // PwHash
+    //
+    static native String crypto_pwhash_primitive();
+
+    static native int crypto_pwhash_alg_default();
+    static native int crypto_pwhash_saltbytes();
+    static native int crypto_pwhash_strbytes();
+    static native int crypto_pwhash_opslimit_interactive();
+    static native int crypto_pwhash_memlimit_interactive();
+    static native int crypto_pwhash_opslimit_moderate();
+    static native int crypto_pwhash_memlimit_moderate();
+    static native int crypto_pwhash_opslimit_sensitive();
+    static native int crypto_pwhash_memlimit_sensitive();
+
+    static native int crypto_pwhash(
+            ByteBuffer dst, ByteBuffer password, ByteBuffer salt, int opslimit, int memlimit);
+
+    //
+    // PwHash Scrypt
+    //
+    static native int crypto_pwhash_scryptsalsa208sha256_saltbytes();
+    static native int crypto_pwhash_scryptsalsa208sha256_strbytes();
+    static native int crypto_pwhash_scryptsalsa208sha256_opslimit_interactive();
+    static native int crypto_pwhash_scryptsalsa208sha256_memlimit_interactive();
+    static native int crypto_pwhash_scryptsalsa208sha256_opslimit_sensitive();
+    static native int crypto_pwhash_scryptsalsa208sha256_memlimit_sensitive();
+
+    static native int crypto_pwhash_scryptsalsa208sha256(
+            ByteBuffer dst, ByteBuffer password, ByteBuffer salt, int opslimit, int memlimit);
+
+    //
     // ScalarMult
     //
     static native String crypto_scalarmult_primitive();
