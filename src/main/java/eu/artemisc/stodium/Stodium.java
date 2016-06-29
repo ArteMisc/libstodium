@@ -1,6 +1,5 @@
 package eu.artemisc.stodium;
 
-import android.annotation.SuppressLint;
 import android.os.Build;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
@@ -81,7 +80,7 @@ public final class Stodium {
         if (src == expected) {
             return;
         }
-        throw new SecurityException(
+        throw new ConstraintViolationException(
                 String.format(Locale.ENGLISH, "Check size failed on [%s] [expected: %d, real: %d]",
                         constant, expected, src));
     }
@@ -145,7 +144,7 @@ public final class Stodium {
      * throws an exception otherwise.
      * @param src
      * @param descr
-     * @throws SecurityException
+     * @throws ConstraintViolationException
      */
     public static void checkPow2(final int src,
                                  @NonNull final String descr)
