@@ -21,8 +21,7 @@ public final class Argon2i {
 //  public static final String PRIMITIVE            = StodiumJNI.crypto_pwhash_primitive();
 //  public static final String STRPREFIX            = StodiumJNI.crypto_pwhash_strprefix();
     public static final int    STRBYTES             = StodiumJNI.crypto_pwhash_strbytes();
-
-    public static final int    SALTBYTES            = StodiumJNI.crypto_pwhash_saltbytes();
+    public static final int    SALTBYTES            = 16;//StodiumJNI.crypto_pwhash_saltbytes();
     public static final int    OPSLIMIT_INTERACTIVE = StodiumJNI.crypto_pwhash_opslimit_interactive();
     public static final int    MEMLIMIT_INTERACTIVE = StodiumJNI.crypto_pwhash_memlimit_interactive();
     public static final int    OPSLIMIT_MODERATE    = StodiumJNI.crypto_pwhash_opslimit_moderate();

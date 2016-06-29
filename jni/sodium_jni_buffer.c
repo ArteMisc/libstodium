@@ -491,10 +491,12 @@ STODIUM_JNI(jint, crypto_1box_1seal_1open) (JNIEnv *jenv, jclass jcls,
  **************************************************************************** */
 STODIUM_CONSTANT_STR(pwhash)
 
-STODIUM_CONSTANT_HL(pwhash, alg_default)
 STODIUM_CONSTANT_HL(pwhash, saltbytes)
 STODIUM_CONSTANT_HL(pwhash, strbytes)
 //STODIUM_CONSTANT_HL(pwhash, strprefix)
+STODIUM_JNI(jint, crypto_1pwhash_1alg_1default) (JNIEnv *jenv, jclass jcls) {
+       return (jint) crypto_pwhash_alg_default();
+}
 STODIUM_JNI(jint, crypto_1pwhash_1memlimit_1interactive) (JNIEnv *jenv, jclass jcls) {
        return (jint) crypto_pwhash_memlimit_interactive();
 }
