@@ -20,9 +20,9 @@ public class AEADChacha20Poly1305 {
     private AEADChacha20Poly1305() {}
 
     // constants
-    public static final int KEYBYTES  = Sodium.crypto_aead_chacha20poly1305_keybytes();
-    public static final int NPUBBYTES = Sodium.crypto_aead_chacha20poly1305_npubbytes();
-    public static final int ABYTES    = Sodium.crypto_aead_chacha20poly1305_abytes();
+    public static final int KEYBYTES  = StodiumJNI.crypto_aead_chacha20poly1305_keybytes();
+    public static final int NPUBBYTES = StodiumJNI.crypto_aead_chacha20poly1305_npubbytes();
+    public static final int ABYTES    = StodiumJNI.crypto_aead_chacha20poly1305_abytes();
 
     // wrappers
 
@@ -37,7 +37,7 @@ public class AEADChacha20Poly1305 {
      * @throws ConstraintViolationException
      * @throws StodiumException
      */
-    public static int encrypt(@NotNull final byte[] dstCipher,
+    /*public static int encrypt(@NotNull final byte[] dstCipher,
                               @NotNull final byte[] srcPlain,
                               @NotNull final byte[] ad,
                               @NotNull final byte[] nonce,
@@ -48,11 +48,11 @@ public class AEADChacha20Poly1305 {
         Stodium.checkSize(key.length, KEYBYTES, "AEADChacha20Poly1305.KEYBYTES");
 
         final int[] size = new int[1];
-        Stodium.checkStatus(Sodium.crypto_aead_chacha20poly1305_encrypt(
+        Stodium.checkStatus(StodiumJNI.crypto_aead_chacha20poly1305_encrypt(
                 dstCipher, size, srcPlain, srcPlain.length, ad, ad.length,
                 null, nonce, key));
         return size[0];
-    }
+    }*/
 
     /**
      *
@@ -65,7 +65,7 @@ public class AEADChacha20Poly1305 {
      * @throws ConstraintViolationException
      * @throws StodiumException
      */
-    public static int decrypt(@NotNull final byte[] dstPlain,
+    /*public static int decrypt(@NotNull final byte[] dstPlain,
                               @NotNull final byte[] srcCipher,
                               @NotNull final byte[] ad,
                               @NotNull final byte[] nonce,
@@ -76,10 +76,10 @@ public class AEADChacha20Poly1305 {
         Stodium.checkSize(key.length, KEYBYTES, "AEADChacha20Poly1305.KEYBYTES");
 
         final int[] size = new int[1];
-        Stodium.checkStatusSealOpen(Sodium.crypto_aead_chacha20poly1305_decrypt(
+        Stodium.checkStatusSealOpen(StodiumJNI.crypto_aead_chacha20poly1305_decrypt(
                         dstPlain, size, null, srcCipher, srcCipher.length, ad, ad.length,
                         nonce, key),
                 "AEADChacha20Poly1305#decrypt");
         return size[0];
-    }
+    }*/
 }

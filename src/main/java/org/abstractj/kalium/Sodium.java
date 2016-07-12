@@ -409,42 +409,6 @@ public class Sodium {
     return SodiumJNI.crypto_onetimeauth_final(final_state, dst_out);
   }
 
-  public static int crypto_aead_chacha20poly1305_keybytes() {
-    return SodiumJNI.crypto_aead_chacha20poly1305_keybytes();
-  }
-
-  public static int crypto_aead_chacha20poly1305_nsecbytes() {
-    return SodiumJNI.crypto_aead_chacha20poly1305_nsecbytes();
-  }
-
-  public static int crypto_aead_chacha20poly1305_npubbytes() {
-    return SodiumJNI.crypto_aead_chacha20poly1305_npubbytes();
-  }
-
-  public static int crypto_aead_chacha20poly1305_abytes() {
-    return SodiumJNI.crypto_aead_chacha20poly1305_abytes();
-  }
-
-  public static int crypto_aead_chacha20poly1305_encrypt(byte[] c, int[] clen_p, byte[] m, int mlen, byte[] ad, int adlen, byte[] nsec, byte[] npub, byte[] k) {
-    return SodiumJNI.crypto_aead_chacha20poly1305_encrypt(c, clen_p, m, mlen, ad, adlen, nsec, npub, k);
-  }
-
-  public static int crypto_aead_chacha20poly1305_decrypt(byte[] m, int[] mlen_p, byte[] nsec, byte[] c, int clen, byte[] ad, int adlen, byte[] npub, byte[] k) {
-    return SodiumJNI.crypto_aead_chacha20poly1305_decrypt(m, mlen_p, nsec, c, clen, ad, adlen, npub, k);
-  }
-
-  public static int crypto_aead_chacha20poly1305_ietf_npubbytes() {
-    return SodiumJNI.crypto_aead_chacha20poly1305_ietf_npubbytes();
-  }
-
-  public static int crypto_aead_chacha20poly1305_ietf_encrypt(byte[] c, int[] clen_p, byte[] m, int mlen, byte[] ad, int adlen, byte[] nsec, byte[] npub, byte[] k) {
-    return SodiumJNI.crypto_aead_chacha20poly1305_ietf_encrypt(c, clen_p, m, mlen, ad, adlen, nsec, npub, k);
-  }
-
-  public static int crypto_aead_chacha20poly1305_ietf_decrypt(byte[] m, int[] mlen_p, byte[] nsec, byte[] c, int clen, byte[] ad, int adlen, byte[] npub, byte[] k) {
-    return SodiumJNI.crypto_aead_chacha20poly1305_ietf_decrypt(m, mlen_p, nsec, c, clen, ad, adlen, npub, k);
-  }
-
   public static int crypto_auth_hmacsha256_bytes() {
     return SodiumJNI.crypto_auth_hmacsha256_bytes();
   }
@@ -539,66 +503,6 @@ public class Sodium {
 
   public static int crypto_auth_hmacsha512256_final(byte[] state, byte[] out) {
     return SodiumJNI.crypto_auth_hmacsha512256_final(state, out);
-  }
-
-  public static int crypto_box_curve25519xsalsa20poly1305_seedbytes() {
-    return SodiumJNI.crypto_box_curve25519xsalsa20poly1305_seedbytes();
-  }
-
-  public static int crypto_box_curve25519xsalsa20poly1305_publickeybytes() {
-    return SodiumJNI.crypto_box_curve25519xsalsa20poly1305_publickeybytes();
-  }
-
-  public static int crypto_box_curve25519xsalsa20poly1305_secretkeybytes() {
-    return SodiumJNI.crypto_box_curve25519xsalsa20poly1305_secretkeybytes();
-  }
-
-  public static int crypto_box_curve25519xsalsa20poly1305_beforenmbytes() {
-    return SodiumJNI.crypto_box_curve25519xsalsa20poly1305_beforenmbytes();
-  }
-
-  public static int crypto_box_curve25519xsalsa20poly1305_noncebytes() {
-    return SodiumJNI.crypto_box_curve25519xsalsa20poly1305_noncebytes();
-  }
-
-  public static int crypto_box_curve25519xsalsa20poly1305_zerobytes() {
-    return SodiumJNI.crypto_box_curve25519xsalsa20poly1305_zerobytes();
-  }
-
-  public static int crypto_box_curve25519xsalsa20poly1305_boxzerobytes() {
-    return SodiumJNI.crypto_box_curve25519xsalsa20poly1305_boxzerobytes();
-  }
-
-  public static int crypto_box_curve25519xsalsa20poly1305_macbytes() {
-    return SodiumJNI.crypto_box_curve25519xsalsa20poly1305_macbytes();
-  }
-
-  public static int crypto_box_curve25519xsalsa20poly1305(byte[] c, byte[] m, int mlen, byte[] n, byte[] pk, byte[] sk) {
-    return SodiumJNI.crypto_box_curve25519xsalsa20poly1305(c, m, mlen, n, pk, sk);
-  }
-
-  public static int crypto_box_curve25519xsalsa20poly1305_open(byte[] m, byte[] c, int clen, byte[] n, byte[] pk, byte[] sk) {
-    return SodiumJNI.crypto_box_curve25519xsalsa20poly1305_open(m, c, clen, n, pk, sk);
-  }
-
-  public static int crypto_box_curve25519xsalsa20poly1305_seed_keypair(byte[] pk, byte[] sk, byte[] seed) {
-    return SodiumJNI.crypto_box_curve25519xsalsa20poly1305_seed_keypair(pk, sk, seed);
-  }
-
-  public static int crypto_box_curve25519xsalsa20poly1305_keypair(byte[] pk, byte[] sk) {
-    return SodiumJNI.crypto_box_curve25519xsalsa20poly1305_keypair(pk, sk);
-  }
-
-  public static int crypto_box_curve25519xsalsa20poly1305_beforenm(byte[] k, byte[] pk, byte[] sk) {
-    return SodiumJNI.crypto_box_curve25519xsalsa20poly1305_beforenm(k, pk, sk);
-  }
-
-  public static int crypto_box_curve25519xsalsa20poly1305_afternm(byte[] c, byte[] m, int mlen, byte[] n, byte[] k) {
-    return SodiumJNI.crypto_box_curve25519xsalsa20poly1305_afternm(c, m, mlen, n, k);
-  }
-
-  public static int crypto_box_curve25519xsalsa20poly1305_open_afternm(byte[] m, byte[] c, int clen, byte[] n, byte[] k) {
-    return SodiumJNI.crypto_box_curve25519xsalsa20poly1305_open_afternm(m, c, clen, n, k);
   }
 
   public static int crypto_core_salsa20_outputbytes() {
@@ -759,94 +663,6 @@ public class Sodium {
 
   public static int crypto_onetimeauth_poly1305_final(byte[] state, byte[] out) {
     return SodiumJNI.crypto_onetimeauth_poly1305_final(state, out);
-  }
-
-  public static int crypto_pwhash_scryptsalsa208sha256_saltbytes() {
-    return SodiumJNI.crypto_pwhash_scryptsalsa208sha256_saltbytes();
-  }
-
-  public static int crypto_pwhash_scryptsalsa208sha256_strbytes() {
-    return SodiumJNI.crypto_pwhash_scryptsalsa208sha256_strbytes();
-  }
-
-  public static String crypto_pwhash_scryptsalsa208sha256_strprefix() {
-    return SodiumJNI.crypto_pwhash_scryptsalsa208sha256_strprefix();
-  }
-
-  public static int crypto_pwhash_scryptsalsa208sha256_opslimit_interactive() {
-    return SodiumJNI.crypto_pwhash_scryptsalsa208sha256_opslimit_interactive();
-  }
-
-  public static int crypto_pwhash_scryptsalsa208sha256_memlimit_interactive() {
-    return SodiumJNI.crypto_pwhash_scryptsalsa208sha256_memlimit_interactive();
-  }
-
-  public static int crypto_pwhash_scryptsalsa208sha256_opslimit_sensitive() {
-    return SodiumJNI.crypto_pwhash_scryptsalsa208sha256_opslimit_sensitive();
-  }
-
-  public static int crypto_pwhash_scryptsalsa208sha256_memlimit_sensitive() {
-    return SodiumJNI.crypto_pwhash_scryptsalsa208sha256_memlimit_sensitive();
-  }
-
-  public static int crypto_pwhash_scryptsalsa208sha256(byte[] out, int outlen, byte[] passwd, int passwdlen, byte[] salt, int opslimit, int memlimit) {
-    return SodiumJNI.crypto_pwhash_scryptsalsa208sha256(out, outlen, passwd, passwdlen, salt, opslimit, memlimit);
-  }
-
-  public static int crypto_pwhash_scryptsalsa208sha256_str(byte[] out, byte[] passwd, int passwdlen, int opslimit, int memlimit) {
-    return SodiumJNI.crypto_pwhash_scryptsalsa208sha256_str(out, passwd, passwdlen, opslimit, memlimit);
-  }
-
-  public static int crypto_pwhash_scryptsalsa208sha256_str_verify(byte[] str, byte[] passwd, int passwdlen) {
-    return SodiumJNI.crypto_pwhash_scryptsalsa208sha256_str_verify(str, passwd, passwdlen);
-  }
-
-  public static int crypto_pwhash_scryptsalsa208sha256_ll(byte[] passwd, int passwdlen, byte[] salt, int saltlen, int N, int r, int p, byte[] buf, int buflen) {
-    return SodiumJNI.crypto_pwhash_scryptsalsa208sha256_ll(passwd, passwdlen, salt, saltlen, N, r, p, buf, buflen);
-  }
-
-  public static int crypto_scalarmult_curve25519_bytes() {
-    return SodiumJNI.crypto_scalarmult_curve25519_bytes();
-  }
-
-  public static int crypto_scalarmult_curve25519_scalarbytes() {
-    return SodiumJNI.crypto_scalarmult_curve25519_scalarbytes();
-  }
-
-  public static int crypto_scalarmult_curve25519(byte[] q, byte[] n, byte[] p) {
-    return SodiumJNI.crypto_scalarmult_curve25519(q, n, p);
-  }
-
-  public static int crypto_scalarmult_curve25519_base(byte[] q, byte[] n) {
-    return SodiumJNI.crypto_scalarmult_curve25519_base(q, n);
-  }
-
-  public static int crypto_secretbox_xsalsa20poly1305_keybytes() {
-    return SodiumJNI.crypto_secretbox_xsalsa20poly1305_keybytes();
-  }
-
-  public static int crypto_secretbox_xsalsa20poly1305_noncebytes() {
-    return SodiumJNI.crypto_secretbox_xsalsa20poly1305_noncebytes();
-  }
-
-  public static int crypto_secretbox_xsalsa20poly1305_zerobytes() {
-    return SodiumJNI.crypto_secretbox_xsalsa20poly1305_zerobytes();
-  }
-
-  public static int crypto_secretbox_xsalsa20poly1305_boxzerobytes() {
-    return SodiumJNI.crypto_secretbox_xsalsa20poly1305_boxzerobytes();
-  }
-
-  public static int crypto_secretbox_xsalsa20poly1305_macbytes() {
-    return SodiumJNI.crypto_secretbox_xsalsa20poly1305_macbytes();
-  }
-
-  public static int crypto_secretbox_xsalsa20poly1305(byte[] c, byte[] m, int mlen, byte[] n, byte[] k) {
-    return SodiumJNI.crypto_secretbox_xsalsa20poly1305(c, m, mlen, n, k);
-  }
-
-  public static int crypto_secretbox_xsalsa20poly1305_open(byte[] m, byte[] c, int clen, byte[] n, byte[] k) {
-    return SodiumJNI.crypto_secretbox_xsalsa20poly1305_open(m, c, clen, n, k);
   }
 
   public static int crypto_shorthash_siphash24_bytes() {
