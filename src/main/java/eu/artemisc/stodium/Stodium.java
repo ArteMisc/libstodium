@@ -1,11 +1,13 @@
 package eu.artemisc.stodium;
 
-import android.os.Build;
-import android.support.annotation.CheckResult;
-import android.support.annotation.NonNull;
-
 import org.abstractj.kalium.Sodium;
+import org.jetbrains.annotations.NotNull;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.nio.ByteBuffer;
 import java.util.Arrays;
 import java.util.Locale;
@@ -51,19 +53,17 @@ public final class Stodium {
      *         AEADBadTagException, the method will call
      *         {@link #checkStatus(int)} instead.
      */
-    public static void checkStatusSealOpen(final int status,
-                                           @NonNull final String methodDescription)
+    public static void checkStatusSealOpen(         final int    status,
+                                           @NotNull final String methodDescription)
             throws AEADBadTagException, StodiumException {
         if (status == 0) {
             return;
         }
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            throw new AEADBadTagException(
-                    methodDescription + ": cannot open sealed box (invalid tag?)");
-        } else {
-            checkStatus(status);
-        }
+        // FIXME: 9-7-16 On android, this API is too new. In JAR, this can be used. For now just defer to checkStatus
+        //throw new AEADBadTagException(
+        //        methodDescription + ": cannot open sealed box (invalid tag?)");
+        checkStatus(status);
     }
 
     /**
@@ -73,9 +73,9 @@ public final class Stodium {
      * @param constant
      * @throws ConstraintViolationException
      */
-    public static void checkSize(final int src,
-                                 final int expected,
-                                 @NonNull final String constant)
+    public static void checkSize(         final int    src,
+                                          final int    expected,
+                                 @NotNull final String constant)
             throws ConstraintViolationException {
         if (src == expected) {
             return;
@@ -97,8 +97,8 @@ public final class Stodium {
     public static void checkSize(final int src,
                                  final int lower,
                                  final int upper,
-                                 @NonNull final String lowerC,
-                                 @NonNull final String upperC)
+                                 @NotNull final String lowerC,
+                                 @NotNull final String upperC)
             throws ConstraintViolationException {
         if (src <= upper && src >= lower) {
             return;
@@ -147,7 +147,7 @@ public final class Stodium {
      * @throws ConstraintViolationException
      */
     public static void checkPow2(final int src,
-                                 @NonNull final String descr)
+                                 @NotNull final String descr)
             throws ConstraintViolationException {
         if ((src > 0) && ((src & (~src + 1)) == src)) {
             return;
@@ -163,7 +163,7 @@ public final class Stodium {
      * @throws ConstraintViolationException
      */
     public static void checkPow2(final long src,
-                                 @NonNull final String descr)
+                                 @NotNull final String descr)
             throws ConstraintViolationException {
         if ((src > 0) && ((src & (~src + 1)) == src)) {
             return;
@@ -178,8 +178,8 @@ public final class Stodium {
      *
      * @return true iff a == b
      */
-    public static boolean isEqual(@NonNull final byte[] a,
-                                  @NonNull final byte[] b) {
+    public static boolean isEqual(@NotNull final byte[] a,
+                                  @NotNull final byte[] b) {
         if (a.length != b.length) {
             return false;
         }
@@ -190,12 +190,12 @@ public final class Stodium {
         return result == 0;
     }
 
-    public static void wipeBytes(@NonNull final byte[] a) {
+    public static void wipeBytes(@NotNull final byte[] a) {
         Arrays.fill(a, (byte) 0x00);
     }
 
     private static byte[] emptyBuffer = new byte[8];
-    public static void wipeBytes(@NonNull final ByteBuffer a) {
+    public static void wipeBytes(@NotNull final ByteBuffer a) {
         if (a.hasArray()) {
             wipeBytes(a.array());
             return;
@@ -225,8 +225,8 @@ public final class Stodium {
      * @return a ByteBuffer that is guaranteed to function correctly in the
      *         native code.
      */
-    @NonNull
-    static ByteBuffer ensureUsableByteBuffer(@NonNull final ByteBuffer buff) {
+    @NotNull
+    static ByteBuffer ensureUsableByteBuffer(@NotNull final ByteBuffer buff) {
         if (buff.isDirect() || (buff.hasArray() && !buff.isReadOnly())) {
             return buff;
         }
@@ -248,8 +248,8 @@ public final class Stodium {
      * @throws ReadOnlyBufferException if the buffer is incorrectly passed as a
      *         read-only buffer, even while being the output for an operation.
      */
-    static void checkDestinationWritable(@NonNull final ByteBuffer buff,
-                                         @NonNull final String     description) {
+    static void checkDestinationWritable(@NotNull final ByteBuffer buff,
+                                         @NotNull final String     description) {
         if (buff.isDirect() || !buff.isReadOnly()) {
             return;
         }
@@ -260,31 +260,57 @@ public final class Stodium {
     /**
      *
      */
-    @NonNull
-    private static final AtomicBoolean initialized = new AtomicBoolean(false);
+    private static boolean initialized = false;
 
     /**
      * runInit wraps a call to sodium_init().
      */
-    private void runInit()
+    private synchronized static void runInit()
             throws RuntimeException {
-        if (initialized.get()) {
+        if (initialized) {
             return;
         }
+
         if (StodiumJNI.stodium_init() != 0) {
             throw new RuntimeException("StodiumInit: could not initialize with stodium_init()");
         }
-        if (StodiumJNI.sodium_init() == -1) {
-            throw new RuntimeException("StodiumInit: could not initialize Sodium library");
-        }
-        initialized.set(true);
+
+        initialized = true;
     }
 
     /**
      * Load the native library
      */
     static {
-        System.loadLibrary("kaliumjni");
+        try {
+            Class.forName("android.Manifest");
+
+            // Load the android JNI libs, as this is libstodium-android
+            System.loadLibrary("kaliumjni");
+
+        } catch (final ClassNotFoundException e1) {
+            /*// This is not android, extract pre-build library from jar
+            File file;
+            InputStream in = null;
+            OutputStream out = null;
+
+            String name = System.mapLibraryName("kaliumjni");
+
+            try {
+                in   = Stodium.class.getResourceAsStream("/eu/artemisc/stodium/libs/" + name);
+                file = File.createTempFile("stodium", name);
+                out  = new FileOutputStream(file);
+                System.load(file.getAbsolutePath());
+
+                System.loadLibrary("kaliumjni");
+            } catch (IOException e) {
+                e.printStackTrace();
+            } finally {
+                try { if (in  != null) { in.close();  } } catch (IOException e) { e.printStackTrace(); }
+                try { if (out != null) { out.close(); } } catch (IOException e) { e.printStackTrace(); }
+            }*/
+            throw new RuntimeException("Cannot load libstorium native library");
+        }
     }
 
     /**
@@ -293,7 +319,7 @@ public final class Stodium {
      * available. This ensures the library is loaded and initialized.
      */
     public static void StodiumInit() {
-        new Stodium().runInit();
+        runInit();
     }
 
     /**
@@ -301,7 +327,7 @@ public final class Stodium {
      *
      * @return libsodium's version string
      */
-    @NonNull @CheckResult
+    @NotNull
     public static String SodiumVersionString() {
         return Sodium.sodium_version_string();
     }

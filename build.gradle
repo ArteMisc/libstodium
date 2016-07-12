@@ -1,8 +1,8 @@
 apply plugin: 'com.android.library'
 
 android {
-    compileSdkVersion 23
-    buildToolsVersion "23.0.1"
+    compileSdkVersion 24
+    buildToolsVersion "24.0.0"
 
     // To let the libs be included in other projects
     sourceSets {
@@ -13,7 +13,7 @@ android {
 
     defaultConfig {
         minSdkVersion 16
-        targetSdkVersion 23
+        targetSdkVersion 24
         versionCode 1
         versionName "1.0"
     }
@@ -27,7 +27,6 @@ android {
 }
 
 dependencies {
-    // TODO are these required in this lib project?
-    compile 'com.android.support:appcompat-v7:23.2.0'
+    compile 'org.jetbrains:annotations:15.0'
 }
 

@@ -1,8 +1,7 @@
 package eu.artemisc.stodium;
 
-import android.support.annotation.NonNull;
-
 import org.abstractj.kalium.Sodium;
+import org.jetbrains.annotations.NotNull;
 
 import javax.crypto.AEADBadTagException;
 
@@ -47,10 +46,10 @@ public final class Secretbox {
      *
      * @see <a href="https://download.libsodium.org/doc/secret-key_cryptography/authenticated_encryption.html">libsodium documentation</a>
      */
-    public static void easy(@NonNull final byte[] dstCipher,
-                            @NonNull final byte[] srcPlain,
-                            @NonNull final byte[] nonce,
-                            @NonNull final byte[] secretKey)
+    public static void easy(@NotNull final byte[] dstCipher,
+                            @NotNull final byte[] srcPlain,
+                            @NotNull final byte[] nonce,
+                            @NotNull final byte[] secretKey)
             throws StodiumException {
         Stodium.checkSize(dstCipher.length, srcPlain.length + MACBYTES, "srcPlain.length + Secretbox.MACBYTES");
         Stodium.checkSize(nonce.length, NONCEBYTES, "Secretbox.NONCEBYTES");
@@ -70,10 +69,10 @@ public final class Secretbox {
      *
      * @see <a href="https://download.libsodium.org/doc/secret-key_cryptography/authenticated_encryption.html">libsodium documentation</a>
      */
-    public static void openEasy(@NonNull final byte[] dstPlain,
-                                @NonNull final byte[] srcCipher,
-                                @NonNull final byte[] nonce,
-                                @NonNull final byte[] secretKey)
+    public static void openEasy(@NotNull final byte[] dstPlain,
+                                @NotNull final byte[] srcCipher,
+                                @NotNull final byte[] nonce,
+                                @NotNull final byte[] secretKey)
             throws StodiumException, AEADBadTagException {
         Stodium.checkSize(srcCipher.length, dstPlain.length + MACBYTES, "dstPlain.length + Secretbox.MACBYTES");
         Stodium.checkSize(nonce.length, NONCEBYTES, "Secretbox.NONCEBYTES");
@@ -99,11 +98,11 @@ public final class Secretbox {
      *
      * @see <a href="https://download.libsodium.org/doc/secret-key_cryptography/authenticated_encryption.html">libsodium documentation</a>
      */
-    public static void detached(@NonNull final byte[] dstCipher,
-                                @NonNull final byte[] dstMac,
-                                @NonNull final byte[] srcPlain,
-                                @NonNull final byte[] nonce,
-                                @NonNull final byte[] secretKey)
+    public static void detached(@NotNull final byte[] dstCipher,
+                                @NotNull final byte[] dstMac,
+                                @NotNull final byte[] srcPlain,
+                                @NotNull final byte[] nonce,
+                                @NotNull final byte[] secretKey)
             throws StodiumException {
         Stodium.checkSize(dstCipher.length, srcPlain.length, "srcPlain.length");
         Stodium.checkSize(dstMac.length, MACBYTES, "Secretbox.MACBYTES");
@@ -125,11 +124,11 @@ public final class Secretbox {
      *
      * @see <a href="https://download.libsodium.org/doc/secret-key_cryptography/authenticated_encryption.html">libsodium documentation</a>
      */
-    public static void openDetached(@NonNull final byte[] dstPlain,
-                                    @NonNull final byte[] srcCipher,
-                                    @NonNull final byte[] srcMac,
-                                    @NonNull final byte[] nonce,
-                                    @NonNull final byte[] secretKey)
+    public static void openDetached(@NotNull final byte[] dstPlain,
+                                    @NotNull final byte[] srcCipher,
+                                    @NotNull final byte[] srcMac,
+                                    @NotNull final byte[] nonce,
+                                    @NotNull final byte[] secretKey)
             throws StodiumException, AEADBadTagException {
         Stodium.checkSize(srcCipher.length, dstPlain.length, "dstPlain.length");
         Stodium.checkSize(srcMac.length, MACBYTES, "Secretbox.MACBYTES");

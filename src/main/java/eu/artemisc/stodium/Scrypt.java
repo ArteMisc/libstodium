@@ -1,6 +1,6 @@
 package eu.artemisc.stodium;
 
-import android.support.annotation.NonNull;
+import org.jetbrains.annotations.NotNull;
 
 import java.nio.ByteBuffer;
 
@@ -44,9 +44,9 @@ public final class Scrypt {
      * @throws ConstraintViolationException
      * @throws StodiumException
      */
-    public static void pwhashScrypt(@NonNull final ByteBuffer dstKey,
-                                    @NonNull final ByteBuffer srcPwd,
-                                    @NonNull final ByteBuffer srcSalt)
+    public static void pwhashScrypt(@NotNull final ByteBuffer dstKey,
+                                    @NotNull final ByteBuffer srcPwd,
+                                    @NotNull final ByteBuffer srcSalt)
             throws StodiumException {
         pwhashScrypt(dstKey, srcPwd, srcSalt, OPSLIMIT_INTERACTIVE, MEMLIMIT_INTERACTIVE);
     }
@@ -61,9 +61,9 @@ public final class Scrypt {
      * @throws ConstraintViolationException
      * @throws StodiumException
      */
-    public static void pwhashScrypt(@NonNull final ByteBuffer dstKey,
-                                    @NonNull final ByteBuffer srcPwd,
-                                    @NonNull final ByteBuffer srcSalt,
+    public static void pwhashScrypt(@NotNull final ByteBuffer dstKey,
+                                    @NotNull final ByteBuffer srcPwd,
+                                    @NotNull final ByteBuffer srcSalt,
                                              final int        opsLimit,
                                              final int        memLimit)
             throws StodiumException {

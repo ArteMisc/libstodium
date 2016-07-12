@@ -1,8 +1,7 @@
 package eu.artemisc.stodium;
 
-import android.support.annotation.NonNull;
-
 import org.abstractj.kalium.Sodium;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * RandomBytes builds on top of libsodium's random_bytes as its CSPRNG.
@@ -26,7 +25,7 @@ public final class RandomBytes {
      *
      * @param buffer
      */
-    public static void nextBytes(@NonNull final byte[] buffer) {
+    public static void nextBytes(@NotNull final byte[] buffer) {
         Sodium.randombytes_buf(buffer, buffer.length);
     }
 }

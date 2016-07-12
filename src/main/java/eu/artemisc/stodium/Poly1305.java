@@ -1,9 +1,7 @@
 package eu.artemisc.stodium;
 
-import android.support.annotation.NonNull;
-import android.support.annotation.Size;
-
 import org.abstractj.kalium.Sodium;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
 
@@ -30,8 +28,7 @@ public class Poly1305 {
      * state holds the binary representation of the
      * crypto_onetimeauth_poly1305_state value.
      */
-    @NonNull
-    private final byte[] state;
+    @NotNull private final byte[] state;
 
     /**
      * State allocates a byte array that holds the raw packed value of the C
@@ -47,7 +44,7 @@ public class Poly1305 {
      *
      * @param key
      */
-    public Poly1305(@NonNull @Size(32) final byte[] key)
+    public Poly1305(@NotNull final byte[] key)
             throws StodiumException {
         this();
         init(key);
@@ -60,7 +57,7 @@ public class Poly1305 {
      *
      * @param original The original State that should be copied
      */
-    public Poly1305(@NonNull final Poly1305 original) {
+    public Poly1305(@NotNull final Poly1305 original) {
         this.state = Arrays.copyOf(original.state, original.state.length);
     }
 
@@ -70,7 +67,7 @@ public class Poly1305 {
      * @throws ConstraintViolationException
      * @throws StodiumException
      */
-    public void init(@NonNull @Size(32) final byte[] key)
+    public void init(@NotNull final byte[] key)
             throws StodiumException {
         Stodium.checkSize(key.length, KEYBYTES, "Poly1305.KEYBYTES");
         Stodium.checkStatus(
@@ -83,7 +80,7 @@ public class Poly1305 {
      * @throws ConstraintViolationException
      * @throws StodiumException
      */
-    public void update(@NonNull final byte[] in)
+    public void update(@NotNull final byte[] in)
             throws StodiumException {
         update(in, 0, in.length);
     }
@@ -96,7 +93,7 @@ public class Poly1305 {
      * @throws ConstraintViolationException
      * @throws StodiumException
      */
-    public void update(@NonNull final byte[] in,
+    public void update(@NotNull final byte[] in,
                        final int offset,
                        final int length)
             throws StodiumException {
@@ -113,7 +110,7 @@ public class Poly1305 {
      * @throws ConstraintViolationException
      * @throws StodiumException
      */
-    public void doFinal(@NonNull @Size(min = 16) final byte[] out)
+    public void doFinal(@NotNull final byte[] out)
             throws StodiumException {
         doFinal(out, 0);
     }
@@ -125,7 +122,7 @@ public class Poly1305 {
      * @throws ConstraintViolationException
      * @throws StodiumException
      */
-    public void doFinal(@NonNull @Size(min = 16) final byte[] out,
+    public void doFinal(@NotNull final byte[] out,
                         final int offset)
             throws StodiumException {
         Stodium.checkOffsetParams(out.length, offset, BYTES);
@@ -147,9 +144,9 @@ public class Poly1305 {
      * @throws ConstraintViolationException
      * @throws StodiumException
      */
-    public static void auth(@NonNull @Size(min = 16) final byte[] dstOut,
-                            @NonNull final byte[] srcIn,
-                            @NonNull @Size(32) final byte[] srcKey)
+    public static void auth(@NotNull final byte[] dstOut,
+                            @NotNull final byte[] srcIn,
+                            @NotNull final byte[] srcKey)
             throws StodiumException {
         final Poly1305 poly1305 = new Poly1305(srcKey);
         poly1305.update(srcIn);
@@ -165,9 +162,9 @@ public class Poly1305 {
      * @throws ConstraintViolationException
      * @throws StodiumException
      */
-    public static boolean authVerify(@NonNull @Size(16) final byte[] srcTag,
-                                     @NonNull final byte[] srcIn,
-                                     @NonNull @Size(32) final byte[] srcKey)
+    public static boolean authVerify(@NotNull final byte[] srcTag,
+                                     @NotNull final byte[] srcIn,
+                                     @NotNull final byte[] srcKey)
             throws StodiumException {
         final byte[] verify = new byte[BYTES];
         auth(verify, srcIn, srcKey);

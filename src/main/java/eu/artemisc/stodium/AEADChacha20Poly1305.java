@@ -1,8 +1,7 @@
 package eu.artemisc.stodium;
 
-import android.support.annotation.NonNull;
-
 import org.abstractj.kalium.Sodium;
+import org.jetbrains.annotations.NotNull;
 
 import javax.crypto.AEADBadTagException;
 
@@ -38,11 +37,11 @@ public class AEADChacha20Poly1305 {
      * @throws ConstraintViolationException
      * @throws StodiumException
      */
-    public static int encrypt(@NonNull final byte[] dstCipher,
-                              @NonNull final byte[] srcPlain,
-                              @NonNull final byte[] ad,
-                              @NonNull final byte[] nonce,
-                              @NonNull final byte[] key)
+    public static int encrypt(@NotNull final byte[] dstCipher,
+                              @NotNull final byte[] srcPlain,
+                              @NotNull final byte[] ad,
+                              @NotNull final byte[] nonce,
+                              @NotNull final byte[] key)
             throws StodiumException {
         Stodium.checkSize(dstCipher.length, srcPlain.length + ABYTES, "AEADChacha20Poly1305.ABYTES + srcPlain.length");
         Stodium.checkSize(nonce.length, NPUBBYTES, "AEADChacha20Poly1305.NPUBBYTES");
@@ -66,11 +65,11 @@ public class AEADChacha20Poly1305 {
      * @throws ConstraintViolationException
      * @throws StodiumException
      */
-    public static int decrypt(@NonNull final byte[] dstPlain,
-                              @NonNull final byte[] srcCipher,
-                              @NonNull final byte[] ad,
-                              @NonNull final byte[] nonce,
-                              @NonNull final byte[] key)
+    public static int decrypt(@NotNull final byte[] dstPlain,
+                              @NotNull final byte[] srcCipher,
+                              @NotNull final byte[] ad,
+                              @NotNull final byte[] nonce,
+                              @NotNull final byte[] key)
             throws StodiumException, AEADBadTagException {
         Stodium.checkSize(srcCipher.length, dstPlain.length + ABYTES, "dstPlain.length + AEADChacha20Poly1305.ABYTES");
         Stodium.checkSize(nonce.length, NPUBBYTES, "AEADChacha20Poly1305.NPUBBYTES");

@@ -1,6 +1,6 @@
 package eu.artemisc.stodium;
 
-import android.support.annotation.NonNull;
+import org.jetbrains.annotations.NotNull;
 
 import java.security.GeneralSecurityException;
 
@@ -15,16 +15,16 @@ public class StodiumException
         super();
     }
 
-    StodiumException(@NonNull final String detailMessage) {
+    StodiumException(@NotNull final String detailMessage) {
         super(detailMessage);
     }
 
-    StodiumException(@NonNull final Throwable throwable) {
+    StodiumException(@NotNull final Throwable throwable) {
         super(throwable);
     }
 
-    StodiumException(@NonNull final String detailMessage,
-                     @NonNull final Throwable throwable) {
+    StodiumException(@NotNull final String detailMessage,
+                     @NotNull final Throwable throwable) {
         super(detailMessage, throwable);
     }
 }

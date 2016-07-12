@@ -1,9 +1,8 @@
 package eu.artemisc.stodium;
 
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-
 import org.abstractj.kalium.Sodium;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
 
@@ -36,7 +35,7 @@ public final class GenericHash {
      * state holds the binary representation of the crypto_generichash_state
      * value.
      */
-    @NonNull private final byte[] state;
+    @NotNull private final byte[] state;
     /**
      * outlen is the number of output bytes the state should produce. It is
      * used byte genericHashFinal to validate that the number of
@@ -84,7 +83,7 @@ public final class GenericHash {
      *
      * @param original The original State that should be copied
      */
-    public GenericHash(@NonNull final GenericHash original) {
+    public GenericHash(@NotNull final GenericHash original) {
         this.state = Arrays.copyOf(original.state, original.state.length);
         this.outlen = original.outlen;
     }
@@ -121,7 +120,7 @@ public final class GenericHash {
      * @throws ConstraintViolationException
      * @throws StodiumException
      */
-    public void update(@NonNull final byte[] in)
+    public void update(@NotNull final byte[] in)
             throws StodiumException {
         update(in, 0, in.length);
     }
@@ -134,7 +133,7 @@ public final class GenericHash {
      * @throws ConstraintViolationException
      * @throws StodiumException
      */
-    public void update(@NonNull final byte[] in,
+    public void update(@NotNull final byte[] in,
                        final int offset,
                        final int length)
             throws StodiumException {
@@ -149,7 +148,7 @@ public final class GenericHash {
      * @throws ConstraintViolationException
      * @throws StodiumException
      */
-    public void doFinal(@NonNull final byte[] out)
+    public void doFinal(@NotNull final byte[] out)
             throws StodiumException {
         doFinal(out, 0, outlen);
     }
@@ -161,7 +160,7 @@ public final class GenericHash {
      * @throws ConstraintViolationException
      * @throws StodiumException
      */
-    public void doFinal(@NonNull final byte[] out,
+    public void doFinal(@NotNull final byte[] out,
                         final int offset)
             throws StodiumException {
         doFinal(out, offset, outlen);
@@ -176,7 +175,7 @@ public final class GenericHash {
      * @throws ConstraintViolationException
      * @throws StodiumException
      */
-    public void doFinal(@NonNull final byte[] out,
+    public void doFinal(@NotNull final byte[] out,
                         final int offset,
                         final int length)
             throws StodiumException {
@@ -202,8 +201,8 @@ public final class GenericHash {
      * @throws ConstraintViolationException
      * @throws StodiumException
      */
-    public static void genericHash(@NonNull final byte[] dstHash,
-                                   @NonNull final byte[] srcInput,
+    public static void genericHash(@NotNull final byte[] dstHash,
+                                   @NotNull final byte[] srcInput,
                                    @Nullable final byte[] srcKey)
             throws StodiumException {
         final GenericHash hash = new GenericHash(dstHash.length, srcKey);
@@ -221,8 +220,8 @@ public final class GenericHash {
      * @throws ConstraintViolationException
      * @throws StodiumException
      */
-    public static void genericHash(@NonNull final byte[] dstHash,
-                                   @NonNull final byte[] srcInput)
+    public static void genericHash(@NotNull final byte[] dstHash,
+                                   @NotNull final byte[] srcInput)
             throws StodiumException {
         genericHash(dstHash, srcInput, null);
     }

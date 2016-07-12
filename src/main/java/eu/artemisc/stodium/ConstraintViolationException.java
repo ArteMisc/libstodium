@@ -1,6 +1,6 @@
 package eu.artemisc.stodium;
 
-import android.support.annotation.NonNull;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * ConstraintViolationExceptions are thrown whenever an application tries to
@@ -15,16 +15,16 @@ public class ConstraintViolationException
         super();
     }
 
-    ConstraintViolationException(@NonNull final String detailMessage) {
+    ConstraintViolationException(@NotNull final String detailMessage) {
         super(detailMessage);
     }
 
-    ConstraintViolationException(@NonNull final Throwable throwable) {
+    ConstraintViolationException(@NotNull final Throwable throwable) {
         super(throwable);
     }
 
-    ConstraintViolationException(@NonNull final String detailMessage,
-                                 @NonNull final Throwable throwable) {
+    ConstraintViolationException(@NotNull final String detailMessage,
+                                 @NotNull final Throwable throwable) {
         super(detailMessage, throwable);
     }
 }

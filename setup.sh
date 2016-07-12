@@ -122,11 +122,11 @@ function compile_jni {
 
 # Add auto-cleanup before the script runs
 ndk_cleanup
-swig_cleanup
+#swig_cleanup
 
 # Download and install
 ndk_setup
-swig_setup
+#swig_setup
 
 # Compile the libraries
 setup_libsodium
@@ -134,4 +134,4 @@ compile_jni
 
 # Cleanup
 ndk_cleanup
-swig_cleanup
+#swig_cleanup

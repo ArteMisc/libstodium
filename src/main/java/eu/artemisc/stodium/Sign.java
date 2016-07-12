@@ -1,8 +1,7 @@
 package eu.artemisc.stodium;
 
-import android.support.annotation.NonNull;
-
 import org.abstractj.kalium.Sodium;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * @author Jan van de Molengraft [jan@artemisc.eu]
@@ -17,10 +16,10 @@ public final class Sign {
     private Sign() {}
 
     // constants
-    public static final int SIGNBYTES = Sodium.crypto_sign_bytes();
-    public static final int PUBLICKEYBYTES = Sodium.crypto_sign_publickeybytes();
+    public static final int SIGNBYTES       = Sodium.crypto_sign_bytes();
+    public static final int PUBLICKEYBYTES  = Sodium.crypto_sign_publickeybytes();
     public static final int PRIVATEKEYBYTES = Sodium.crypto_sign_secretkeybytes();
-    public static final int SEEDBYTES = Sodium.crypto_box_seedbytes();
+    public static final int SEEDBYTES       = Sodium.crypto_box_seedbytes();
 
     public static final String PRIMITIVE = Sodium.crypto_sign_primitive();
 
@@ -41,8 +40,8 @@ public final class Sign {
      *
      * @see <a href="https://download.libsodium.org/doc/public-key_cryptography/public-key_signatures.html#key-pair-generation">libsodium docs</a>
      */
-    public static void keypair(@NonNull final byte[] dstPublicKey,
-                               @NonNull final byte[] dstPrivateKey)
+    public static void keypair(@NotNull final byte[] dstPublicKey,
+                               @NotNull final byte[] dstPrivateKey)
             throws StodiumException {
         Stodium.checkSize(dstPublicKey.length, PUBLICKEYBYTES, "Sign.PUBLICKEYBYTES");
         Stodium.checkSize(dstPrivateKey.length, PRIVATEKEYBYTES, "Sign.PRIVATEKEYBYTES");
@@ -62,9 +61,9 @@ public final class Sign {
      *
      * @see <a href="https://download.libsodium.org/doc/public-key_cryptography/public-key_signatures.html#key-pair-generation">libsodium docs</a>
      */
-    public static void keypairSeed(@NonNull final byte[] dstPublicKey,
-                                   @NonNull final byte[] dstPrivateKey,
-                                   @NonNull final byte[] srcSeed)
+    public static void keypairSeed(@NotNull final byte[] dstPublicKey,
+                                   @NotNull final byte[] dstPrivateKey,
+                                   @NotNull final byte[] srcSeed)
             throws StodiumException {
         Stodium.checkSize(dstPublicKey.length, PUBLICKEYBYTES, "Sign.PUBLICKEYBYTES");
         Stodium.checkSize(dstPrivateKey.length, PRIVATEKEYBYTES, "Sign.PRIVATEKEYBYTES");
@@ -88,8 +87,8 @@ public final class Sign {
      *
      * @see <a href="https://download.libsodium.org/doc/public-key_cryptography/public-key_signatures.html#extracting-the-seed-and-the-public-key-from-the-secret-key">libsodium docs</a>
      */
-    public static void publicFromPrivate(@NonNull final byte[] dstPublicKey,
-                                         @NonNull final byte[] srcPrivateKey)
+    public static void publicFromPrivate(@NotNull final byte[] dstPublicKey,
+                                         @NotNull final byte[] srcPrivateKey)
             throws StodiumException {
         Stodium.checkSize(dstPublicKey.length, PUBLICKEYBYTES, "Sign.PUBLICKEYBYTES");
         Stodium.checkSize(srcPrivateKey.length, PRIVATEKEYBYTES, "Sign.PRIVATEKEYBYTES");
@@ -107,8 +106,8 @@ public final class Sign {
      *
      * @see <a href="https://download.libsodium.org/doc/public-key_cryptography/public-key_signatures.html#extracting-the-seed-and-the-public-key-from-the-secret-key">libsodium docs</a>
      */
-    public static void seedFromPrivate(@NonNull final byte[] dstSeed,
-                                       @NonNull final byte[] srcPrivateKey)
+    public static void seedFromPrivate(@NotNull final byte[] dstSeed,
+                                       @NotNull final byte[] srcPrivateKey)
             throws StodiumException {
         Stodium.checkSize(srcPrivateKey.length, PRIVATEKEYBYTES, "Sign.PRIVATEKEYBYTES");
         Stodium.checkSize(dstSeed.length, SEEDBYTES, "Sign.SEEDBYTES");
@@ -138,9 +137,9 @@ public final class Sign {
      *
      * @see <a href="https://download.libsodium.org/doc/public-key_cryptography/public-key_signatures.html#combined-mode">libsodium docs</a>
      */
-    public static int sign(@NonNull final byte[] dstSignedMsg,
-                           @NonNull final byte[] srcMsg,
-                           @NonNull final byte[] localPrivKey)
+    public static int sign(@NotNull final byte[] dstSignedMsg,
+                           @NotNull final byte[] srcMsg,
+                           @NotNull final byte[] localPrivKey)
             throws StodiumException {
         Stodium.checkSize(dstSignedMsg.length, srcMsg.length + SIGNBYTES, "Sign.SIGNBYTES + srcMsg.length");
         Stodium.checkSize(localPrivKey.length, PRIVATEKEYBYTES, "Sign.PRIVATEKEYBYTES");
@@ -168,9 +167,9 @@ public final class Sign {
      *
      * @see <a href="https://download.libsodium.org/doc/public-key_cryptography/public-key_signatures.html#combined-mode">libsodium docs</a>
      */
-    public static int open(@NonNull final byte[] dstMsg,
-                           @NonNull final byte[] srcSignedMsg,
-                           @NonNull final byte[] remotePubKey)
+    public static int open(@NotNull final byte[] dstMsg,
+                           @NotNull final byte[] srcSignedMsg,
+                           @NotNull final byte[] remotePubKey)
             throws StodiumException {
         Stodium.checkSize(srcSignedMsg.length, dstMsg.length + SIGNBYTES, "Sign.SIGNBYTES + dstMsg.length");
         Stodium.checkSize(remotePubKey.length, PUBLICKEYBYTES, "Sign.PUBLICKEYBYTES");
@@ -196,9 +195,9 @@ public final class Sign {
      *
      * @see <a href="https://download.libsodium.org/doc/public-key_cryptography/public-key_signatures.html#detached-mode">libsodium docs</a>
      */
-    public static int signDetached(@NonNull final byte[] dstSignature,
-                                   @NonNull final byte[] srcMsg,
-                                   @NonNull final byte[] localPrivKey)
+    public static int signDetached(@NotNull final byte[] dstSignature,
+                                   @NotNull final byte[] srcMsg,
+                                   @NotNull final byte[] localPrivKey)
             throws StodiumException {
         Stodium.checkSize(dstSignature.length, SIGNBYTES, "Sign.SIGNBYTES");
         Stodium.checkSize(localPrivKey.length, PRIVATEKEYBYTES, "Sign.PRIVATEKEYBYTES");
@@ -218,9 +217,9 @@ public final class Sign {
      *
      * @see <a href="https://download.libsodium.org/doc/public-key_cryptography/public-key_signatures.html#detached-mode">libsodium docs</a>
      */
-    public static void verifyDetached(@NonNull final byte[] srcSignature,
-                                      @NonNull final byte[] srcMsg,
-                                      @NonNull final byte[] remotePubKey)
+    public static void verifyDetached(@NotNull final byte[] srcSignature,
+                                      @NotNull final byte[] srcMsg,
+                                      @NotNull final byte[] remotePubKey)
             throws StodiumException {
         Stodium.checkSize(srcSignature.length, SIGNBYTES, "Sign.SIGNBYTES");
         Stodium.checkSize(remotePubKey.length, PUBLICKEYBYTES, "Sign.PUBLICKEYBYTES");

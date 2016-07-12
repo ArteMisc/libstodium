@@ -1,6 +1,6 @@
 package eu.artemisc.stodium;
 
-import android.support.annotation.NonNull;
+import org.jetbrains.annotations.NotNull;
 
 import java.nio.ByteBuffer;
 
@@ -38,9 +38,9 @@ public final class Curve25519 {
      * @throws ConstraintViolationException
      * @throws StodiumException
      */
-    public static void scalarMult(@NonNull final ByteBuffer dst,
-                                  @NonNull final ByteBuffer src,
-                                  @NonNull final ByteBuffer groupElement)
+    public static void scalarMult(@NotNull final ByteBuffer dst,
+                                  @NotNull final ByteBuffer src,
+                                  @NotNull final ByteBuffer groupElement)
             throws StodiumException {
         Stodium.checkSize(dst.remaining(), SCALAR_BYTES, "Curve25519.SCALAR_BYTES");
         Stodium.checkSize(src.remaining(), SCALAR_BYTES, "Curve25519.SCALAR_BYTES");
@@ -58,8 +58,8 @@ public final class Curve25519 {
      * @throws ConstraintViolationException
      * @throws StodiumException
      */
-    public static void scalarMultBase(@NonNull final ByteBuffer dst,
-                                      @NonNull final ByteBuffer src)
+    public static void scalarMultBase(@NotNull final ByteBuffer dst,
+                                      @NotNull final ByteBuffer src)
             throws StodiumException {
         Stodium.checkSize(dst.remaining(), SCALAR_BYTES, "Curve25519.SCALAR_BYTES");
         Stodium.checkSize(src.remaining(), SCALAR_BYTES, "Curve25519.SCALAR_BYTES");
@@ -79,8 +79,8 @@ public final class Curve25519 {
      * @throws ConstraintViolationException
      * @throws StodiumException
      */
-    public static void x25519PrivateToPublic(@NonNull final ByteBuffer dstPublic,
-                                             @NonNull final ByteBuffer srcPrivate)
+    public static void x25519PrivateToPublic(@NotNull final ByteBuffer dstPublic,
+                                             @NotNull final ByteBuffer srcPrivate)
             throws StodiumException {
         scalarMultBase(dstPublic, srcPrivate);
     }

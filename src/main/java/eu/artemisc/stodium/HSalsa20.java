@@ -1,7 +1,7 @@
 package eu.artemisc.stodium;
 
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.nio.ByteBuffer;
 
@@ -29,9 +29,9 @@ public class HSalsa20 {
      * @throws StodiumException
      * @throws IllegalArgumentException
      */
-    public static void hsalsa20(@NonNull  final ByteBuffer dst,
-                                @NonNull  final ByteBuffer src,
-                                @NonNull  final ByteBuffer key,
+    public static void hsalsa20(@NotNull  final ByteBuffer dst,
+                                @NotNull  final ByteBuffer src,
+                                @NotNull  final ByteBuffer key,
                                 @Nullable final ByteBuffer constant)
             throws StodiumException {
         Stodium.checkDestinationWritable(dst, "Stodium.HSalsa20#hsalsa20(dst)");

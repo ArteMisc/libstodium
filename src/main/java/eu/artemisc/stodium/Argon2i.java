@@ -1,6 +1,6 @@
 package eu.artemisc.stodium;
 
-import android.support.annotation.NonNull;
+import org.jetbrains.annotations.NotNull;
 
 import java.nio.ByteBuffer;
 
@@ -21,7 +21,7 @@ public final class Argon2i {
 //  public static final String PRIMITIVE            = StodiumJNI.crypto_pwhash_primitive();
 //  public static final String STRPREFIX            = StodiumJNI.crypto_pwhash_strprefix();
     public static final int    STRBYTES             = StodiumJNI.crypto_pwhash_strbytes();
-    public static final int    SALTBYTES            = 16;//StodiumJNI.crypto_pwhash_saltbytes();
+    public static final int    SALTBYTES            = 16; //StodiumJNI.crypto_pwhash_saltbytes();
     public static final int    OPSLIMIT_INTERACTIVE = StodiumJNI.crypto_pwhash_opslimit_interactive();
     public static final int    MEMLIMIT_INTERACTIVE = StodiumJNI.crypto_pwhash_memlimit_interactive();
     public static final int    OPSLIMIT_MODERATE    = StodiumJNI.crypto_pwhash_opslimit_moderate();
@@ -47,9 +47,9 @@ public final class Argon2i {
      * @throws ConstraintViolationException
      * @throws StodiumException
      */
-    public static void pwhashArgon2i(@NonNull final ByteBuffer dstKey,
-                                     @NonNull final ByteBuffer srcPwd,
-                                     @NonNull final ByteBuffer srcSalt)
+    public static void pwhashArgon2i(@NotNull final ByteBuffer dstKey,
+                                     @NotNull final ByteBuffer srcPwd,
+                                     @NotNull final ByteBuffer srcSalt)
             throws StodiumException {
         pwhashArgon2i(dstKey, srcPwd, srcSalt, OPSLIMIT_INTERACTIVE, MEMLIMIT_INTERACTIVE);
     }
@@ -64,9 +64,9 @@ public final class Argon2i {
      * @throws ConstraintViolationException
      * @throws StodiumException
      */
-    public static void pwhashArgon2i(@NonNull final ByteBuffer dstKey,
-                                     @NonNull final ByteBuffer srcPwd,
-                                     @NonNull final ByteBuffer srcSalt,
+    public static void pwhashArgon2i(@NotNull final ByteBuffer dstKey,
+                                     @NotNull final ByteBuffer srcPwd,
+                                     @NotNull final ByteBuffer srcSalt,
                                               final int        opsLimit,
                                               final int        memLimit)
             throws StodiumException {

@@ -1,8 +1,7 @@
 package eu.artemisc.stodium;
 
-import android.support.annotation.NonNull;
-
 import org.abstractj.kalium.Sodium;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Auth wraps calls to crypto_auth, based on HMAC-SHA512256
@@ -34,9 +33,9 @@ public class Auth {
      * @throws ConstraintViolationException
      * @throws StodiumException
      */
-    public static void auth(@NonNull final byte[] dstOut,
-                            @NonNull final byte[] srcIn,
-                            @NonNull final byte[] srcKey)
+    public static void auth(@NotNull final byte[] dstOut,
+                            @NotNull final byte[] srcIn,
+                            @NotNull final byte[] srcKey)
             throws StodiumException {
         Stodium.checkSize(dstOut.length, BYTES, "Auth.BYTES");
         Stodium.checkSize(srcKey.length, KEYBYTES, "Auth.KEYBYTES");
@@ -53,9 +52,9 @@ public class Auth {
      * @throws ConstraintViolationException
      * @throws StodiumException
      */
-    public static boolean authVerify(@NonNull final byte[] srcTag,
-                                     @NonNull final byte[] srcIn,
-                                     @NonNull final byte[] srcKey)
+    public static boolean authVerify(@NotNull final byte[] srcTag,
+                                     @NotNull final byte[] srcIn,
+                                     @NotNull final byte[] srcKey)
             throws StodiumException {
         Stodium.checkSize(srcTag.length, BYTES, "Auth.BYTES");
         Stodium.checkSize(srcKey.length, KEYBYTES, "Auth.KEYBYTES");

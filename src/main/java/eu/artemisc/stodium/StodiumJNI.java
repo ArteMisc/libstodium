@@ -1,11 +1,14 @@
 package eu.artemisc.stodium;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
 import java.nio.ByteBuffer;
 
 /**
  * StodiumJNI implements the java definitions of native methods for wrappers
- * around Libsodium functions.
  *
+ * around Libsodium functions.
  * @author Jan van de Molengraft [jan@artemisc.eu]
  */
 public class StodiumJNI {
@@ -30,7 +33,10 @@ public class StodiumJNI {
     static native int crypto_core_hsalsa20_keybytes();
     static native int crypto_core_hsalsa20_constbytes();
     static native int crypto_core_hsalsa20(
-            ByteBuffer dst, ByteBuffer src, ByteBuffer key, ByteBuffer constant);
+            @NotNull ByteBuffer dst,
+            @NotNull ByteBuffer src,
+            @NotNull ByteBuffer key,
+            @NotNull ByteBuffer constant);
 
     //
     // AEAD
@@ -77,6 +83,42 @@ public class StodiumJNI {
             ByteBuffer dstCipher, ByteBuffer srcPlain, ByteBuffer publicKey);
     static native int crypto_box_seal_open(
             ByteBuffer dstPlain, ByteBuffer srcCipher, ByteBuffer publicKey, ByteBuffer privateKey);
+
+    //
+    // GenericHash Blake2b
+    //
+    static native int crypto_generichash_blake2b_bytes();
+    static native int crypto_generichash_blake2b_bytes_min();
+    static native int crypto_generichash_blake2b_bytes_max();
+    static native int crypto_generichash_blake2b_keybytes();
+    static native int crypto_generichash_blake2b_keybytes_min();
+    static native int crypto_generichash_blake2b_keybytes_max();
+    static native int crypto_generichash_blake2b_personalbytes();
+    static native int crypto_generichash_blake2b_saltbytes();
+    static native int crypto_generichash_blake2b_statebytes();
+
+    static native int crypto_generichash_blake2b(
+            @NotNull  ByteBuffer dst,
+            @NotNull  ByteBuffer src,
+            @Nullable ByteBuffer key);
+
+    static native int crypto_generichash_blake2b_salt_personal(
+            @NotNull ByteBuffer dst,
+            @NotNull ByteBuffer src,
+            @NotNull ByteBuffer key,
+            @NotNull ByteBuffer salt,
+            @NotNull ByteBuffer personal);
+
+    static native int crypto_generichash_blake2b_init(
+            @NotNull ByteBuffer state,
+            @NotNull ByteBuffer key,
+                     int        outlen);
+    static native int crypto_generichash_blake2b_update(
+            @NotNull ByteBuffer state,
+            @NotNull ByteBuffer in);
+    static native int crypto_generichash_blake2b_final(
+            @NotNull ByteBuffer state,
+            @NotNull ByteBuffer out);
 
     //
     // PwHash

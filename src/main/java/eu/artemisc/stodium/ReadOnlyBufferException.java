@@ -1,6 +1,6 @@
 package eu.artemisc.stodium;
 
-import android.support.annotation.NonNull;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * ReadOnlyBufferException is a mirror of
@@ -15,7 +15,7 @@ import android.support.annotation.NonNull;
  */
 public class ReadOnlyBufferException
         extends UnsupportedOperationException {
-    ReadOnlyBufferException(@NonNull final String detailMessage) {
+    ReadOnlyBufferException(@NotNull final String detailMessage) {
         super(detailMessage);
     }
 }

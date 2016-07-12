@@ -1,8 +1,7 @@
 package eu.artemisc.stodium;
 
-import android.support.annotation.NonNull;
-
 import org.abstractj.kalium.Sodium;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
 
@@ -16,8 +15,7 @@ public class Hash {
     }
 
     // constants
-    public static final int BYTES = Sodium.crypto_hash_bytes();
-
+    public static final int BYTES       = Sodium.crypto_hash_bytes();
     public static final int STATE_BYTES = Sodium.crypto_hash_statebytes();
 
     public static final String PRIMITIVE = Sodium.crypto_generichash_primitive();
@@ -25,8 +23,7 @@ public class Hash {
     /**
      * state holds the binary representation of the crypto_hash_state value.
      */
-    @NonNull
-    private final byte[] state;
+    @NotNull private final byte[] state;
 
     /**
      * Hash constructor creates a new hash_state. It implicitly calls
@@ -47,7 +44,7 @@ public class Hash {
      * by copying the internal byte array of the original state value.
      * @param original
      */
-    public Hash(@NonNull final Hash original) {
+    public Hash(@NotNull final Hash original) {
         this.state = Arrays.copyOf(original.state, STATE_BYTES);
     }
 
@@ -67,7 +64,7 @@ public class Hash {
      * @throws ConstraintViolationException
      * @throws StodiumException
      */
-    public void update(@NonNull final byte[] in)
+    public void update(@NotNull final byte[] in)
             throws StodiumException {
         update(in, 0, in.length);
     }
@@ -80,7 +77,7 @@ public class Hash {
      * @throws ConstraintViolationException
      * @throws StodiumException
      */
-    public void update(@NonNull final byte[] in,
+    public void update(@NotNull final byte[] in,
                        final int offset,
                        final int len)
             throws StodiumException {
@@ -94,7 +91,7 @@ public class Hash {
      * @throws ConstraintViolationException
      * @throws StodiumException
      */
-    public void doFinal(@NonNull final byte[] out)
+    public void doFinal(@NotNull final byte[] out)
             throws StodiumException {
         doFinal(out, 0);
     }
@@ -106,7 +103,7 @@ public class Hash {
      * @throws ConstraintViolationException
      * @throws StodiumException
      */
-    public void doFinal(@NonNull final byte[] out,
+    public void doFinal(@NotNull final byte[] out,
                         final int offset)
             throws StodiumException {
         Stodium.checkOffsetParams(out.length, offset, BYTES);
@@ -120,8 +117,8 @@ public class Hash {
      * @throws ConstraintViolationException
      * @throws StodiumException
      */
-    public static void hash(@NonNull final byte[] out,
-                            @NonNull final byte[] in)
+    public static void hash(@NotNull final byte[] out,
+                            @NotNull final byte[] in)
             throws StodiumException {
         hash(out, 0, in, 0, in.length);
     }
@@ -136,11 +133,11 @@ public class Hash {
      * @throws ConstraintViolationException
      * @throws StodiumException
      */
-    public static void hash(@NonNull final byte[] out,
-                            final int outOffset,
-                            @NonNull final byte[] in,
-                            final int inOffset,
-                            final int inLen)
+    public static void hash(@NotNull final byte[] out,
+                                     final int    outOffset,
+                            @NotNull final byte[] in,
+                                     final int    inOffset,
+                                     final int    inLen)
             throws StodiumException {
         Stodium.checkOffsetParams(out.length, outOffset, BYTES);
         Stodium.checkOffsetParams(in.length, inOffset, inLen);

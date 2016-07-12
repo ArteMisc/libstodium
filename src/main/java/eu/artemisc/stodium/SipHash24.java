@@ -1,9 +1,7 @@
 package eu.artemisc.stodium;
 
-import android.support.annotation.CheckResult;
-import android.support.annotation.NonNull;
-
 import org.abstractj.kalium.Sodium;
+import org.jetbrains.annotations.NotNull;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -35,9 +33,9 @@ public class SipHash24 {
      * @throws ConstraintViolationException
      * @throws StodiumException
      */
-    @NonNull @CheckResult
-    public static Long shorthash(@NonNull final byte[] srcIn,
-                                 @NonNull final byte[] srcKey)
+    @NotNull
+    public static Long shorthash(@NotNull final byte[] srcIn,
+                                 @NotNull final byte[] srcKey)
             throws StodiumException {
         Stodium.checkSize(srcKey.length, KEYBYTES, "SipHash24.KEYBYTES");
 
@@ -59,9 +57,9 @@ public class SipHash24 {
      * @throws ConstraintViolationException
      * @throws StodiumException
      */
-    public static void shorthash(@NonNull final byte[] dstHash,
-                                 @NonNull final byte[] srcIn,
-                                 @NonNull final byte[] srcKey)
+    public static void shorthash(@NotNull final byte[] dstHash,
+                                 @NotNull final byte[] srcIn,
+                                 @NotNull final byte[] srcKey)
             throws StodiumException {
         Stodium.checkSize(dstHash.length, BYTES, "SipHash24.BYTES");
         Stodium.checkSize(srcKey.length, KEYBYTES, "SipHash24.KEYBYTES");

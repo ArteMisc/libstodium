@@ -1,8 +1,7 @@
 package eu.artemisc.stodium;
 
-import android.support.annotation.NonNull;
-
 import org.abstractj.kalium.Sodium;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
 
@@ -32,8 +31,7 @@ public class OneTimeAuth {
      * state holds the binary representation of the crypto_onetimeauth_state
      * value.
      */
-    @NonNull
-    private final byte[] state;
+    @NotNull private final byte[] state;
 
     /**
      * State allocates a byte array that holds the raw packed value of the C
@@ -51,7 +49,7 @@ public class OneTimeAuth {
      * @throws ConstraintViolationException
      * @throws StodiumException
      */
-    public OneTimeAuth(@NonNull final byte[] key)
+    public OneTimeAuth(@NotNull final byte[] key)
             throws StodiumException {
         this();
         init(key);
@@ -64,7 +62,7 @@ public class OneTimeAuth {
      *
      * @param original The original State that should be copied
      */
-    public OneTimeAuth(@NonNull final OneTimeAuth original) {
+    public OneTimeAuth(@NotNull final OneTimeAuth original) {
         this.state = Arrays.copyOf(original.state, original.state.length);
     }
 
@@ -74,7 +72,7 @@ public class OneTimeAuth {
      * @throws ConstraintViolationException
      * @throws StodiumException
      */
-    public void init(@NonNull final byte[] key)
+    public void init(@NotNull final byte[] key)
             throws StodiumException {
         Stodium.checkSize(key.length, KEYBYTES, "OneTimeAuth.KEYBYTES");
         Stodium.checkStatus(
@@ -87,7 +85,7 @@ public class OneTimeAuth {
      * @throws ConstraintViolationException
      * @throws StodiumException
      */
-    public void update(@NonNull final byte[] in)
+    public void update(@NotNull final byte[] in)
             throws StodiumException {
         update(in, 0, in.length);
     }
@@ -100,7 +98,7 @@ public class OneTimeAuth {
      * @throws ConstraintViolationException
      * @throws StodiumException
      */
-    public void update(@NonNull final byte[] in,
+    public void update(@NotNull final byte[] in,
                        final int offset,
                        final int length)
             throws StodiumException {
@@ -117,7 +115,7 @@ public class OneTimeAuth {
      * @throws ConstraintViolationException
      * @throws StodiumException
      */
-    public void doFinal(@NonNull final byte[] out)
+    public void doFinal(@NotNull final byte[] out)
             throws StodiumException {
         doFinal(out, 0);
     }
@@ -129,7 +127,7 @@ public class OneTimeAuth {
      * @throws ConstraintViolationException
      * @throws StodiumException
      */
-    public void doFinal(@NonNull final byte[] out,
+    public void doFinal(@NotNull final byte[] out,
                         final int offset)
             throws StodiumException {
         Stodium.checkOffsetParams(out.length, offset, BYTES);
@@ -151,9 +149,9 @@ public class OneTimeAuth {
      * @throws ConstraintViolationException
      * @throws StodiumException
      */
-    public static void auth(@NonNull final byte[] dstOut,
-                            @NonNull final byte[] srcIn,
-                            @NonNull final byte[] srcKey)
+    public static void auth(@NotNull final byte[] dstOut,
+                            @NotNull final byte[] srcIn,
+                            @NotNull final byte[] srcKey)
             throws StodiumException {
         final OneTimeAuth auth = new OneTimeAuth(srcKey);
         auth.update(srcIn);
@@ -169,9 +167,9 @@ public class OneTimeAuth {
      * @throws ConstraintViolationException
      * @throws StodiumException
      */
-    public static boolean authVerify(@NonNull final byte[] srcTag,
-                                     @NonNull final byte[] srcIn,
-                                     @NonNull final byte[] srcKey)
+    public static boolean authVerify(@NotNull final byte[] srcTag,
+                                     @NotNull final byte[] srcIn,
+                                     @NotNull final byte[] srcKey)
             throws StodiumException {
         final byte[] verify = new byte[BYTES];
         auth(verify, srcIn, srcKey);

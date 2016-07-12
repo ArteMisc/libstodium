@@ -1,10 +1,5 @@
 package eu.artemisc.stodium;
 
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-
-import org.abstractj.kalium.Sodium;
-
 /**
  * @author Jan van de Molengraft [jan@artemisc.eu]
  */
