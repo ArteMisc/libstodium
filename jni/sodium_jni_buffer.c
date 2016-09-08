@@ -465,13 +465,6 @@ STODIUM_JNI(jint, crypto_1secretbox_1open_1detached) (JNIEnv *jenv, jclass jcls,
     stodium_get_buffer(jenv, &nonce_buffer, nonce);
     stodium_get_buffer(jenv, &key_buffer, key);
 
-//    jint result = (jint) crypto_secretbox_open_detached(
-//            AS_OUTPUT(unsigned char, dst_buffer),
-//            AS_INPUT(unsigned char, src_buffer),
-//            AS_INPUT(unsigned char, mac_buffer),
-//            AS_INPUT_LEN(unsigned long long, src_buffer),
-//            AS_INPUT(unsigned char, nonce_buffer)
-//            AS_INPUT(unsigned char, key_buffer));
     jint result = (jint) crypto_secretbox_open_detached(
             AS_OUTPUT(unsigned char, dst_buffer),
             AS_INPUT(unsigned char, src_buffer),
