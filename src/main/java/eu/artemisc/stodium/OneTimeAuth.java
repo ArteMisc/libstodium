@@ -18,12 +18,11 @@ public class OneTimeAuth {
     }
 
     // constants
-    public static final int BYTES = Sodium.crypto_onetimeauth_bytes();
-    public static final int KEYBYTES = Sodium.crypto_onetimeauth_keybytes();
-
+    public static final int BYTES      = Sodium.crypto_onetimeauth_bytes();
+    public static final int KEYBYTES   = Sodium.crypto_onetimeauth_keybytes();
     public static final int STATEBYTES = Sodium.crypto_onetimeauth_statebytes();
 
-    public static final String PRIMITIVE = Sodium.crypto_onetimeauth_primitive();
+    public static final @NotNull String PRIMITIVE = Sodium.crypto_onetimeauth_primitive();
 
     // Implementation of the stream API
 
@@ -31,7 +30,7 @@ public class OneTimeAuth {
      * state holds the binary representation of the crypto_onetimeauth_state
      * value.
      */
-    @NotNull private final byte[] state;
+    private final @NotNull byte[] state;
 
     /**
      * State allocates a byte array that holds the raw packed value of the C
@@ -49,7 +48,7 @@ public class OneTimeAuth {
      * @throws ConstraintViolationException
      * @throws StodiumException
      */
-    public OneTimeAuth(@NotNull final byte[] key)
+    public OneTimeAuth(final @NotNull byte[] key)
             throws StodiumException {
         this();
         init(key);
@@ -62,7 +61,7 @@ public class OneTimeAuth {
      *
      * @param original The original State that should be copied
      */
-    public OneTimeAuth(@NotNull final OneTimeAuth original) {
+    public OneTimeAuth(final @NotNull OneTimeAuth original) {
         this.state = Arrays.copyOf(original.state, original.state.length);
     }
 
@@ -72,7 +71,7 @@ public class OneTimeAuth {
      * @throws ConstraintViolationException
      * @throws StodiumException
      */
-    public void init(@NotNull final byte[] key)
+    public void init(final @NotNull byte[] key)
             throws StodiumException {
         Stodium.checkSize(key.length, KEYBYTES, "OneTimeAuth.KEYBYTES");
         Stodium.checkStatus(
@@ -85,7 +84,7 @@ public class OneTimeAuth {
      * @throws ConstraintViolationException
      * @throws StodiumException
      */
-    public void update(@NotNull final byte[] in)
+    public void update(final @NotNull byte[] in)
             throws StodiumException {
         update(in, 0, in.length);
     }
@@ -98,9 +97,9 @@ public class OneTimeAuth {
      * @throws ConstraintViolationException
      * @throws StodiumException
      */
-    public void update(@NotNull final byte[] in,
-                       final int offset,
-                       final int length)
+    public void update(final @NotNull byte[] in,
+                       final          int    offset,
+                       final          int    length)
             throws StodiumException {
         Stodium.checkOffsetParams(in.length, offset, length);
         Stodium.checkStatus(Sodium.crypto_onetimeauth_update_offset(
@@ -115,7 +114,7 @@ public class OneTimeAuth {
      * @throws ConstraintViolationException
      * @throws StodiumException
      */
-    public void doFinal(@NotNull final byte[] out)
+    public void doFinal(final @NotNull byte[] out)
             throws StodiumException {
         doFinal(out, 0);
     }
@@ -127,8 +126,8 @@ public class OneTimeAuth {
      * @throws ConstraintViolationException
      * @throws StodiumException
      */
-    public void doFinal(@NotNull final byte[] out,
-                        final int offset)
+    public void doFinal(final @NotNull byte[] out,
+                        final          int    offset)
             throws StodiumException {
         Stodium.checkOffsetParams(out.length, offset, BYTES);
         Stodium.checkStatus(Sodium.crypto_onetimeauth_final_offset(
@@ -149,9 +148,9 @@ public class OneTimeAuth {
      * @throws ConstraintViolationException
      * @throws StodiumException
      */
-    public static void auth(@NotNull final byte[] dstOut,
-                            @NotNull final byte[] srcIn,
-                            @NotNull final byte[] srcKey)
+    public static void auth(final @NotNull byte[] dstOut,
+                            final @NotNull byte[] srcIn,
+                            final @NotNull byte[] srcKey)
             throws StodiumException {
         final OneTimeAuth auth = new OneTimeAuth(srcKey);
         auth.update(srcIn);
@@ -167,9 +166,9 @@ public class OneTimeAuth {
      * @throws ConstraintViolationException
      * @throws StodiumException
      */
-    public static boolean authVerify(@NotNull final byte[] srcTag,
-                                     @NotNull final byte[] srcIn,
-                                     @NotNull final byte[] srcKey)
+    public static boolean authVerify(final @NotNull byte[] srcTag,
+                                     final @NotNull byte[] srcIn,
+                                     final @NotNull byte[] srcKey)
             throws StodiumException {
         final byte[] verify = new byte[BYTES];
         auth(verify, srcIn, srcKey);

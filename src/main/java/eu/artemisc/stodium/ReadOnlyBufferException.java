@@ -15,7 +15,7 @@ import org.jetbrains.annotations.NotNull;
  */
 public class ReadOnlyBufferException
         extends UnsupportedOperationException {
-    ReadOnlyBufferException(@NotNull final String detailMessage) {
+    ReadOnlyBufferException(final @NotNull String detailMessage) {
         super(detailMessage);
     }
 }

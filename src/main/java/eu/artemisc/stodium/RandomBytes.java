@@ -1,7 +1,8 @@
 package eu.artemisc.stodium;
 
-import org.abstractj.kalium.Sodium;
 import org.jetbrains.annotations.NotNull;
+
+import java.nio.ByteBuffer;
 
 /**
  * RandomBytes builds on top of libsodium's random_bytes as its CSPRNG.
@@ -21,11 +22,11 @@ public final class RandomBytes {
      * nextBytes fills the provided buffer with random bytes, using Sodium's
      * {@code randombytes_buf(void*, size_t)} function.
      *
-     * FIXME this method call does not work
-     *
      * @param buffer
+     * @throws ReadOnlyBufferException
      */
-    public static void nextBytes(@NotNull final byte[] buffer) {
-        Sodium.randombytes_buf(buffer, buffer.length);
+    public static void nextBytes(final @NotNull ByteBuffer buffer) {
+        Stodium.checkDestinationWritable(buffer, "RANDOM buffer");
+        StodiumJNI.randombytes_buf(buffer);
     }
 }

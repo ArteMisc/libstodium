@@ -15,16 +15,16 @@ public class StodiumException
         super();
     }
 
-    StodiumException(@NotNull final String detailMessage) {
+    StodiumException(final @NotNull String detailMessage) {
         super(detailMessage);
     }
 
-    StodiumException(@NotNull final Throwable throwable) {
+    StodiumException(final @NotNull Throwable throwable) {
         super(throwable);
     }
 
-    StodiumException(@NotNull final String detailMessage,
-                     @NotNull final Throwable throwable) {
+    StodiumException(final @NotNull String detailMessage,
+                     final @NotNull Throwable throwable) {
         super(detailMessage, throwable);
     }
 }

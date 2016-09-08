@@ -47,9 +47,9 @@ public final class Argon2i {
      * @throws ConstraintViolationException
      * @throws StodiumException
      */
-    public static void pwhashArgon2i(@NotNull final ByteBuffer dstKey,
-                                     @NotNull final ByteBuffer srcPwd,
-                                     @NotNull final ByteBuffer srcSalt)
+    public static void pwhashArgon2i(final @NotNull ByteBuffer dstKey,
+                                     final @NotNull ByteBuffer srcPwd,
+                                     final @NotNull ByteBuffer srcSalt)
             throws StodiumException {
         pwhashArgon2i(dstKey, srcPwd, srcSalt, OPSLIMIT_INTERACTIVE, MEMLIMIT_INTERACTIVE);
     }
@@ -64,11 +64,11 @@ public final class Argon2i {
      * @throws ConstraintViolationException
      * @throws StodiumException
      */
-    public static void pwhashArgon2i(@NotNull final ByteBuffer dstKey,
-                                     @NotNull final ByteBuffer srcPwd,
-                                     @NotNull final ByteBuffer srcSalt,
-                                              final int        opsLimit,
-                                              final int        memLimit)
+    public static void pwhashArgon2i(final @NotNull ByteBuffer dstKey,
+                                     final @NotNull ByteBuffer srcPwd,
+                                     final @NotNull ByteBuffer srcSalt,
+                                     final          int        opsLimit,
+                                     final          int        memLimit)
             throws StodiumException {
         Stodium.checkDestinationWritable(dstKey, "Stodium.Argon2i#pwhashScrypt(dstKey)");
 

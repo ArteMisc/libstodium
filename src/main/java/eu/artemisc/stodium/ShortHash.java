@@ -21,10 +21,10 @@ public class ShortHash {
     private ShortHash() {}
 
     // constants
-    public static final int BYTES = Sodium.crypto_shorthash_bytes();
+    public static final int BYTES    = Sodium.crypto_shorthash_bytes();
     public static final int KEYBYTES = Sodium.crypto_shorthash_keybytes();
 
-    public static final String PRIMITIVE = Sodium.crypto_shorthash_primitive();
+    public static final @NotNull String PRIMITIVE = Sodium.crypto_shorthash_primitive();
 
     /**
      *
@@ -36,8 +36,8 @@ public class ShortHash {
      * @throws StodiumException
      */
     @NotNull
-    static Long shorthash(@NotNull final byte[] srcIn,
-                          @NotNull final byte[] srcKey)
+    static Long shorthash(final @NotNull byte[] srcIn,
+                          final @NotNull byte[] srcKey)
             throws StodiumException {
         Stodium.checkSize(srcKey.length, KEYBYTES, "ShortHash.KEYBYTES");
 
@@ -60,9 +60,9 @@ public class ShortHash {
      * @throws ConstraintViolationException
      * @throws StodiumException
      */
-    static void shorthash(@NotNull final byte[] dstHash,
-                          @NotNull final byte[] srcIn,
-                          @NotNull final byte[] srcKey)
+    static void shorthash(final @NotNull byte[] dstHash,
+                          final @NotNull byte[] srcIn,
+                          final @NotNull byte[] srcKey)
             throws StodiumException {
         Stodium.checkSize(dstHash.length, BYTES, "ShortHash.BYTES");
         Stodium.checkSize(srcKey.length, KEYBYTES, "ShortHash.KEYBYTES");

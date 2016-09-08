@@ -15,16 +15,16 @@ public class ConstraintViolationException
         super();
     }
 
-    ConstraintViolationException(@NotNull final String detailMessage) {
+    ConstraintViolationException(final @NotNull String detailMessage) {
         super(detailMessage);
     }
 
-    ConstraintViolationException(@NotNull final Throwable throwable) {
+    ConstraintViolationException(final @NotNull Throwable throwable) {
         super(throwable);
     }
 
-    ConstraintViolationException(@NotNull final String detailMessage,
-                                 @NotNull final Throwable throwable) {
+    ConstraintViolationException(final @NotNull String detailMessage,
+                                 final @NotNull Throwable throwable) {
         super(detailMessage, throwable);
     }
 }

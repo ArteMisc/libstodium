@@ -22,7 +22,7 @@ public final class Curve25519 {
     public static final int BYTES        = StodiumJNI.crypto_scalarmult_curve25519_bytes();
     public static final int SCALAR_BYTES = StodiumJNI.crypto_scalarmult_curve25519_scalarbytes();
 
-    public static final String PRIMITIVE = StodiumJNI.crypto_scalarmult_primitive();
+    public static final @NotNull String PRIMITIVE = StodiumJNI.crypto_scalarmult_primitive();
 
     // wrappers
 
@@ -38,9 +38,9 @@ public final class Curve25519 {
      * @throws ConstraintViolationException
      * @throws StodiumException
      */
-    public static void scalarMult(@NotNull final ByteBuffer dst,
-                                  @NotNull final ByteBuffer src,
-                                  @NotNull final ByteBuffer groupElement)
+    public static void scalarMult(final @NotNull ByteBuffer dst,
+                                  final @NotNull ByteBuffer src,
+                                  final @NotNull ByteBuffer groupElement)
             throws StodiumException {
         Stodium.checkSize(dst.remaining(), SCALAR_BYTES, "Curve25519.SCALAR_BYTES");
         Stodium.checkSize(src.remaining(), SCALAR_BYTES, "Curve25519.SCALAR_BYTES");
@@ -58,8 +58,8 @@ public final class Curve25519 {
      * @throws ConstraintViolationException
      * @throws StodiumException
      */
-    public static void scalarMultBase(@NotNull final ByteBuffer dst,
-                                      @NotNull final ByteBuffer src)
+    public static void scalarMultBase(final @NotNull ByteBuffer dst,
+                                      final @NotNull ByteBuffer src)
             throws StodiumException {
         Stodium.checkSize(dst.remaining(), SCALAR_BYTES, "Curve25519.SCALAR_BYTES");
         Stodium.checkSize(src.remaining(), SCALAR_BYTES, "Curve25519.SCALAR_BYTES");
@@ -79,8 +79,8 @@ public final class Curve25519 {
      * @throws ConstraintViolationException
      * @throws StodiumException
      */
-    public static void x25519PrivateToPublic(@NotNull final ByteBuffer dstPublic,
-                                             @NotNull final ByteBuffer srcPrivate)
+    public static void x25519PrivateToPublic(final @NotNull ByteBuffer dstPublic,
+                                             final @NotNull ByteBuffer srcPrivate)
             throws StodiumException {
         scalarMultBase(dstPublic, srcPrivate);
     }

@@ -29,10 +29,10 @@ public class HSalsa20 {
      * @throws StodiumException
      * @throws IllegalArgumentException
      */
-    public static void hsalsa20(@NotNull  final ByteBuffer dst,
-                                @NotNull  final ByteBuffer src,
-                                @NotNull  final ByteBuffer key,
-                                @Nullable final ByteBuffer constant)
+    public static void hsalsa20(final @NotNull  ByteBuffer dst,
+                                final @NotNull  ByteBuffer src,
+                                final @NotNull  ByteBuffer key,
+                                final @Nullable ByteBuffer constant)
             throws StodiumException {
         Stodium.checkDestinationWritable(dst, "Stodium.HSalsa20#hsalsa20(dst)");
 

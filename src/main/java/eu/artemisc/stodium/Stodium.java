@@ -3,15 +3,9 @@ package eu.artemisc.stodium;
 import org.abstractj.kalium.Sodium;
 import org.jetbrains.annotations.NotNull;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.nio.ByteBuffer;
 import java.util.Arrays;
 import java.util.Locale;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 import javax.crypto.AEADBadTagException;
 
@@ -54,7 +48,7 @@ public final class Stodium {
      *         {@link #checkStatus(int)} instead.
      */
     public static void checkStatusSealOpen(         final int    status,
-                                           @NotNull final String methodDescription)
+                                           final @NotNull String methodDescription)
             throws AEADBadTagException, StodiumException {
         if (status == 0) {
             return;
@@ -75,7 +69,7 @@ public final class Stodium {
      */
     public static void checkSize(         final int    src,
                                           final int    expected,
-                                 @NotNull final String constant)
+                                 final @NotNull String constant)
             throws ConstraintViolationException {
         if (src == expected) {
             return;
@@ -97,8 +91,8 @@ public final class Stodium {
     public static void checkSize(final int src,
                                  final int lower,
                                  final int upper,
-                                 @NotNull final String lowerC,
-                                 @NotNull final String upperC)
+                                 final @NotNull String lowerC,
+                                 final @NotNull String upperC)
             throws ConstraintViolationException {
         if (src <= upper && src >= lower) {
             return;
@@ -147,7 +141,7 @@ public final class Stodium {
      * @throws ConstraintViolationException
      */
     public static void checkPow2(final int src,
-                                 @NotNull final String descr)
+                                 final @NotNull String descr)
             throws ConstraintViolationException {
         if ((src > 0) && ((src & (~src + 1)) == src)) {
             return;
@@ -163,7 +157,7 @@ public final class Stodium {
      * @throws ConstraintViolationException
      */
     public static void checkPow2(final long src,
-                                 @NotNull final String descr)
+                                 final @NotNull String descr)
             throws ConstraintViolationException {
         if ((src > 0) && ((src & (~src + 1)) == src)) {
             return;
@@ -178,8 +172,8 @@ public final class Stodium {
      *
      * @return true iff a == b
      */
-    public static boolean isEqual(@NotNull final byte[] a,
-                                  @NotNull final byte[] b) {
+    public static boolean isEqual(final @NotNull byte[] a,
+                                  final @NotNull byte[] b) {
         if (a.length != b.length) {
             return false;
         }
@@ -190,12 +184,34 @@ public final class Stodium {
         return result == 0;
     }
 
-    public static void wipeBytes(@NotNull final byte[] a) {
+    /**
+     * TODO let this call a native comparator for direct buffers?
+     * @param a
+     * @param b
+     * @return
+     */
+    public static boolean isEqual(final @NotNull ByteBuffer a,
+                                  final @NotNull ByteBuffer b) {
+        if (a.remaining() != b.remaining()) {
+            return false;
+        }
+        int result = 0;
+        for (int i = 0; i < a.remaining(); i++) {
+            result |= a.get(i) ^ b.get(i);
+        }
+        return result == 0;
+    }
+
+    /**
+     *
+     * @param a
+     */
+    public static void wipeBytes(final @NotNull byte[] a) {
         Arrays.fill(a, (byte) 0x00);
     }
 
     private static byte[] emptyBuffer = new byte[8];
-    public static void wipeBytes(@NotNull final ByteBuffer a) {
+    public static void wipeBytes(final @NotNull ByteBuffer a) {
         if (a.hasArray()) {
             wipeBytes(a.array());
             return;
@@ -226,7 +242,7 @@ public final class Stodium {
      *         native code.
      */
     @NotNull
-    static ByteBuffer ensureUsableByteBuffer(@NotNull final ByteBuffer buff) {
+    static ByteBuffer ensureUsableByteBuffer(final @NotNull ByteBuffer buff) {
         if (buff.isDirect() || (buff.hasArray() && !buff.isReadOnly())) {
             return buff;
         }
@@ -248,8 +264,8 @@ public final class Stodium {
      * @throws ReadOnlyBufferException if the buffer is incorrectly passed as a
      *         read-only buffer, even while being the output for an operation.
      */
-    static void checkDestinationWritable(@NotNull final ByteBuffer buff,
-                                         @NotNull final String     description) {
+    static void checkDestinationWritable(final @NotNull ByteBuffer buff,
+                                         final @NotNull String     description) {
         if (buff.isDirect() || !buff.isReadOnly()) {
             return;
         }

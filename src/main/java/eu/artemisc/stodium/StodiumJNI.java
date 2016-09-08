@@ -162,4 +162,21 @@ public class StodiumJNI {
             ByteBuffer dst, ByteBuffer src, ByteBuffer elm);
     static native int crypto_scalarmult_curve25519_base(
             ByteBuffer dst, ByteBuffer src);
+
+    //
+    // SecretBox
+    //
+    static native String crypto_secretbox_primitive();
+
+    static native int crypto_secretbox_keybytes();
+    static native int crypto_secretbox_macbytes();
+    static native int crypto_secretbox_noncebytes();
+    static native int crypto_secretbox_easy(
+            ByteBuffer dst, ByteBuffer src, ByteBuffer nonce, ByteBuffer key);
+    static native int crypto_secretbox_open_easy(
+            ByteBuffer dst, ByteBuffer src, ByteBuffer nonce, ByteBuffer key);
+    static native int crypto_secretbox_detached(
+            ByteBuffer dst, ByteBuffer mac, ByteBuffer src, ByteBuffer nonce, ByteBuffer key);
+    static native int crypto_secretbox_open_detached(
+            ByteBuffer dst, ByteBuffer src, ByteBuffer mac, ByteBuffer nonce, ByteBuffer key);
 }

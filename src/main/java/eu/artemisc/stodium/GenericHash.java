@@ -18,16 +18,15 @@ public final class GenericHash {
     }
 
     // constants
-    public static final int BYTES = Sodium.crypto_generichash_bytes();
-    public static final int BYTES_MIN = Sodium.crypto_generichash_bytes_min();
-    public static final int BYTES_MAX = Sodium.crypto_generichash_bytes_max();
-    public static final int KEYBYTES = Sodium.crypto_generichash_keybytes();
+    public static final int BYTES        = Sodium.crypto_generichash_bytes();
+    public static final int BYTES_MIN    = Sodium.crypto_generichash_bytes_min();
+    public static final int BYTES_MAX    = Sodium.crypto_generichash_bytes_max();
+    public static final int KEYBYTES     = Sodium.crypto_generichash_keybytes();
     public static final int KEYBYTES_MIN = Sodium.crypto_generichash_keybytes_min();
     public static final int KEYBYTES_MAX = Sodium.crypto_generichash_keybytes_max();
+    public static final int STATE_BYTES  = Sodium.crypto_generichash_statebytes();
 
-    public static final int STATE_BYTES = Sodium.crypto_generichash_statebytes();
-
-    public static final String PRIMITIVE = Sodium.crypto_generichash_primitive();
+    public static final @NotNull String PRIMITIVE = Sodium.crypto_generichash_primitive();
 
     // Implementation of the stream API
 
@@ -35,7 +34,8 @@ public final class GenericHash {
      * state holds the binary representation of the crypto_generichash_state
      * value.
      */
-    @NotNull private final byte[] state;
+    private final @NotNull byte[] state;
+
     /**
      * outlen is the number of output bytes the state should produce. It is
      * used byte genericHashFinal to validate that the number of
@@ -69,8 +69,8 @@ public final class GenericHash {
      * @throws ConstraintViolationException
      * @throws StodiumException
      */
-    public GenericHash(final int outlen,
-                       @Nullable final byte[] key)
+    public GenericHash(final           int    outlen,
+                       final @Nullable byte[] key)
             throws StodiumException {
         this(outlen);
         init(key);
@@ -83,7 +83,7 @@ public final class GenericHash {
      *
      * @param original The original State that should be copied
      */
-    public GenericHash(@NotNull final GenericHash original) {
+    public GenericHash(final @NotNull GenericHash original) {
         this.state = Arrays.copyOf(original.state, original.state.length);
         this.outlen = original.outlen;
     }
@@ -120,7 +120,7 @@ public final class GenericHash {
      * @throws ConstraintViolationException
      * @throws StodiumException
      */
-    public void update(@NotNull final byte[] in)
+    public void update(final @NotNull byte[] in)
             throws StodiumException {
         update(in, 0, in.length);
     }
@@ -133,9 +133,9 @@ public final class GenericHash {
      * @throws ConstraintViolationException
      * @throws StodiumException
      */
-    public void update(@NotNull final byte[] in,
-                       final int offset,
-                       final int length)
+    public void update(final @NotNull byte[] in,
+                       final          int    offset,
+                       final          int    length)
             throws StodiumException {
         Stodium.checkOffsetParams(in.length, offset, length);
             Stodium.checkStatus(Sodium.crypto_generichash_update_offset(
@@ -148,7 +148,7 @@ public final class GenericHash {
      * @throws ConstraintViolationException
      * @throws StodiumException
      */
-    public void doFinal(@NotNull final byte[] out)
+    public void doFinal(final @NotNull byte[] out)
             throws StodiumException {
         doFinal(out, 0, outlen);
     }
@@ -160,8 +160,8 @@ public final class GenericHash {
      * @throws ConstraintViolationException
      * @throws StodiumException
      */
-    public void doFinal(@NotNull final byte[] out,
-                        final int offset)
+    public void doFinal(final @NotNull byte[] out,
+                        final          int    offset)
             throws StodiumException {
         doFinal(out, offset, outlen);
     }
@@ -175,9 +175,9 @@ public final class GenericHash {
      * @throws ConstraintViolationException
      * @throws StodiumException
      */
-    public void doFinal(@NotNull final byte[] out,
-                        final int offset,
-                        final int length)
+    public void doFinal(final @NotNull byte[] out,
+                        final          int    offset,
+                        final          int    length)
             throws StodiumException {
         Stodium.checkSize(length, 1, outlen, "1", "Blake2b.outlen");
         Stodium.checkOffsetParams(out.length, offset, outlen);
@@ -201,9 +201,9 @@ public final class GenericHash {
      * @throws ConstraintViolationException
      * @throws StodiumException
      */
-    public static void genericHash(@NotNull final byte[] dstHash,
-                                   @NotNull final byte[] srcInput,
-                                   @Nullable final byte[] srcKey)
+    public static void genericHash(final @NotNull  byte[] dstHash,
+                                   final @NotNull  byte[] srcInput,
+                                   final @Nullable byte[] srcKey)
             throws StodiumException {
         final GenericHash hash = new GenericHash(dstHash.length, srcKey);
         hash.update(srcInput);
@@ -220,8 +220,8 @@ public final class GenericHash {
      * @throws ConstraintViolationException
      * @throws StodiumException
      */
-    public static void genericHash(@NotNull final byte[] dstHash,
-                                   @NotNull final byte[] srcInput)
+    public static void genericHash(final @NotNull byte[] dstHash,
+                                   final @NotNull byte[] srcInput)
             throws StodiumException {
         genericHash(dstHash, srcInput, null);
     }

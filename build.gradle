@@ -29,4 +29,3 @@ android {
 dependencies {
     compile 'org.jetbrains:annotations:15.0'
 }
-

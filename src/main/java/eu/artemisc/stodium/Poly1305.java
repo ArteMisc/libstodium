@@ -17,9 +17,8 @@ public class Poly1305 {
     }
 
     // constants
-    public static final int BYTES = Sodium.crypto_onetimeauth_poly1305_bytes();
-    public static final int KEYBYTES = Sodium.crypto_onetimeauth_poly1305_keybytes();
-
+    public static final int BYTES      = Sodium.crypto_onetimeauth_poly1305_bytes();
+    public static final int KEYBYTES   = Sodium.crypto_onetimeauth_poly1305_keybytes();
     public static final int STATEBYTES = Sodium.crypto_onetimeauth_poly1305_statebytes();
 
     // Implementation of the stream API
@@ -28,7 +27,7 @@ public class Poly1305 {
      * state holds the binary representation of the
      * crypto_onetimeauth_poly1305_state value.
      */
-    @NotNull private final byte[] state;
+    private final @NotNull byte[] state;
 
     /**
      * State allocates a byte array that holds the raw packed value of the C
@@ -44,7 +43,7 @@ public class Poly1305 {
      *
      * @param key
      */
-    public Poly1305(@NotNull final byte[] key)
+    public Poly1305(final @NotNull byte[] key)
             throws StodiumException {
         this();
         init(key);
@@ -57,7 +56,7 @@ public class Poly1305 {
      *
      * @param original The original State that should be copied
      */
-    public Poly1305(@NotNull final Poly1305 original) {
+    public Poly1305(final @NotNull Poly1305 original) {
         this.state = Arrays.copyOf(original.state, original.state.length);
     }
 
@@ -67,7 +66,7 @@ public class Poly1305 {
      * @throws ConstraintViolationException
      * @throws StodiumException
      */
-    public void init(@NotNull final byte[] key)
+    public void init(final @NotNull byte[] key)
             throws StodiumException {
         Stodium.checkSize(key.length, KEYBYTES, "Poly1305.KEYBYTES");
         Stodium.checkStatus(
@@ -80,7 +79,7 @@ public class Poly1305 {
      * @throws ConstraintViolationException
      * @throws StodiumException
      */
-    public void update(@NotNull final byte[] in)
+    public void update(final @NotNull byte[] in)
             throws StodiumException {
         update(in, 0, in.length);
     }
@@ -93,9 +92,9 @@ public class Poly1305 {
      * @throws ConstraintViolationException
      * @throws StodiumException
      */
-    public void update(@NotNull final byte[] in,
-                       final int offset,
-                       final int length)
+    public void update(final @NotNull byte[] in,
+                       final          int    offset,
+                       final          int    length)
             throws StodiumException {
         Stodium.checkOffsetParams(in.length, offset, length);
         Stodium.checkStatus(Sodium.crypto_onetimeauth_poly1305_update_offset(
@@ -110,7 +109,7 @@ public class Poly1305 {
      * @throws ConstraintViolationException
      * @throws StodiumException
      */
-    public void doFinal(@NotNull final byte[] out)
+    public void doFinal(final @NotNull byte[] out)
             throws StodiumException {
         doFinal(out, 0);
     }
@@ -122,8 +121,8 @@ public class Poly1305 {
      * @throws ConstraintViolationException
      * @throws StodiumException
      */
-    public void doFinal(@NotNull final byte[] out,
-                        final int offset)
+    public void doFinal(final @NotNull byte[] out,
+                        final          int    offset)
             throws StodiumException {
         Stodium.checkOffsetParams(out.length, offset, BYTES);
         Stodium.checkStatus(Sodium.crypto_onetimeauth_poly1305_final_offset(
@@ -144,9 +143,9 @@ public class Poly1305 {
      * @throws ConstraintViolationException
      * @throws StodiumException
      */
-    public static void auth(@NotNull final byte[] dstOut,
-                            @NotNull final byte[] srcIn,
-                            @NotNull final byte[] srcKey)
+    public static void auth(final @NotNull byte[] dstOut,
+                            final @NotNull byte[] srcIn,
+                            final @NotNull byte[] srcKey)
             throws StodiumException {
         final Poly1305 poly1305 = new Poly1305(srcKey);
         poly1305.update(srcIn);
@@ -162,9 +161,9 @@ public class Poly1305 {
      * @throws ConstraintViolationException
      * @throws StodiumException
      */
-    public static boolean authVerify(@NotNull final byte[] srcTag,
-                                     @NotNull final byte[] srcIn,
-                                     @NotNull final byte[] srcKey)
+    public static boolean authVerify(final @NotNull byte[] srcTag,
+                                     final @NotNull byte[] srcIn,
+                                     final @NotNull byte[] srcKey)
             throws StodiumException {
         final byte[] verify = new byte[BYTES];
         auth(verify, srcIn, srcKey);

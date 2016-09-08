@@ -1,11 +1,9 @@
 package eu.artemisc.stodium;
 
-import org.abstractj.kalium.SodiumJNI;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.nio.ByteBuffer;
-import java.util.Arrays;
 
 /**
  * @author Jan van de Molengraft [jan@artemisc.eu]
@@ -33,7 +31,7 @@ public class Blake2b {
      * state holds the binary representation of the
      * crypto_generichash_blake2b_state value.
      */
-    @NotNull private final ByteBuffer state;
+    private final @NotNull ByteBuffer state;
 
     /**
      * outlen is the number of output bytes the state should produce. It is
@@ -65,8 +63,8 @@ public class Blake2b {
      * @throws ConstraintViolationException
      * @throws StodiumException
      */
-    public Blake2b(          final int        outlen,
-                   @Nullable final ByteBuffer key)
+    public Blake2b(final           int        outlen,
+                   final @Nullable ByteBuffer key)
             throws StodiumException {
         this(outlen);
         init(key);
@@ -79,7 +77,7 @@ public class Blake2b {
      *
      * @param original The original State that should be copied
      */
-    public Blake2b(@NotNull final Blake2b original) {
+    public Blake2b(final @NotNull Blake2b original) {
         this.state  = ByteBuffer.allocateDirect(STATE_BYTES);
         this.outlen = original.outlen;
 
@@ -101,7 +99,7 @@ public class Blake2b {
      * @throws ConstraintViolationException
      * @throws StodiumException
      */
-    public void init(@Nullable final ByteBuffer key)
+    public void init(final @Nullable ByteBuffer key)
             throws StodiumException {
         if (key != null) {
             Stodium.checkSize(key.remaining(), KEYBYTES_MIN, KEYBYTES_MAX,
@@ -116,41 +114,11 @@ public class Blake2b {
 
     /**
      *
-     * @param key
-     * @param salt
-     * @param personal
-     * @throws ConstraintViolationException
-     * @throws StodiumException
-     *
-     * FIXME this API should allow null-values for key (at least) and maybe for salt/personal
-     */
-    /*public void init(@NotNull  final byte[] key,
-                     @Nullable final byte[] salt,
-                     @Nullable final byte[] personal)
-            throws StodiumException {
-        Stodium.checkSize(key.length, KEYBYTES_MIN, KEYBYTES_MAX,
-                "Blake2b.KEYBYTES_MIN", "Blake2b.KEYBYTES_MAX");
-
-        if (salt != null) {
-            Stodium.checkSize(salt.length, SALTBYTES,
-                    "Blake2b.SALTBYTES");
-        }
-        if (personal != null) {
-            Stodium.checkSize(personal.length, PERSONALBYTES,
-                    "Blake2b.PERSONALBYTES");
-        }
-
-        Stodium.checkStatus(StodiumJNI.crypto_generichash_blake2b_init_salt_personal(
-                        state, key, key.length, outlen, salt, personal));
-    }*/
-
-    /**
-     *
      * @param in
      * @throws ConstraintViolationException
      * @throws StodiumException
      */
-    public void update(@NotNull final ByteBuffer in)
+    public void update(final @NotNull ByteBuffer in)
             throws StodiumException {
         Stodium.checkStatus(StodiumJNI.crypto_generichash_blake2b_update(
                 state, Stodium.ensureUsableByteBuffer(in)));
@@ -161,7 +129,7 @@ public class Blake2b {
      * @throws ConstraintViolationException
      * @throws StodiumException
      */
-    public void doFinal(@NotNull final ByteBuffer out)
+    public void doFinal(final @NotNull ByteBuffer out)
             throws StodiumException {
         Stodium.checkSize(out.remaining(), 1, outlen, "1", "Blake2b.outlen");
         Stodium.checkDestinationWritable(out, "Blake2b#doFinal(out)");
@@ -185,9 +153,9 @@ public class Blake2b {
      * @throws ConstraintViolationException
      * @throws StodiumException
      */
-    public static void genericHash(@NotNull  final ByteBuffer dstHash,
-                                   @NotNull  final ByteBuffer srcInput,
-                                   @Nullable final ByteBuffer srcKey)
+    public static void genericHash(final @NotNull  ByteBuffer dstHash,
+                                   final @NotNull  ByteBuffer srcInput,
+                                   final @Nullable ByteBuffer srcKey)
             throws StodiumException {
         final Blake2b blake2b = new Blake2b(dstHash.remaining(), srcKey);
         blake2b.update(srcInput);
@@ -204,31 +172,9 @@ public class Blake2b {
      * @throws ConstraintViolationException
      * @throws StodiumException
      */
-    public static void genericHash(@NotNull final ByteBuffer dstHash,
-                                   @NotNull final ByteBuffer srcInput)
+    public static void genericHash(final @NotNull ByteBuffer dstHash,
+                                   final @NotNull ByteBuffer srcInput)
             throws StodiumException {
         genericHash(dstHash, srcInput, null);
     }
-
-    /**
-     *
-     * @param dstHash
-     * @param srcInput
-     * @param key
-     * @param salt
-     * @param personal
-     * @throws ConstraintViolationException
-     * @throws StodiumException
-     */
-    /*public static void genericHashSaltPersonal(@NotNull final ByteBuffer dstHash,
-                                               @NotNull final ByteBuffer srcInput,
-                                               @NotNull final ByteBuffer key,
-                                               @NotNull final ByteBuffer salt,
-                                               @NotNull final ByteBuffer personal)
-            throws StodiumException {
-        final Blake2b blake2b = new Blake2b(dstHash.remaining());
-        blake2b.init(key, salt, personal);
-        blake2b.update(srcInput);
-        blake2b.doFinal(dstHash);
-    }*/
 }

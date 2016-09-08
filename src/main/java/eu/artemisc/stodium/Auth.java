@@ -18,10 +18,10 @@ public class Auth {
     private Auth() {}
 
     // constants
-    public static final int BYTES = 32;
+    public static final int BYTES    = 32;
     public static final int KEYBYTES = 32;
 
-    public static final String PRIMITIVE = Sodium.crypto_auth_primitive();
+    public static final @NotNull String PRIMITIVE = Sodium.crypto_auth_primitive();
 
     // wrappers
 
@@ -33,9 +33,9 @@ public class Auth {
      * @throws ConstraintViolationException
      * @throws StodiumException
      */
-    public static void auth(@NotNull final byte[] dstOut,
-                            @NotNull final byte[] srcIn,
-                            @NotNull final byte[] srcKey)
+    public static void auth(final @NotNull byte[] dstOut,
+                            final @NotNull byte[] srcIn,
+                            final @NotNull byte[] srcKey)
             throws StodiumException {
         Stodium.checkSize(dstOut.length, BYTES, "Auth.BYTES");
         Stodium.checkSize(srcKey.length, KEYBYTES, "Auth.KEYBYTES");
@@ -52,9 +52,9 @@ public class Auth {
      * @throws ConstraintViolationException
      * @throws StodiumException
      */
-    public static boolean authVerify(@NotNull final byte[] srcTag,
-                                     @NotNull final byte[] srcIn,
-                                     @NotNull final byte[] srcKey)
+    public static boolean authVerify(final @NotNull byte[] srcTag,
+                                     final @NotNull byte[] srcIn,
+                                     final @NotNull byte[] srcKey)
             throws StodiumException {
         Stodium.checkSize(srcTag.length, BYTES, "Auth.BYTES");
         Stodium.checkSize(srcKey.length, KEYBYTES, "Auth.KEYBYTES");

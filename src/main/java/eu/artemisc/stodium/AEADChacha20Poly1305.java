@@ -1,10 +1,5 @@
 package eu.artemisc.stodium;
 
-import org.abstractj.kalium.Sodium;
-import org.jetbrains.annotations.NotNull;
-
-import javax.crypto.AEADBadTagException;
-
 /**
  * AEADChacha20Poly1305 implements the crypto_aead_chacha20poly1305* API.
  *
@@ -37,11 +32,11 @@ public class AEADChacha20Poly1305 {
      * @throws ConstraintViolationException
      * @throws StodiumException
      */
-    /*public static int encrypt(@NotNull final byte[] dstCipher,
-                              @NotNull final byte[] srcPlain,
-                              @NotNull final byte[] ad,
-                              @NotNull final byte[] nonce,
-                              @NotNull final byte[] key)
+    /*public static int encrypt(final @NotNull byte[] dstCipher,
+                              final @NotNull byte[] srcPlain,
+                              final @NotNull byte[] ad,
+                              final @NotNull byte[] nonce,
+                              final @NotNull byte[] key)
             throws StodiumException {
         Stodium.checkSize(dstCipher.length, srcPlain.length + ABYTES, "AEADChacha20Poly1305.ABYTES + srcPlain.length");
         Stodium.checkSize(nonce.length, NPUBBYTES, "AEADChacha20Poly1305.NPUBBYTES");
@@ -65,11 +60,11 @@ public class AEADChacha20Poly1305 {
      * @throws ConstraintViolationException
      * @throws StodiumException
      */
-    /*public static int decrypt(@NotNull final byte[] dstPlain,
-                              @NotNull final byte[] srcCipher,
-                              @NotNull final byte[] ad,
-                              @NotNull final byte[] nonce,
-                              @NotNull final byte[] key)
+    /*public static int decrypt(final @NotNull byte[] dstPlain,
+                              final @NotNull byte[] srcCipher,
+                              final @NotNull byte[] ad,
+                              final @NotNull byte[] nonce,
+                              final @NotNull byte[] key)
             throws StodiumException, AEADBadTagException {
         Stodium.checkSize(srcCipher.length, dstPlain.length + ABYTES, "dstPlain.length + AEADChacha20Poly1305.ABYTES");
         Stodium.checkSize(nonce.length, NPUBBYTES, "AEADChacha20Poly1305.NPUBBYTES");
