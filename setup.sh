@@ -2,8 +2,8 @@
 set -e
 set -x
 
-# Android NDK r10e
-export NDK_VERSION="android-ndk-r10e"
+# Android NDK r12b
+export NDK_VERSION="android-ndk-r12b"
 export NDK_OSFAMILY="linux"
 export SWIG_VERSION="swig-3.0.8"
 
@@ -22,25 +22,10 @@ function ndk_setup {
     fi
 
     echo "Downloading NDK for ${ARCH}"
-    BIN="${NDK_VERSION}-${NDK_OSFAMILY}-${ARCH}.bin"
-
-    wget https://dl.google.com/android/ndk/$BIN
-    chmod a+x $BIN
-    ./$BIN
-
-    export ANDROID_NDK_HOME=${PWD}/${NDK_VERSION}
-}
-
-function ndk_setup_r11 {
-    ARCH=$(uname -m)
-    if [ $ARCH != "x86_64" ]; then
-      $ARCH = "x86"
-    fi
-
     ZIP="${NDK_VERSION}-${NDK_OSFAMILY}-${ARCH}.zip"
 
     wget https://dl.google.com/android/repository/${ZIP}
-    unzip ./${ZIP}
+    unzip ${ZIP}
 
     export ANDROID_NDK_HOME=${PWD}/${NDK_VERSION}
 }
