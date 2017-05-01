@@ -1,42 +1,50 @@
-package eu.artemisc.stodium;
+/*
+ * Copyright (c) 2016 Project ArteMisc
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
+package eu.artemisc.stodium.onetimeauth;
 
 import org.abstractj.kalium.Sodium;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
 
+import eu.artemisc.stodium.Stodium;
+import eu.artemisc.stodium.exceptions.ConstraintViolationException;
+import eu.artemisc.stodium.exceptions.StodiumException;
+
 /**
- * OneTimeAuth wraps calls to crypto_onetimeauth, a message authentication code
- * based on Poly1305.
+ * Poly1305 wraps the crypto_onetimeauth_poly1305 methods.
  *
  * @author Jan van de Molengraft [jan@artemisc.eu]
  */
-public class OneTimeAuth {
+public class Poly1305 {
     static {
         // Require sodium_init();
         Stodium.StodiumInit();
     }
 
     // constants
-    public static final int BYTES      = Sodium.crypto_onetimeauth_bytes();
-    public static final int KEYBYTES   = Sodium.crypto_onetimeauth_keybytes();
-    public static final int STATEBYTES = Sodium.crypto_onetimeauth_statebytes();
-
-    public static final @NotNull String PRIMITIVE = Sodium.crypto_onetimeauth_primitive();
+    public static final int BYTES      = Sodium.crypto_onetimeauth_poly1305_bytes();
+    public static final int KEYBYTES   = Sodium.crypto_onetimeauth_poly1305_keybytes();
+    public static final int STATEBYTES = Sodium.crypto_onetimeauth_poly1305_statebytes();
 
     // Implementation of the stream API
 
     /**
-     * state holds the binary representation of the crypto_onetimeauth_state
-     * value.
+     * state holds the binary representation of the
+     * crypto_onetimeauth_poly1305_state value.
      */
     private final @NotNull byte[] state;
 
     /**
      * State allocates a byte array that holds the raw packed value of the C
-     * crypto_onetimeauth_state bytes.
+     * crypto_onetimeauth_poly1305_state bytes.
      */
-    public OneTimeAuth() {
+    public Poly1305() {
         this.state = new byte[STATEBYTES];
     }
 
@@ -45,10 +53,8 @@ public class OneTimeAuth {
      * the provided key.
      *
      * @param key
-     * @throws ConstraintViolationException
-     * @throws StodiumException
      */
-    public OneTimeAuth(final @NotNull byte[] key)
+    public Poly1305(final @NotNull byte[] key)
             throws StodiumException {
         this();
         init(key);
@@ -61,7 +67,7 @@ public class OneTimeAuth {
      *
      * @param original The original State that should be copied
      */
-    public OneTimeAuth(final @NotNull OneTimeAuth original) {
+    public Poly1305(final @NotNull Poly1305 original) {
         this.state = Arrays.copyOf(original.state, original.state.length);
     }
 
@@ -73,9 +79,9 @@ public class OneTimeAuth {
      */
     public void init(final @NotNull byte[] key)
             throws StodiumException {
-        Stodium.checkSize(key.length, KEYBYTES, "OneTimeAuth.KEYBYTES");
+        Stodium.checkSize(key.length, KEYBYTES, "Poly1305.KEYBYTES");
         Stodium.checkStatus(
-                Sodium.crypto_onetimeauth_init(state, key));
+                Sodium.crypto_onetimeauth_poly1305_init(state, key));
     }
 
     /**
@@ -102,7 +108,7 @@ public class OneTimeAuth {
                        final          int    length)
             throws StodiumException {
         Stodium.checkOffsetParams(in.length, offset, length);
-        Stodium.checkStatus(Sodium.crypto_onetimeauth_update_offset(
+        Stodium.checkStatus(Sodium.crypto_onetimeauth_poly1305_update_offset(
                 state, in, offset, length));
     }
 
@@ -130,7 +136,7 @@ public class OneTimeAuth {
                         final          int    offset)
             throws StodiumException {
         Stodium.checkOffsetParams(out.length, offset, BYTES);
-        Stodium.checkStatus(Sodium.crypto_onetimeauth_final_offset(
+        Stodium.checkStatus(Sodium.crypto_onetimeauth_poly1305_final_offset(
                 state, out, offset));
     }
 
@@ -152,9 +158,9 @@ public class OneTimeAuth {
                             final @NotNull byte[] srcIn,
                             final @NotNull byte[] srcKey)
             throws StodiumException {
-        final OneTimeAuth auth = new OneTimeAuth(srcKey);
-        auth.update(srcIn);
-        auth.doFinal(dstOut);
+        final Poly1305 poly1305 = new Poly1305(srcKey);
+        poly1305.update(srcIn);
+        poly1305.doFinal(dstOut);
     }
 
     /**

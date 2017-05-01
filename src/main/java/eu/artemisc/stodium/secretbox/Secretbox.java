@@ -1,4 +1,11 @@
-package eu.artemisc.stodium;
+/*
+ * Copyright (c) 2016 Project ArteMisc
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
+package eu.artemisc.stodium.secretbox;
 
 import org.abstractj.kalium.Sodium;
 import org.jetbrains.annotations.NotNull;
@@ -6,6 +13,11 @@ import org.jetbrains.annotations.NotNull;
 import java.nio.ByteBuffer;
 
 import javax.crypto.AEADBadTagException;
+
+import eu.artemisc.stodium.Stodium;
+import eu.artemisc.stodium.exceptions.ConstraintViolationException;
+import eu.artemisc.stodium.exceptions.StodiumException;
+import eu.artemisc.stodium.StodiumJNI;
 
 /**
  * Secretbox is a static class that maps all calls to the corresponding native

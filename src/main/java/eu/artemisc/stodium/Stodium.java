@@ -1,13 +1,26 @@
+/*
+ * Copyright (c) 2016 Project ArteMisc
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
 package eu.artemisc.stodium;
 
 import org.abstractj.kalium.Sodium;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.nio.ByteBuffer;
 import java.util.Arrays;
 import java.util.Locale;
 
 import javax.crypto.AEADBadTagException;
+
+import eu.artemisc.stodium.exceptions.ConstraintViolationException;
+import eu.artemisc.stodium.exceptions.OperationFailedException;
+import eu.artemisc.stodium.exceptions.ReadOnlyBufferException;
+import eu.artemisc.stodium.exceptions.StodiumException;
 
 /**
  * Stodium is an abstract class with static methods. It is an attempt to
@@ -25,6 +38,11 @@ public final class Stodium {
 
     /**
      *
+     */
+    private static final @NotNull byte[] EMPTY_BUFFER = new byte[8];
+
+    /**
+     *
      * @param status
      * @throws StodiumException
      */
@@ -33,7 +51,7 @@ public final class Stodium {
         if (status == 0) {
             return;
         }
-        throw new StodiumException(
+        throw new OperationFailedException(
                 String.format(Locale.ENGLISH, "Stodium: operation returned non-zero status %d", status));
     }
 
@@ -47,7 +65,7 @@ public final class Stodium {
      *         AEADBadTagException, the method will call
      *         {@link #checkStatus(int)} instead.
      */
-    public static void checkStatusSealOpen(         final int    status,
+    public static void checkStatusSealOpen(final          int    status,
                                            final @NotNull String methodDescription)
             throws AEADBadTagException, StodiumException {
         if (status == 0) {
@@ -67,8 +85,8 @@ public final class Stodium {
      * @param constant
      * @throws ConstraintViolationException
      */
-    public static void checkSize(         final int    src,
-                                          final int    expected,
+    public static void checkSize(final          int    src,
+                                 final          int    expected,
                                  final @NotNull String constant)
             throws ConstraintViolationException {
         if (src == expected) {
@@ -88,9 +106,9 @@ public final class Stodium {
      * @param upperC
      * @throws ConstraintViolationException
      */
-    public static void checkSize(final int src,
-                                 final int lower,
-                                 final int upper,
+    public static void checkSize(final          int    src,
+                                 final          int    lower,
+                                 final          int    upper,
                                  final @NotNull String lowerC,
                                  final @NotNull String upperC)
             throws ConstraintViolationException {
@@ -140,7 +158,7 @@ public final class Stodium {
      * @param descr
      * @throws ConstraintViolationException
      */
-    public static void checkPow2(final int src,
+    public static void checkPow2(final          int    src,
                                  final @NotNull String descr)
             throws ConstraintViolationException {
         if ((src > 0) && ((src & (~src + 1)) == src)) {
@@ -156,7 +174,7 @@ public final class Stodium {
      * @param descr
      * @throws ConstraintViolationException
      */
-    public static void checkPow2(final long src,
+    public static void checkPow2(final          long   src,
                                  final @NotNull String descr)
             throws ConstraintViolationException {
         if ((src > 0) && ((src & (~src + 1)) == src)) {
@@ -210,8 +228,15 @@ public final class Stodium {
         Arrays.fill(a, (byte) 0x00);
     }
 
-    private static byte[] emptyBuffer = new byte[8];
-    public static void wipeBytes(final @NotNull ByteBuffer a) {
+    /**
+     *
+     * @param a
+     */
+    public static void wipeBytes(final @Nullable ByteBuffer a) {
+        if (a == null) {
+            return;
+        }
+
         if (a.hasArray()) {
             wipeBytes(a.array());
             return;
@@ -222,7 +247,7 @@ public final class Stodium {
         }
 
         while (a.hasRemaining()) {
-            a.put(emptyBuffer, 0, a.remaining() < 8 ? a.remaining() : 8);
+            a.put(EMPTY_BUFFER, 0, a.remaining() < 8 ? a.remaining() : 8);
         }
     }
 
@@ -242,7 +267,7 @@ public final class Stodium {
      *         native code.
      */
     @NotNull
-    static ByteBuffer ensureUsableByteBuffer(final @NotNull ByteBuffer buff) {
+    public static ByteBuffer ensureUsableByteBuffer(final @NotNull ByteBuffer buff) {
         if (buff.isDirect() || (buff.hasArray() && !buff.isReadOnly())) {
             return buff;
         }
@@ -264,8 +289,8 @@ public final class Stodium {
      * @throws ReadOnlyBufferException if the buffer is incorrectly passed as a
      *         read-only buffer, even while being the output for an operation.
      */
-    static void checkDestinationWritable(final @NotNull ByteBuffer buff,
-                                         final @NotNull String     description) {
+    public static void checkDestinationWritable(final @NotNull ByteBuffer buff,
+                                                final @NotNull String     description) {
         if (buff.isDirect() || !buff.isReadOnly()) {
             return;
         }

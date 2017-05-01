@@ -1,4 +1,16 @@
-package eu.artemisc.stodium;
+/*
+ * Copyright (c) 2016 Project ArteMisc
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
+package eu.artemisc.stodium.aead;
+
+import eu.artemisc.stodium.exceptions.ConstraintViolationException;
+import eu.artemisc.stodium.Stodium;
+import eu.artemisc.stodium.exceptions.StodiumException;
+import eu.artemisc.stodium.StodiumJNI;
 
 /**
  * AEADChacha20Poly1305 implements the crypto_aead_chacha20poly1305* API.
