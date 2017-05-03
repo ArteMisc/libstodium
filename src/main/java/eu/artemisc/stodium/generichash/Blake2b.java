@@ -93,7 +93,9 @@ public class Blake2b {
         this.state  = ByteBuffer.allocateDirect(STATE_BYTES);
         this.outlen = original.outlen;
 
-        state.duplicate().put(original.state.duplicate());
+        this.state.put(original.state);
+        this.state.position(0);
+        original.state.position(0);
     }
 
     /**

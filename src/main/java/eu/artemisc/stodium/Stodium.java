@@ -123,6 +123,20 @@ public final class Stodium {
     /**
      *
      * @param src
+     * @param lower
+     * @param lowerC
+     * @throws ConstraintViolationException
+     */
+    public static void checkSizeMin(final          int    src,
+                                    final          int    lower,
+                                    final @NotNull String lowerC)
+            throws ConstraintViolationException {
+        checkSize(src, lower, Integer.MAX_VALUE, lowerC, "Integer.MAX_VALUE");
+    }
+
+    /**
+     *
+     * @param src
      * @throws ConstraintViolationException
      */
     public static void checkPositive(final int src)

@@ -3,9 +3,11 @@ set -e
 set -x
 
 # Android NDK r12b
-export NDK_VERSION="android-ndk-r12b"
+export NDK_VERSION="android-ndk-r14b"
 export NDK_OSFAMILY="linux"
 export SWIG_VERSION="swig-3.0.8"
+
+export NDK_PLATFORM="android-9"
 
 # Require JAVA_HOME
 if [ -z "$JAVA_HOME" ]; then

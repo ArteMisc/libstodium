@@ -30,7 +30,7 @@ public class StodiumJNI {
     //
     public static native int randombytes_random();
     public static native int randombytes_uniform(int upper_bound);
-    public static native void randombytes_buf(ByteBuffer dst);
+    public static native void randombytes_buf(@NotNull ByteBuffer dst);
 
     //
     // Core
@@ -46,7 +46,7 @@ public class StodiumJNI {
             @NotNull ByteBuffer constant);
 
     //
-    // AEAD
+    // AEAD - Chacha20Poly1305
     //
     public static native int crypto_aead_chacha20poly1305_keybytes();
     public static native int crypto_aead_chacha20poly1305_nsecbytes();
@@ -54,19 +54,102 @@ public class StodiumJNI {
     public static native int crypto_aead_chacha20poly1305_abytes();
 
     public static native int crypto_aead_chacha20poly1305_encrypt_detached(
-            ByteBuffer dstCipher, ByteBuffer srcPlain, ByteBuffer ad, ByteBuffer nonce, ByteBuffer key);
+            @NotNull ByteBuffer dstCipher,
+            @NotNull ByteBuffer dstMac,
+            @NotNull ByteBuffer srcPlain,
+            @NotNull ByteBuffer ad,
+            @NotNull ByteBuffer nonce,
+            @NotNull ByteBuffer key);
+    public static native int crypto_aead_chacha20poly1305_encrypt(
+            @NotNull ByteBuffer dstCipher,
+            @NotNull ByteBuffer srcPlain,
+            @NotNull ByteBuffer ad,
+            @NotNull ByteBuffer nonce,
+            @NotNull ByteBuffer key);
     public static native int crypto_aead_chacha20poly1305_decrypt_detached(
-            ByteBuffer dstPlain, ByteBuffer srcCipher, ByteBuffer ad, ByteBuffer nonce, ByteBuffer key);
+            @NotNull ByteBuffer dstPlain,
+            @NotNull ByteBuffer srcCipher,
+            @NotNull ByteBuffer srcMac,
+            @NotNull ByteBuffer ad,
+            @NotNull ByteBuffer nonce,
+            @NotNull ByteBuffer key);
+    public static native int crypto_aead_chacha20poly1305_decrypt(
+            @NotNull ByteBuffer dstPlain,
+            @NotNull ByteBuffer srcCipher,
+            @NotNull ByteBuffer ad,
+            @NotNull ByteBuffer nonce,
+            @NotNull ByteBuffer key);
 
-    public static native int crypto_aead_xchacha20poly1305_encrypt_detached(
-            ByteBuffer dstCipher, ByteBuffer srcPlain, ByteBuffer ad, ByteBuffer nonce, ByteBuffer key);
-    public static native int crypto_aead_xchacha20poly1305_decrypt_detached(
-            ByteBuffer dstPlain, ByteBuffer srcCipher, ByteBuffer ad, ByteBuffer nonce, ByteBuffer key);
 
-    public static native int crypto_aead_xsalsa20poly1305_encrypt_detached(
-            ByteBuffer dstCipher, ByteBuffer srcPlain, ByteBuffer ad, ByteBuffer nonce, ByteBuffer key);
-    public static native int crypto_aead_xsalsa20poly1305_decrypt_detached(
-            ByteBuffer dstPlain, ByteBuffer srcCipher, ByteBuffer ad, ByteBuffer nonce, ByteBuffer key);
+    //
+    // AEAD - Chacha20Poly1305 (ietf)
+    //
+    public static native int crypto_aead_chacha20poly1305_ietf_keybytes();
+    public static native int crypto_aead_chacha20poly1305_ietf_nsecbytes();
+    public static native int crypto_aead_chacha20poly1305_ietf_npubbytes();
+    public static native int crypto_aead_chacha20poly1305_ietf_abytes();
+
+    public static native int crypto_aead_chacha20poly1305_ietf_encrypt_detached(
+            @NotNull ByteBuffer dstCipher,
+            @NotNull ByteBuffer dstMac,
+            @NotNull ByteBuffer srcPlain,
+            @NotNull ByteBuffer ad,
+            @NotNull ByteBuffer nonce,
+            @NotNull ByteBuffer key);
+    public static native int crypto_aead_chacha20poly1305_ietf_encrypt(
+            @NotNull ByteBuffer dstCipher,
+            @NotNull ByteBuffer srcPlain,
+            @NotNull ByteBuffer ad,
+            @NotNull ByteBuffer nonce,
+            @NotNull ByteBuffer key);
+    public static native int crypto_aead_chacha20poly1305_ietf_decrypt_detached(
+            @NotNull ByteBuffer dstPlain,
+            @NotNull ByteBuffer srcCipher,
+            @NotNull ByteBuffer srcMac,
+            @NotNull ByteBuffer ad,
+            @NotNull ByteBuffer nonce,
+            @NotNull ByteBuffer key);
+    public static native int crypto_aead_chacha20poly1305_ietf_decrypt(
+            @NotNull ByteBuffer dstPlain,
+            @NotNull ByteBuffer srcCipher,
+            @NotNull ByteBuffer ad,
+            @NotNull ByteBuffer nonce,
+            @NotNull ByteBuffer key);
+
+    //
+    // AEAD - XChacha20Poly1305 (ietf)
+    //
+    public static native int crypto_aead_xchacha20poly1305_ietf_keybytes();
+    public static native int crypto_aead_xchacha20poly1305_ietf_nsecbytes();
+    public static native int crypto_aead_xchacha20poly1305_ietf_npubbytes();
+    public static native int crypto_aead_xchacha20poly1305_ietf_abytes();
+
+    public static native int crypto_aead_xchacha20poly1305_ietf_encrypt_detached(
+            @NotNull ByteBuffer dstCipher,
+            @NotNull ByteBuffer dstMac,
+            @NotNull ByteBuffer srcPlain,
+            @NotNull ByteBuffer ad,
+            @NotNull ByteBuffer nonce,
+            @NotNull ByteBuffer key);
+    public static native int crypto_aead_xchacha20poly1305_ietf_encrypt(
+            @NotNull ByteBuffer dstCipher,
+            @NotNull ByteBuffer srcPlain,
+            @NotNull ByteBuffer ad,
+            @NotNull ByteBuffer nonce,
+            @NotNull ByteBuffer key);
+    public static native int crypto_aead_xchacha20poly1305_ietf_decrypt_detached(
+            @NotNull ByteBuffer dstPlain,
+            @NotNull ByteBuffer srcCipher,
+            @NotNull ByteBuffer srcMac,
+            @NotNull ByteBuffer ad,
+            @NotNull ByteBuffer nonce,
+            @NotNull ByteBuffer key);
+    public static native int crypto_aead_xchacha20poly1305_ietf_decrypt(
+            @NotNull ByteBuffer dstPlain,
+            @NotNull ByteBuffer srcCipher,
+            @NotNull ByteBuffer ad,
+            @NotNull ByteBuffer nonce,
+            @NotNull ByteBuffer key);
 
     //
     // Box
@@ -87,9 +170,14 @@ public class StodiumJNI {
 //            ByteBuffer publicKey, ByteBuffer privateKey, ByteBuffer seed);
 
     public static native int crypto_box_seal(
-            ByteBuffer dstCipher, ByteBuffer srcPlain, ByteBuffer publicKey);
+            @NotNull ByteBuffer dstCipher,
+            @NotNull ByteBuffer srcPlain,
+            @NotNull ByteBuffer publicKey);
     public static native int crypto_box_seal_open(
-            ByteBuffer dstPlain, ByteBuffer srcCipher, ByteBuffer publicKey, ByteBuffer privateKey);
+            @NotNull ByteBuffer dstPlain,
+            @NotNull ByteBuffer srcCipher,
+            @NotNull ByteBuffer publicKey,
+            @NotNull ByteBuffer privateKey);
 
     //
     // GenericHash Blake2b
@@ -143,7 +231,11 @@ public class StodiumJNI {
     public static native int crypto_pwhash_memlimit_sensitive();
 
     public static native int crypto_pwhash(
-            ByteBuffer dst, ByteBuffer password, ByteBuffer salt, int opslimit, int memlimit);
+            @NotNull ByteBuffer dst,
+            @NotNull ByteBuffer password,
+            @NotNull ByteBuffer salt,
+                     int        opslimit,
+                     int        memlimit);
 
     //
     // PwHash Scrypt
@@ -156,7 +248,11 @@ public class StodiumJNI {
     public static native int crypto_pwhash_scryptsalsa208sha256_memlimit_sensitive();
 
     public static native int crypto_pwhash_scryptsalsa208sha256(
-            ByteBuffer dst, ByteBuffer password, ByteBuffer salt, int opslimit, int memlimit);
+            @NotNull ByteBuffer dst,
+            @NotNull ByteBuffer password,
+            @NotNull ByteBuffer salt,
+                     int        opslimit,
+                     int        memlimit);
 
     //
     // ScalarMult
@@ -166,9 +262,12 @@ public class StodiumJNI {
     public static native int crypto_scalarmult_curve25519_bytes();
     public static native int crypto_scalarmult_curve25519_scalarbytes();
     public static native int crypto_scalarmult_curve25519(
-            ByteBuffer dst, ByteBuffer src, ByteBuffer elm);
+            @NotNull ByteBuffer dst,
+            @NotNull ByteBuffer src,
+            @NotNull ByteBuffer elm);
     public static native int crypto_scalarmult_curve25519_base(
-            ByteBuffer dst, ByteBuffer src);
+            @NotNull ByteBuffer dst,
+            @NotNull ByteBuffer src);
 
     //
     // SecretBox
@@ -179,11 +278,25 @@ public class StodiumJNI {
     public static native int crypto_secretbox_macbytes();
     public static native int crypto_secretbox_noncebytes();
     public static native int crypto_secretbox_easy(
-            ByteBuffer dst, ByteBuffer src, ByteBuffer nonce, ByteBuffer key);
+            @NotNull ByteBuffer dst,
+            @NotNull ByteBuffer src,
+            @NotNull ByteBuffer nonce,
+            @NotNull ByteBuffer key);
     public static native int crypto_secretbox_open_easy(
-            ByteBuffer dst, ByteBuffer src, ByteBuffer nonce, ByteBuffer key);
+            @NotNull ByteBuffer dst,
+            @NotNull ByteBuffer src,
+            @NotNull ByteBuffer nonce,
+            @NotNull ByteBuffer key);
     public static native int crypto_secretbox_detached(
-            ByteBuffer dst, ByteBuffer mac, ByteBuffer src, ByteBuffer nonce, ByteBuffer key);
+            @NotNull ByteBuffer dst,
+            @NotNull ByteBuffer mac,
+            @NotNull ByteBuffer src,
+            @NotNull ByteBuffer nonce,
+            @NotNull ByteBuffer key);
     public static native int crypto_secretbox_open_detached(
-            ByteBuffer dst, ByteBuffer src, ByteBuffer mac, ByteBuffer nonce, ByteBuffer key);
+            @NotNull ByteBuffer dst,
+            @NotNull ByteBuffer src,
+            @NotNull ByteBuffer mac,
+            @NotNull ByteBuffer nonce,
+            @NotNull ByteBuffer key);
 }
