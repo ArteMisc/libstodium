@@ -383,6 +383,145 @@ STODIUM_JNI(jint, crypto_1aead_1chacha20poly1305_1ietf_1abytes) (JNIEnv *jenv, j
        return (jint) crypto_aead_chacha20poly1305_ietf_abytes();
 }
 
+STODIUM_JNI(jint, crypto_1aead_1chacha20poly1305_1ietf_1encrypt_1detached) (JNIEnv *jenv, jclass jcls,
+        jobject dst,
+        jobject mac,
+        jobject src,
+        jobject ad,
+        jobject nonce,
+        jobject key) {
+    stodium_buffer dst_buffer, mac_buffer, src_buffer, ad_buffer, nonce_buffer, key_buffer;
+    stodium_get_buffer(jenv, &dst_buffer,   dst);
+    stodium_get_buffer(jenv, &mac_buffer,   mac);
+    stodium_get_buffer(jenv, &src_buffer,   src);
+    stodium_get_buffer(jenv, &ad_buffer,    ad);
+    stodium_get_buffer(jenv, &nonce_buffer, nonce);
+    stodium_get_buffer(jenv, &key_buffer,   key);
+ 
+    jint result = (jint) crypto_aead_chacha20poly1305_ietf_encrypt_detached(
+            AS_OUTPUT(unsigned char, dst_buffer),
+            AS_OUTPUT(unsigned char, mac_buffer),
+            AS_OUTPUT_LEN(unsigned long long, mac_buffer),
+            AS_INPUT(unsigned char, src_buffer),
+            AS_INPUT_LEN(unsigned long long, src_buffer),
+            AS_INPUT(unsigned char, ad_buffer),
+            AS_INPUT_LEN(unsigned long long, ad_buffer),
+            NULL, // nsec
+            AS_INPUT(unsigned char, nonce_buffer),
+            AS_INPUT(unsigned char, key_buffer));
+
+    stodium_release_output(jenv, dst,   &dst_buffer);
+    stodium_release_output(jenv, mac,   &mac_buffer);
+    stodium_release_input(jenv,  src,   &src_buffer);
+    stodium_release_input(jenv,  ad,    &ad_buffer);
+    stodium_release_input(jenv,  nonce, &nonce_buffer);
+    stodium_release_input(jenv,  key,   &key_buffer);
+
+    return result;
+}
+
+STODIUM_JNI(jint, crypto_1aead_1chacha20poly1305_1ietf_1encrypt) (JNIEnv *jenv, jclass jcls,
+        jobject dst,
+        jobject src,
+        jobject ad,
+        jobject nonce,
+        jobject key) {
+    stodium_buffer dst_buffer, src_buffer, ad_buffer, nonce_buffer, key_buffer;
+    stodium_get_buffer(jenv, &dst_buffer,   dst);
+    stodium_get_buffer(jenv, &src_buffer,   src);
+    stodium_get_buffer(jenv, &ad_buffer,    ad);
+    stodium_get_buffer(jenv, &nonce_buffer, nonce);
+    stodium_get_buffer(jenv, &key_buffer,   key);
+ 
+    jint result = (jint) crypto_aead_chacha20poly1305_ietf_encrypt(
+            AS_OUTPUT(unsigned char, dst_buffer),
+            AS_OUTPUT_LEN(unsigned long long, dst_buffer),
+            AS_INPUT(unsigned char, src_buffer),
+            AS_INPUT_LEN(unsigned long long, src_buffer),
+            AS_INPUT(unsigned char, ad_buffer),
+            AS_INPUT_LEN(unsigned long long, ad_buffer),
+            NULL, // nsec
+            AS_INPUT(unsigned char, nonce_buffer),
+            AS_INPUT(unsigned char, key_buffer));
+
+    stodium_release_output(jenv, dst,   &dst_buffer);
+    stodium_release_input(jenv,  src,   &src_buffer);
+    stodium_release_input(jenv,  ad,    &ad_buffer);
+    stodium_release_input(jenv,  nonce, &nonce_buffer);
+    stodium_release_input(jenv,  key,   &key_buffer);
+
+    return result;
+}
+
+STODIUM_JNI(jint, crypto_1aead_1chacha20poly1305_1ietf_1decrypt_1detached) (JNIEnv *jenv, jclass jcls,
+        jobject dst,
+        jobject src,
+        jobject mac,
+        jobject ad,
+        jobject nonce,
+        jobject key) {
+    stodium_buffer dst_buffer, mac_buffer, src_buffer, ad_buffer, nonce_buffer, key_buffer;
+    stodium_get_buffer(jenv, &dst_buffer,   dst);
+    stodium_get_buffer(jenv, &src_buffer,   src);
+    stodium_get_buffer(jenv, &mac_buffer,   mac);
+    stodium_get_buffer(jenv, &ad_buffer,    ad);
+    stodium_get_buffer(jenv, &nonce_buffer, nonce);
+    stodium_get_buffer(jenv, &key_buffer,   key);
+ 
+    jint result = (jint) crypto_aead_chacha20poly1305_ietf_decrypt_detached(
+            AS_OUTPUT(unsigned char, dst_buffer),
+            NULL, // nsec
+            AS_INPUT(unsigned char, src_buffer),
+            AS_INPUT_LEN(unsigned long long, src_buffer),
+            AS_OUTPUT(unsigned char, mac_buffer),
+            AS_INPUT(unsigned char, ad_buffer),
+            AS_INPUT_LEN(unsigned long long, ad_buffer),
+            AS_INPUT(unsigned char, nonce_buffer),
+            AS_INPUT(unsigned char, key_buffer));
+
+    stodium_release_output(jenv, dst,   &dst_buffer);
+    stodium_release_input(jenv,  mac,   &mac_buffer);
+    stodium_release_input(jenv,  src,   &src_buffer);
+    stodium_release_input(jenv,  ad,    &ad_buffer);
+    stodium_release_input(jenv,  nonce, &nonce_buffer);
+    stodium_release_input(jenv,  key,   &key_buffer);
+
+    return result;
+}
+
+STODIUM_JNI(jint, crypto_1aead_1chacha20poly1305_1ietf_1decrypt) (JNIEnv *jenv, jclass jcls,
+        jobject dst,
+        jobject src,
+        jobject ad,
+        jobject nonce,
+        jobject key) {
+    stodium_buffer dst_buffer, src_buffer, ad_buffer, nonce_buffer, key_buffer;
+    stodium_get_buffer(jenv, &dst_buffer,   dst);
+    stodium_get_buffer(jenv, &src_buffer,   src);
+    stodium_get_buffer(jenv, &ad_buffer,    ad);
+    stodium_get_buffer(jenv, &nonce_buffer, nonce);
+    stodium_get_buffer(jenv, &key_buffer,   key);
+ 
+    jint result = (jint) crypto_aead_chacha20poly1305_ietf_decrypt(
+            AS_OUTPUT(unsigned char, dst_buffer),
+            AS_OUTPUT_LEN(unsigned long long, dst_buffer),
+            NULL, // nsec
+            AS_INPUT(unsigned char, src_buffer),
+            AS_INPUT_LEN(unsigned long long, src_buffer),
+            AS_INPUT(unsigned char, ad_buffer),
+            AS_INPUT_LEN(unsigned long long, ad_buffer),
+            AS_INPUT(unsigned char, nonce_buffer),
+            AS_INPUT(unsigned char, key_buffer));
+
+    stodium_release_output(jenv, dst,   &dst_buffer);
+    stodium_release_input(jenv,  src,   &src_buffer);
+    stodium_release_input(jenv,  ad,    &ad_buffer);
+    stodium_release_input(jenv,  nonce, &nonce_buffer);
+    stodium_release_input(jenv,  key,   &key_buffer);
+
+    return result;
+}
+
 
 /** ****************************************************************************
  *
@@ -401,6 +540,145 @@ STODIUM_JNI(jint, crypto_1aead_1xchacha20poly1305_1ietf_1npubbytes) (JNIEnv *jen
 }
 STODIUM_JNI(jint, crypto_1aead_1xchacha20poly1305_1ietf_1abytes) (JNIEnv *jenv, jclass jcls) {
        return (jint) crypto_aead_xchacha20poly1305_ietf_abytes();
+}
+
+STODIUM_JNI(jint, crypto_1aead_1xchacha20poly1305_1ietf_1encrypt_1detached) (JNIEnv *jenv, jclass jcls,
+        jobject dst,
+        jobject mac,
+        jobject src,
+        jobject ad,
+        jobject nonce,
+        jobject key) {
+    stodium_buffer dst_buffer, mac_buffer, src_buffer, ad_buffer, nonce_buffer, key_buffer;
+    stodium_get_buffer(jenv, &dst_buffer,   dst);
+    stodium_get_buffer(jenv, &mac_buffer,   mac);
+    stodium_get_buffer(jenv, &src_buffer,   src);
+    stodium_get_buffer(jenv, &ad_buffer,    ad);
+    stodium_get_buffer(jenv, &nonce_buffer, nonce);
+    stodium_get_buffer(jenv, &key_buffer,   key);
+ 
+    jint result = (jint) crypto_aead_xchacha20poly1305_ietf_encrypt_detached(
+            AS_OUTPUT(unsigned char, dst_buffer),
+            AS_OUTPUT(unsigned char, mac_buffer),
+            AS_OUTPUT_LEN(unsigned long long, mac_buffer),
+            AS_INPUT(unsigned char, src_buffer),
+            AS_INPUT_LEN(unsigned long long, src_buffer),
+            AS_INPUT(unsigned char, ad_buffer),
+            AS_INPUT_LEN(unsigned long long, ad_buffer),
+            NULL, // nsec
+            AS_INPUT(unsigned char, nonce_buffer),
+            AS_INPUT(unsigned char, key_buffer));
+
+    stodium_release_output(jenv, dst,   &dst_buffer);
+    stodium_release_output(jenv, mac,   &mac_buffer);
+    stodium_release_input(jenv,  src,   &src_buffer);
+    stodium_release_input(jenv,  ad,    &ad_buffer);
+    stodium_release_input(jenv,  nonce, &nonce_buffer);
+    stodium_release_input(jenv,  key,   &key_buffer);
+
+    return result;
+}
+
+STODIUM_JNI(jint, crypto_1aead_1xchacha20poly1305_1ietf_1encrypt) (JNIEnv *jenv, jclass jcls,
+        jobject dst,
+        jobject src,
+        jobject ad,
+        jobject nonce,
+        jobject key) {
+    stodium_buffer dst_buffer, src_buffer, ad_buffer, nonce_buffer, key_buffer;
+    stodium_get_buffer(jenv, &dst_buffer,   dst);
+    stodium_get_buffer(jenv, &src_buffer,   src);
+    stodium_get_buffer(jenv, &ad_buffer,    ad);
+    stodium_get_buffer(jenv, &nonce_buffer, nonce);
+    stodium_get_buffer(jenv, &key_buffer,   key);
+ 
+    jint result = (jint) crypto_aead_xchacha20poly1305_ietf_encrypt(
+            AS_OUTPUT(unsigned char, dst_buffer),
+            AS_OUTPUT_LEN(unsigned long long, dst_buffer),
+            AS_INPUT(unsigned char, src_buffer),
+            AS_INPUT_LEN(unsigned long long, src_buffer),
+            AS_INPUT(unsigned char, ad_buffer),
+            AS_INPUT_LEN(unsigned long long, ad_buffer),
+            NULL, // nsec
+            AS_INPUT(unsigned char, nonce_buffer),
+            AS_INPUT(unsigned char, key_buffer));
+
+    stodium_release_output(jenv, dst,   &dst_buffer);
+    stodium_release_input(jenv,  src,   &src_buffer);
+    stodium_release_input(jenv,  ad,    &ad_buffer);
+    stodium_release_input(jenv,  nonce, &nonce_buffer);
+    stodium_release_input(jenv,  key,   &key_buffer);
+
+    return result;
+}
+
+STODIUM_JNI(jint, crypto_1aead_1xchacha20poly1305_1ietf_1decrypt_1detached) (JNIEnv *jenv, jclass jcls,
+        jobject dst,
+        jobject src,
+        jobject mac,
+        jobject ad,
+        jobject nonce,
+        jobject key) {
+    stodium_buffer dst_buffer, mac_buffer, src_buffer, ad_buffer, nonce_buffer, key_buffer;
+    stodium_get_buffer(jenv, &dst_buffer,   dst);
+    stodium_get_buffer(jenv, &src_buffer,   src);
+    stodium_get_buffer(jenv, &mac_buffer,   mac);
+    stodium_get_buffer(jenv, &ad_buffer,    ad);
+    stodium_get_buffer(jenv, &nonce_buffer, nonce);
+    stodium_get_buffer(jenv, &key_buffer,   key);
+ 
+    jint result = (jint) crypto_aead_xchacha20poly1305_ietf_decrypt_detached(
+            AS_OUTPUT(unsigned char, dst_buffer),
+            NULL, // nsec
+            AS_INPUT(unsigned char, src_buffer),
+            AS_INPUT_LEN(unsigned long long, src_buffer),
+            AS_OUTPUT(unsigned char, mac_buffer),
+            AS_INPUT(unsigned char, ad_buffer),
+            AS_INPUT_LEN(unsigned long long, ad_buffer),
+            AS_INPUT(unsigned char, nonce_buffer),
+            AS_INPUT(unsigned char, key_buffer));
+
+    stodium_release_output(jenv, dst,   &dst_buffer);
+    stodium_release_input(jenv,  mac,   &mac_buffer);
+    stodium_release_input(jenv,  src,   &src_buffer);
+    stodium_release_input(jenv,  ad,    &ad_buffer);
+    stodium_release_input(jenv,  nonce, &nonce_buffer);
+    stodium_release_input(jenv,  key,   &key_buffer);
+
+    return result;
+}
+
+STODIUM_JNI(jint, crypto_1aead_1xchacha20poly1305_1ietf_1decrypt) (JNIEnv *jenv, jclass jcls,
+        jobject dst,
+        jobject src,
+        jobject ad,
+        jobject nonce,
+        jobject key) {
+    stodium_buffer dst_buffer, src_buffer, ad_buffer, nonce_buffer, key_buffer;
+    stodium_get_buffer(jenv, &dst_buffer,   dst);
+    stodium_get_buffer(jenv, &src_buffer,   src);
+    stodium_get_buffer(jenv, &ad_buffer,    ad);
+    stodium_get_buffer(jenv, &nonce_buffer, nonce);
+    stodium_get_buffer(jenv, &key_buffer,   key);
+ 
+    jint result = (jint) crypto_aead_xchacha20poly1305_ietf_decrypt(
+            AS_OUTPUT(unsigned char, dst_buffer),
+            AS_OUTPUT_LEN(unsigned long long, dst_buffer),
+            NULL, // nsec
+            AS_INPUT(unsigned char, src_buffer),
+            AS_INPUT_LEN(unsigned long long, src_buffer),
+            AS_INPUT(unsigned char, ad_buffer),
+            AS_INPUT_LEN(unsigned long long, ad_buffer),
+            AS_INPUT(unsigned char, nonce_buffer),
+            AS_INPUT(unsigned char, key_buffer));
+
+    stodium_release_output(jenv, dst,   &dst_buffer);
+    stodium_release_input(jenv,  src,   &src_buffer);
+    stodium_release_input(jenv,  ad,    &ad_buffer);
+    stodium_release_input(jenv,  nonce, &nonce_buffer);
+    stodium_release_input(jenv,  key,   &key_buffer);
+
+    return result;
 }
 
 
