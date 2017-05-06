@@ -82,9 +82,9 @@ public final class Argon2i {
                                      final          int        opsLimit,
                                      final          int        memLimit)
             throws StodiumException {
-        Stodium.checkDestinationWritable(dstKey, "Stodium.Argon2i#pwhashScrypt(dstKey)");
+        Stodium.checkDestinationWritable(dstKey);
 
-        Stodium.checkSize(srcSalt.remaining(), SALTBYTES, "Argon2i.SALTBYTES");
+        Stodium.checkSize(srcSalt.remaining(), SALTBYTES);
         Stodium.checkPow2(memLimit,                       "Argon2i.pwhashArgon2i(memLimit)");
 
         Stodium.checkStatus(StodiumJNI.crypto_pwhash(

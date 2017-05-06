@@ -54,9 +54,9 @@ public final class Curve25519 {
                                   final @NotNull ByteBuffer src,
                                   final @NotNull ByteBuffer groupElement)
             throws StodiumException {
-        Stodium.checkSize(dst.remaining(), SCALAR_BYTES, "Curve25519.SCALAR_BYTES");
-        Stodium.checkSize(src.remaining(), SCALAR_BYTES, "Curve25519.SCALAR_BYTES");
-        Stodium.checkSize(groupElement.remaining(), SCALAR_BYTES, "Curve25519.SCALAR_BYTES");
+        Stodium.checkSize(dst.remaining(), SCALAR_BYTES);
+        Stodium.checkSize(src.remaining(), SCALAR_BYTES);
+        Stodium.checkSize(groupElement.remaining(), SCALAR_BYTES);
         Stodium.checkStatus(StodiumJNI.crypto_scalarmult_curve25519(
                 Stodium.ensureUsableByteBuffer(dst.slice()),
                 Stodium.ensureUsableByteBuffer(src.slice()),
@@ -73,8 +73,8 @@ public final class Curve25519 {
     public static void scalarMultBase(final @NotNull ByteBuffer dst,
                                       final @NotNull ByteBuffer src)
             throws StodiumException {
-        Stodium.checkSize(dst.remaining(), SCALAR_BYTES, "Curve25519.SCALAR_BYTES");
-        Stodium.checkSize(src.remaining(), SCALAR_BYTES, "Curve25519.SCALAR_BYTES");
+        Stodium.checkSize(dst.remaining(), SCALAR_BYTES);
+        Stodium.checkSize(src.remaining(), SCALAR_BYTES);
         Stodium.checkStatus(StodiumJNI.crypto_scalarmult_curve25519_base(
                 Stodium.ensureUsableByteBuffer(dst.slice()),
                 Stodium.ensureUsableByteBuffer(src.slice())));

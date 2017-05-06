@@ -50,7 +50,7 @@ public class ShortHash {
     static Long shorthash(final @NotNull byte[] srcIn,
                           final @NotNull byte[] srcKey)
             throws StodiumException {
-        Stodium.checkSize(srcKey.length, KEYBYTES, "ShortHash.KEYBYTES");
+        Stodium.checkSize(srcKey.length, KEYBYTES);
 
         byte[] dst = new byte[BYTES];
         Stodium.checkStatus(
@@ -75,8 +75,8 @@ public class ShortHash {
                           final @NotNull byte[] srcIn,
                           final @NotNull byte[] srcKey)
             throws StodiumException {
-        Stodium.checkSize(dstHash.length, BYTES, "ShortHash.BYTES");
-        Stodium.checkSize(srcKey.length, KEYBYTES, "ShortHash.KEYBYTES");
+        Stodium.checkSize(dstHash.length, BYTES);
+        Stodium.checkSize(srcKey.length, KEYBYTES);
         Stodium.checkStatus(
                 Sodium.crypto_shorthash(dstHash, srcIn, srcIn.length, srcKey));
     }

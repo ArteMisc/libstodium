@@ -84,7 +84,7 @@ public class OneTimeAuth {
      */
     public void init(final @NotNull byte[] key)
             throws StodiumException {
-        Stodium.checkSize(key.length, KEYBYTES, "OneTimeAuth.KEYBYTES");
+        Stodium.checkSize(key.length, KEYBYTES);
         Stodium.checkStatus(
                 Sodium.crypto_onetimeauth_init(state, key));
     }

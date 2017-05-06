@@ -52,8 +52,8 @@ public final class Ed25519 {
     public static void keypair(final @NotNull byte[] dstPublicKey,
                                final @NotNull byte[] dstPrivateKey)
             throws StodiumException {
-        Stodium.checkSize(dstPublicKey.length, PUBLICKEYBYTES, "Ed25519.PUBLICKEYBYTES");
-        Stodium.checkSize(dstPrivateKey.length, PRIVATEKEYBYTES, "Ed25519.PRIVATEKEYBYTES");
+        Stodium.checkSize(dstPublicKey.length, PUBLICKEYBYTES);
+        Stodium.checkSize(dstPrivateKey.length, PRIVATEKEYBYTES);
         Stodium.checkStatus(
                 Sodium.crypto_sign_ed25519_keypair(dstPublicKey, dstPrivateKey));
     }
@@ -74,9 +74,9 @@ public final class Ed25519 {
                                    final @NotNull byte[] dstPrivateKey,
                                    final @NotNull byte[] srcSeed)
             throws StodiumException {
-        Stodium.checkSize(dstPublicKey.length, PUBLICKEYBYTES, "Ed25519.PUBLICKEYBYTES");
-        Stodium.checkSize(dstPrivateKey.length, PRIVATEKEYBYTES, "Ed25519.PRIVATEKEYBYTES");
-        Stodium.checkSize(srcSeed.length, SEEDBYTES, "Ed25519.SEEDBYTES");
+        Stodium.checkSize(dstPublicKey.length, PUBLICKEYBYTES);
+        Stodium.checkSize(dstPrivateKey.length, PRIVATEKEYBYTES);
+        Stodium.checkSize(srcSeed.length, SEEDBYTES);
         Stodium.checkStatus(Sodium.crypto_sign_ed25519_seed_keypair(dstPublicKey,
                 dstPrivateKey, srcSeed));
     }
@@ -99,8 +99,8 @@ public final class Ed25519 {
     public static void publicFromPrivate(final @NotNull byte[] dstPublicKey,
                                          final @NotNull byte[] srcPrivateKey)
             throws StodiumException {
-        Stodium.checkSize(dstPublicKey.length, PUBLICKEYBYTES, "Ed25519.PUBLICKEYBYTES");
-        Stodium.checkSize(srcPrivateKey.length, PRIVATEKEYBYTES, "Ed25519.PRIVATEKEYBYTES");
+        Stodium.checkSize(dstPublicKey.length, PUBLICKEYBYTES);
+        Stodium.checkSize(srcPrivateKey.length, PRIVATEKEYBYTES);
         Stodium.checkStatus(
                 Sodium.crypto_sign_ed25519_sk_to_pk(dstPublicKey, srcPrivateKey));
     }
@@ -118,8 +118,8 @@ public final class Ed25519 {
     public static void seedFromPrivate(final @NotNull byte[] dstSeed,
                                        final @NotNull byte[] srcPrivateKey)
             throws StodiumException {
-        Stodium.checkSize(srcPrivateKey.length, PRIVATEKEYBYTES, "Ed25519.PRIVATEKEYBYTES");
-        Stodium.checkSize(dstSeed.length, SEEDBYTES, "Ed25519.SEEDBYTES");
+        Stodium.checkSize(srcPrivateKey.length, PRIVATEKEYBYTES);
+        Stodium.checkSize(dstSeed.length, SEEDBYTES);
         Stodium.checkStatus(Sodium.crypto_sign_ed25519_sk_to_seed(dstSeed,
                 srcPrivateKey));
     }
@@ -150,8 +150,8 @@ public final class Ed25519 {
                            final @NotNull byte[] srcMsg,
                            final @NotNull byte[] localPrivKey)
             throws StodiumException {
-        Stodium.checkSize(dstSignedMsg.length, srcMsg.length + SIGNBYTES, "Ed25519.SIGNBYTES + srcMsg.length");
-        Stodium.checkSize(localPrivKey.length, PRIVATEKEYBYTES, "Ed25519.PRIVATEKEYBYTES");
+        Stodium.checkSize(dstSignedMsg.length, srcMsg.length + SIGNBYTES);
+        Stodium.checkSize(localPrivKey.length, PRIVATEKEYBYTES);
         final int[] dstSize = new int[1];
         Stodium.checkStatus(Sodium.crypto_sign_ed25519(dstSignedMsg, dstSize, srcMsg,
                 srcMsg.length, localPrivKey));
@@ -180,8 +180,8 @@ public final class Ed25519 {
                            final @NotNull byte[] srcSignedMsg,
                            final @NotNull byte[] remotePubKey)
             throws StodiumException {
-        Stodium.checkSize(srcSignedMsg.length, dstMsg.length + SIGNBYTES, "Ed25519.SIGNBYTES + dstMsg.length");
-        Stodium.checkSize(remotePubKey.length, PUBLICKEYBYTES, "Ed25519.PUBLICKEYBYTES");
+        Stodium.checkSize(srcSignedMsg.length, dstMsg.length + SIGNBYTES);
+        Stodium.checkSize(remotePubKey.length, PUBLICKEYBYTES);
         final int[] dstSize = new int[1];
         Stodium.checkStatus(Sodium.crypto_sign_ed25519_open(dstMsg, dstSize,
                 srcSignedMsg, srcSignedMsg.length, remotePubKey));
@@ -208,8 +208,8 @@ public final class Ed25519 {
                                    final @NotNull byte[] srcMsg,
                                    final @NotNull byte[] localPrivKey)
             throws StodiumException {
-        Stodium.checkSize(dstSignature.length, SIGNBYTES, "Ed25519.SIGNBYTES");
-        Stodium.checkSize(localPrivKey.length, PRIVATEKEYBYTES, "Ed25519.PRIVATEKEYBYTES");
+        Stodium.checkSize(dstSignature.length, SIGNBYTES);
+        Stodium.checkSize(localPrivKey.length, PRIVATEKEYBYTES);
         final int[] dstSize = new int[1];
         Stodium.checkStatus(Sodium.crypto_sign_ed25519_detached(dstSignature, dstSize,
                 srcMsg, srcMsg.length, localPrivKey));
@@ -230,8 +230,8 @@ public final class Ed25519 {
                                          final @NotNull byte[] srcMsg,
                                          final @NotNull byte[] remotePubKey)
             throws StodiumException {
-        Stodium.checkSize(srcSignature.length, SIGNBYTES, "Ed25519.SIGNBYTES");
-        Stodium.checkSize(remotePubKey.length, PUBLICKEYBYTES, "Ed25519.PUBLICKEYBYTES");
+        Stodium.checkSize(srcSignature.length, SIGNBYTES);
+        Stodium.checkSize(remotePubKey.length, PUBLICKEYBYTES);
         return Sodium.crypto_sign_ed25519_verify_detached(srcSignature, srcMsg,
                 srcMsg.length, remotePubKey) == 0;
     }

@@ -48,8 +48,8 @@ public class Auth {
                             final @NotNull byte[] srcIn,
                             final @NotNull byte[] srcKey)
             throws StodiumException {
-        Stodium.checkSize(dstOut.length, BYTES, "Auth.BYTES");
-        Stodium.checkSize(srcKey.length, KEYBYTES, "Auth.KEYBYTES");
+        Stodium.checkSize(dstOut.length, BYTES);
+        Stodium.checkSize(srcKey.length, KEYBYTES);
         Stodium.checkStatus(
                 Sodium.crypto_auth(dstOut, srcIn, srcIn.length, srcKey));
     }
@@ -67,8 +67,8 @@ public class Auth {
                                      final @NotNull byte[] srcIn,
                                      final @NotNull byte[] srcKey)
             throws StodiumException {
-        Stodium.checkSize(srcTag.length, BYTES, "Auth.BYTES");
-        Stodium.checkSize(srcKey.length, KEYBYTES, "Auth.KEYBYTES");
+        Stodium.checkSize(srcTag.length, BYTES);
+        Stodium.checkSize(srcKey.length, KEYBYTES);
         return Sodium.crypto_auth_verify(
                 srcTag, srcIn, srcIn.length, srcKey) == 0;
     }

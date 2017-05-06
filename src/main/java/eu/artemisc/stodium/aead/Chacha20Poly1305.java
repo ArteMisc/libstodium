@@ -52,13 +52,13 @@ public final class Chacha20Poly1305 {
                                        final @NotNull ByteBuffer nonce,
                                        final @NotNull ByteBuffer key)
             throws StodiumException {
-        Stodium.checkDestinationWritable(dstCipher, "Stodium.Chacha20Poly1305#encryptDetached(dstCipher)");
-        Stodium.checkDestinationWritable(dstMac,    "Stodium.Chacha20Poly1305#encryptDetached(dstMac)");
+        Stodium.checkDestinationWritable(dstCipher);
+        Stodium.checkDestinationWritable(dstMac);
 
 
-        Stodium.checkSizeMin(dstCipher.remaining(), srcPlain.remaining(), "Chacha20Poly1305.plain");
-        Stodium.checkSizeMin(nonce.remaining(), NPUBBYTES, "Chacha20Poly1305.NPUBBYTES");
-        Stodium.checkSize(key.remaining(), KEYBYTES, "Chacha20Poly1305.KEYBYTES");
+        Stodium.checkSizeMin(dstCipher.remaining(), srcPlain.remaining());
+        Stodium.checkSizeMin(nonce.remaining(), NPUBBYTES);
+        Stodium.checkSize(key.remaining(), KEYBYTES);
 
         Stodium.checkStatus(StodiumJNI.crypto_aead_chacha20poly1305_encrypt_detached(
                 Stodium.ensureUsableByteBuffer(dstCipher),
@@ -84,11 +84,11 @@ public final class Chacha20Poly1305 {
                                final @NotNull ByteBuffer nonce,
                                final @NotNull ByteBuffer key)
             throws StodiumException {
-        Stodium.checkDestinationWritable(dstCipher, "Stodium.Chacha20Poly1305#encrypt(dstCipher)");
+        Stodium.checkDestinationWritable(dstCipher);
 
-        Stodium.checkSizeMin(dstCipher.remaining(), srcPlain.remaining() + ABYTES, "Chacha20Poly1305.plain + ABYTES");
-        Stodium.checkSizeMin(nonce.remaining(), NPUBBYTES, "Chacha20Poly1305.NPUBBYTES");
-        Stodium.checkSize(key.remaining(), KEYBYTES, "Chacha20Poly1305.KEYBYTES");
+        Stodium.checkSizeMin(dstCipher.remaining(), srcPlain.remaining() + ABYTES);
+        Stodium.checkSizeMin(nonce.remaining(), NPUBBYTES);
+        Stodium.checkSize(key.remaining(), KEYBYTES);
 
         Stodium.checkStatus(StodiumJNI.crypto_aead_chacha20poly1305_encrypt(
                 Stodium.ensureUsableByteBuffer(dstCipher),
@@ -115,11 +115,11 @@ public final class Chacha20Poly1305 {
                                        final @NotNull ByteBuffer nonce,
                                        final @NotNull ByteBuffer key)
             throws StodiumException {
-        Stodium.checkDestinationWritable(dstPlain, "Stodium.Chacha20Poly1305#decryptDetached(dstPlain)");
+        Stodium.checkDestinationWritable(dstPlain);
 
-        Stodium.checkSizeMin(dstPlain.remaining(), srcCipher.remaining(), "Chacha20Poly1305.plain");
-        Stodium.checkSizeMin(nonce.remaining(), NPUBBYTES, "Chacha20Poly1305.NPUBBYTES");
-        Stodium.checkSize(key.remaining(), KEYBYTES, "Chacha20Poly1305.KEYBYTES");
+        Stodium.checkSizeMin(dstPlain.remaining(), srcCipher.remaining());
+        Stodium.checkSizeMin(nonce.remaining(), NPUBBYTES);
+        Stodium.checkSize(key.remaining(), KEYBYTES);
 
         Stodium.checkStatus(StodiumJNI.crypto_aead_chacha20poly1305_decrypt_detached(
                 Stodium.ensureUsableByteBuffer(dstPlain),
@@ -145,11 +145,11 @@ public final class Chacha20Poly1305 {
                                final @NotNull ByteBuffer nonce,
                                final @NotNull ByteBuffer key)
             throws StodiumException {
-        Stodium.checkDestinationWritable(dstPlain, "Stodium.Chacha20Poly1305#decrypt(dstPlain)");
+        Stodium.checkDestinationWritable(dstPlain);
 
-        Stodium.checkSizeMin(srcCipher.remaining(), dstPlain.remaining() + ABYTES, "Chacha20Poly1305.plain + ABYTES");
-        Stodium.checkSizeMin(nonce.remaining(), NPUBBYTES, "Chacha20Poly1305.NPUBBYTES");
-        Stodium.checkSize(key.remaining(), KEYBYTES, "Chacha20Poly1305.KEYBYTES");
+        Stodium.checkSizeMin(srcCipher.remaining(), dstPlain.remaining() + ABYTES);
+        Stodium.checkSizeMin(nonce.remaining(), NPUBBYTES);
+        Stodium.checkSize(key.remaining(), KEYBYTES);
 
         Stodium.checkStatus(StodiumJNI.crypto_aead_chacha20poly1305_decrypt(
                 Stodium.ensureUsableByteBuffer(dstPlain),

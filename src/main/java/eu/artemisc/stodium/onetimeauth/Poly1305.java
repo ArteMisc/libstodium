@@ -79,7 +79,7 @@ public class Poly1305 {
      */
     public void init(final @NotNull byte[] key)
             throws StodiumException {
-        Stodium.checkSize(key.length, KEYBYTES, "Poly1305.KEYBYTES");
+        Stodium.checkSize(key.length, KEYBYTES);
         Stodium.checkStatus(
                 Sodium.crypto_onetimeauth_poly1305_init(state, key));
     }

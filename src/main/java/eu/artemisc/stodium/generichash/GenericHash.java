@@ -66,8 +66,8 @@ public final class GenericHash {
      */
     public GenericHash(final int outlen)
             throws StodiumException {
-        Stodium.checkSize(outlen, BYTES_MIN, BYTES_MAX,
-                "GenericHash.BYTES_MIN", "GenericHash.BYTES_MAX");
+        Stodium.checkSize(outlen, BYTES_MIN, BYTES_MAX
+        );
         this.state = new byte[STATE_BYTES];
         this.outlen = outlen;
     }
@@ -117,8 +117,8 @@ public final class GenericHash {
     public void init(@Nullable final byte[] key)
             throws StodiumException {
         if (key != null) {
-            Stodium.checkSize(key.length, KEYBYTES_MIN, KEYBYTES_MAX,
-                    "GenericHash.KEYBYTES_MIN", "GenericHash.KEYBYTES_MAX");
+            Stodium.checkSize(key.length, KEYBYTES_MIN, KEYBYTES_MAX
+            );
         }
 
         Stodium.checkStatus(Sodium.crypto_generichash_init(
@@ -190,7 +190,7 @@ public final class GenericHash {
                         final          int    offset,
                         final          int    length)
             throws StodiumException {
-        Stodium.checkSize(length, 1, outlen, "1", "Blake2b.outlen");
+        Stodium.checkSize(length, 1, outlen);
         Stodium.checkOffsetParams(out.length, offset, outlen);
         Stodium.checkStatus(Sodium.crypto_generichash_blake2b_final_offset(
                 state, out, offset, length));

@@ -79,9 +79,9 @@ public final class Scrypt {
                                     final          int        opsLimit,
                                     final          int        memLimit)
             throws StodiumException {
-        Stodium.checkDestinationWritable(dstKey, "Stodium.Scrypt#pwhashScrypt(dstKey)");
+        Stodium.checkDestinationWritable(dstKey);
 
-        Stodium.checkSize(srcSalt.remaining(), SALTBYTES, "SCrypt.SALTBYTES");
+        Stodium.checkSize(srcSalt.remaining(), SALTBYTES);
         Stodium.checkPow2(memLimit,                       "SCrypt.pwhashScrypt(memLimit)");
 
         Stodium.checkStatus(StodiumJNI.crypto_pwhash_scryptsalsa208sha256(

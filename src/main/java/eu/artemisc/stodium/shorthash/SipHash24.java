@@ -48,7 +48,7 @@ public class SipHash24 {
     public static Long shorthash(final @NotNull byte[] srcIn,
                                  final @NotNull byte[] srcKey)
             throws StodiumException {
-        Stodium.checkSize(srcKey.length, KEYBYTES, "SipHash24.KEYBYTES");
+        Stodium.checkSize(srcKey.length, KEYBYTES);
 
         byte[] dst = new byte[BYTES];
         Stodium.checkStatus(
@@ -72,8 +72,8 @@ public class SipHash24 {
                                  final @NotNull byte[] srcIn,
                                  final @NotNull byte[] srcKey)
             throws StodiumException {
-        Stodium.checkSize(dstHash.length, BYTES, "SipHash24.BYTES");
-        Stodium.checkSize(srcKey.length, KEYBYTES, "SipHash24.KEYBYTES");
+        Stodium.checkSize(dstHash.length, BYTES);
+        Stodium.checkSize(srcKey.length, KEYBYTES);
         Stodium.checkStatus(
                 Sodium.crypto_shorthash_siphash24(dstHash, srcIn, srcIn.length, srcKey));
     }

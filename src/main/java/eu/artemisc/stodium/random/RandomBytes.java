@@ -37,7 +37,7 @@ public final class RandomBytes {
      * @throws ReadOnlyBufferException
      */
     public static void nextBytes(final @NotNull ByteBuffer buffer) {
-        Stodium.checkDestinationWritable(buffer, "RANDOM buffer");
+        Stodium.checkDestinationWritable(buffer);
         StodiumJNI.randombytes_buf(buffer);
     }
 }

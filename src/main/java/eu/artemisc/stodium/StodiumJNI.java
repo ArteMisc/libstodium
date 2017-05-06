@@ -155,19 +155,7 @@ public class StodiumJNI {
     // Box
     //
     public static native String crypto_box_primitive();
-
-    public static native int crypto_box_seedbytes();
-    public static native int crypto_box_publickeybytes();
-    public static native int crypto_box_secretkeybytes();
-    public static native int crypto_box_noncebytes();
-    public static native int crypto_box_macbytes();
-    public static native int crypto_box_beforenmbytes();
     public static native int crypto_box_sealbytes();
-
-//    public static native int crypto_box_keypair(
-//            ByteBuffer publicKey, ByteBuffer privateKey);
-//    public static native int crypto_box_seed_keypair(
-//            ByteBuffer publicKey, ByteBuffer privateKey, ByteBuffer seed);
 
     public static native int crypto_box_seal(
             @NotNull ByteBuffer dstCipher,
@@ -178,6 +166,100 @@ public class StodiumJNI {
             @NotNull ByteBuffer srcCipher,
             @NotNull ByteBuffer publicKey,
             @NotNull ByteBuffer privateKey);
+
+    // todo detached
+
+    //
+    // Box - Curve25519XSalsa20Poly1305
+    //
+    public static native int crypto_box_curve25519xsalsa20poly1305_seedbytes();
+    public static native int crypto_box_curve25519xsalsa20poly1305_publickeybytes();
+    public static native int crypto_box_curve25519xsalsa20poly1305_secretkeybytes();
+    public static native int crypto_box_curve25519xsalsa20poly1305_beforenmbytes();
+    public static native int crypto_box_curve25519xsalsa20poly1305_noncebytes();
+    public static native int crypto_box_curve25519xsalsa20poly1305_zerobytes();
+    public static native int crypto_box_curve25519xsalsa20poly1305_boxzerobytes();
+    public static native int crypto_box_curve25519xsalsa20poly1305_macbytes();
+
+    public static native int crypto_box_curve25519xsalsa20poly1305_seed_keypair(
+            @NotNull ByteBuffer dstPublic,
+            @NotNull ByteBuffer dstPrivate,
+            @NotNull ByteBuffer seed);
+    public static native int crypto_box_curve25519xsalsa20poly1305_keypair(
+            @NotNull ByteBuffer dstPublic,
+            @NotNull ByteBuffer dstPrivate);
+    public static native int crypto_box_curve25519xsalsa20poly1305_beforenm(
+            @NotNull ByteBuffer dstKey,
+            @NotNull ByteBuffer srcPublic,
+            @NotNull ByteBuffer srcPrivate);
+    public static native int crypto_box_curve25519xsalsa20poly1305_afternm(
+            @NotNull ByteBuffer dstCipher,
+            @NotNull ByteBuffer srcPlain,
+            @NotNull ByteBuffer nonce,
+            @NotNull ByteBuffer key);
+    public static native int crypto_box_curve25519xsalsa20poly1305_open_afternm(
+            @NotNull ByteBuffer dstPlain,
+            @NotNull ByteBuffer srcCipher,
+            @NotNull ByteBuffer nonce,
+            @NotNull ByteBuffer key);
+    public static native int crypto_box_curve25519xsalsa20poly1305(
+            @NotNull ByteBuffer dstCipher,
+            @NotNull ByteBuffer srcPlain,
+            @NotNull ByteBuffer nonce,
+            @NotNull ByteBuffer publicKey,
+            @NotNull ByteBuffer privateKey);
+    public static native int crypto_box_curve25519xsalsa20poly1305_open(
+            @NotNull ByteBuffer dstPlain,
+            @NotNull ByteBuffer srcCipher,
+            @NotNull ByteBuffer nonce,
+            @NotNull ByteBuffer publicKey,
+            @NotNull ByteBuffer privateKey);
+
+    //
+    // Box - X25519XChachaPoly1305
+    //
+    public static native int crypto_box_curve25519xchacha20poly1305_seedbytes();
+    public static native int crypto_box_curve25519xchachac20poly1305_publickeybytes();
+    public static native int crypto_box_curve25519xchacha20poly1305_secretkeybytes();
+    public static native int crypto_box_curve25519xchacha20poly1305_beforenmbytes();
+    public static native int crypto_box_curve25519xchacha20poly1305_noncebytes();
+    public static native int crypto_box_curve25519xchacha20poly1305_macbytes();
+
+    public static native int crypto_box_curve25519xchacha20poly1305_seed_keypair(
+            @NotNull ByteBuffer dstPublic,
+            @NotNull ByteBuffer dstPrivate,
+            @NotNull ByteBuffer seed);
+    public static native int crypto_box_curve25519xchacha20poly1305_keypair(
+            @NotNull ByteBuffer dstPublic,
+            @NotNull ByteBuffer dstPrivate);
+    public static native int crypto_box_curve25519xchacha20poly1305_beforenm(
+            @NotNull ByteBuffer dstKey,
+            @NotNull ByteBuffer srcPublic,
+            @NotNull ByteBuffer srcPrivate);
+    public static native int crypto_box_curve25519xchacha20poly1305_easy_afternm(
+            @NotNull ByteBuffer dstCipher,
+            @NotNull ByteBuffer srcPlain,
+            @NotNull ByteBuffer nonce,
+            @NotNull ByteBuffer key);
+    public static native int crypto_box_curve25519xchacha20poly1305_open_easy_afternm(
+            @NotNull ByteBuffer dstPlain,
+            @NotNull ByteBuffer srcCipher,
+            @NotNull ByteBuffer nonce,
+            @NotNull ByteBuffer key);
+    public static native int crypto_box_curve25519xchacha20poly1305_easy(
+            @NotNull ByteBuffer dstCipher,
+            @NotNull ByteBuffer srcPlain,
+            @NotNull ByteBuffer nonce,
+            @NotNull ByteBuffer publicKey,
+            @NotNull ByteBuffer privateKey);
+    public static native int crypto_box_curve25519xchacha20poly1305_open_easy(
+            @NotNull ByteBuffer dstPlain,
+            @NotNull ByteBuffer srcCipher,
+            @NotNull ByteBuffer nonce,
+            @NotNull ByteBuffer publicKey,
+            @NotNull ByteBuffer privateKey);
+
+    // todo detached
 
     //
     // GenericHash Blake2b

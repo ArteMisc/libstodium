@@ -63,9 +63,9 @@ public final class Secretbox {
                             final @NotNull byte[] nonce,
                             final @NotNull byte[] secretKey)
             throws StodiumException {
-        Stodium.checkSize(dstCipher.length, srcPlain.length + MACBYTES, "srcPlain.length + Secretbox.MACBYTES");
-        Stodium.checkSize(nonce.length, NONCEBYTES, "Secretbox.NONCEBYTES");
-        Stodium.checkSize(secretKey.length, KEYBYTES, "Secretbox.KEYBYTES");
+        Stodium.checkSize(dstCipher.length, srcPlain.length + MACBYTES);
+        Stodium.checkSize(nonce.length, NONCEBYTES);
+        Stodium.checkSize(secretKey.length, KEYBYTES);
         Stodium.checkStatus(Sodium.crypto_secretbox_easy(dstCipher, srcPlain,
                 srcPlain.length, nonce, secretKey));
     }
@@ -83,9 +83,9 @@ public final class Secretbox {
                             final @NotNull ByteBuffer nonce,
                             final @NotNull ByteBuffer secretKey)
             throws StodiumException {
-        Stodium.checkSize(dstCipher.remaining(), srcPlain.remaining() + MACBYTES, "srcPlain.length + Secretbox.MACBYTES");
-        Stodium.checkSize(nonce.remaining(),     NONCEBYTES,                      "Secretbox.NONCEBYTES");
-        Stodium.checkSize(secretKey.remaining(), KEYBYTES,                        "Secretbox.KEYBYTES");
+        Stodium.checkSize(dstCipher.remaining(), srcPlain.remaining() + MACBYTES);
+        Stodium.checkSize(nonce.remaining(),     NONCEBYTES);
+        Stodium.checkSize(secretKey.remaining(), KEYBYTES);
         Stodium.checkStatus(StodiumJNI.crypto_secretbox_easy(
                 dstCipher, srcPlain, nonce, secretKey));
     }
@@ -104,9 +104,9 @@ public final class Secretbox {
                                    final @NotNull ByteBuffer nonce,
                                    final @NotNull ByteBuffer secretKey)
             throws StodiumException {
-        Stodium.checkSize(srcCipher.remaining(), dstPlain.remaining() + MACBYTES, "dstPlain.length + Secretbox.MACBYTES");
-        Stodium.checkSize(nonce.remaining(),     NONCEBYTES,                      "Secretbox.NONCEBYTES");
-        Stodium.checkSize(secretKey.remaining(), KEYBYTES,                        "Secretbox.KEYBYTES");
+        Stodium.checkSize(srcCipher.remaining(), dstPlain.remaining() + MACBYTES);
+        Stodium.checkSize(nonce.remaining(),     NONCEBYTES);
+        Stodium.checkSize(secretKey.remaining(), KEYBYTES);
         return StodiumJNI.crypto_secretbox_open_easy(
                 dstPlain, srcCipher, nonce, secretKey) == 0;
     }
@@ -127,12 +127,12 @@ public final class Secretbox {
                                 final @NotNull byte[] nonce,
                                 final @NotNull byte[] secretKey)
             throws StodiumException, AEADBadTagException {
-        Stodium.checkSize(srcCipher.length, dstPlain.length + MACBYTES, "dstPlain.length + Secretbox.MACBYTES");
-        Stodium.checkSize(nonce.length, NONCEBYTES, "Secretbox.NONCEBYTES");
-        Stodium.checkSize(secretKey.length, KEYBYTES, "Secretbox.KEYBYTES");
+        Stodium.checkSize(srcCipher.length, dstPlain.length + MACBYTES);
+        Stodium.checkSize(nonce.length, NONCEBYTES);
+        Stodium.checkSize(secretKey.length, KEYBYTES);
         Stodium.checkStatusSealOpen(Sodium.crypto_secretbox_open_easy(dstPlain,
-                srcCipher, srcCipher.length, nonce, secretKey),
-                "Secretbox#openEasy");
+                srcCipher, srcCipher.length, nonce, secretKey)
+        );
     }
 
     //
@@ -157,10 +157,10 @@ public final class Secretbox {
                                 final @NotNull byte[] nonce,
                                 final @NotNull byte[] secretKey)
             throws StodiumException {
-        Stodium.checkSize(dstCipher.length, srcPlain.length, "srcPlain.length");
-        Stodium.checkSize(dstMac.length, MACBYTES, "Secretbox.MACBYTES");
-        Stodium.checkSize(nonce.length, NONCEBYTES, "Secretbox.NONCEBYTES");
-        Stodium.checkSize(secretKey.length, KEYBYTES, "Secretbox.KEYBYTES");
+        Stodium.checkSize(dstCipher.length, srcPlain.length);
+        Stodium.checkSize(dstMac.length, MACBYTES);
+        Stodium.checkSize(nonce.length, NONCEBYTES);
+        Stodium.checkSize(secretKey.length, KEYBYTES);
         Stodium.checkStatus(Sodium.crypto_secretbox_detached(dstCipher, dstMac,
                 srcPlain, srcPlain.length, nonce, secretKey));
     }
@@ -183,12 +183,12 @@ public final class Secretbox {
                                     final @NotNull byte[] nonce,
                                     final @NotNull byte[] secretKey)
             throws StodiumException, AEADBadTagException {
-        Stodium.checkSize(srcCipher.length, dstPlain.length, "dstPlain.length");
-        Stodium.checkSize(srcMac.length, MACBYTES, "Secretbox.MACBYTES");
-        Stodium.checkSize(nonce.length, NONCEBYTES, "Secretbox.NONCEBYTES");
-        Stodium.checkSize(secretKey.length, KEYBYTES, "Secretbox.KEYBYTES");
+        Stodium.checkSize(srcCipher.length, dstPlain.length);
+        Stodium.checkSize(srcMac.length, MACBYTES);
+        Stodium.checkSize(nonce.length, NONCEBYTES);
+        Stodium.checkSize(secretKey.length, KEYBYTES);
         Stodium.checkStatusSealOpen(Sodium.crypto_secretbox_open_detached(dstPlain,
-                        srcCipher, srcMac, srcCipher.length, nonce, secretKey),
-                "Secretbox#openDetached");
+                        srcCipher, srcMac, srcCipher.length, nonce, secretKey)
+        );
     }
 }

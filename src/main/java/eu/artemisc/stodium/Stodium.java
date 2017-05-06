@@ -34,7 +34,7 @@ import eu.artemisc.stodium.exceptions.StodiumException;
  */
 public final class Stodium {
     // Block constructor
-    private Stodium() {}
+    private Stodium() { throw new IllegalAccessError(); }
 
     /**
      *
@@ -51,22 +51,19 @@ public final class Stodium {
         if (status == 0) {
             return;
         }
-        throw new OperationFailedException(
-                String.format(Locale.ENGLISH, "Stodium: operation returned non-zero status %d", status));
+        throw new OperationFailedException("operation returned non-zero status " + status);
     }
 
     /**
      *
      * @param status
-     * @param methodDescription
      * @throws AEADBadTagException If the status value does not equal 0,
      *         indicating an invalid authentication tag was encountered.
      * @throws StodiumException If the API level does not support
      *         AEADBadTagException, the method will call
      *         {@link #checkStatus(int)} instead.
      */
-    public static void checkStatusSealOpen(final          int    status,
-                                           final @NotNull String methodDescription)
+    public static void checkStatusSealOpen(final int status)
             throws AEADBadTagException, StodiumException {
         if (status == 0) {
             return;
@@ -82,19 +79,17 @@ public final class Stodium {
      *
      * @param src
      * @param expected
-     * @param constant
      * @throws ConstraintViolationException
      */
-    public static void checkSize(final          int    src,
-                                 final          int    expected,
-                                 final @NotNull String constant)
+    public static void checkSize(final int src,
+                                 final int expected)
             throws ConstraintViolationException {
         if (src == expected) {
             return;
         }
         throw new ConstraintViolationException(
-                String.format(Locale.ENGLISH, "Check size failed on [%s] [expected: %d, real: %d]",
-                        constant, expected, src));
+                String.format(Locale.ENGLISH, "Check size failed [expected: %d, real: %d]",
+                        expected, src));
     }
 
     /**
@@ -102,36 +97,30 @@ public final class Stodium {
      * @param src
      * @param lower
      * @param upper
-     * @param lowerC
-     * @param upperC
      * @throws ConstraintViolationException
      */
-    public static void checkSize(final          int    src,
-                                 final          int    lower,
-                                 final          int    upper,
-                                 final @NotNull String lowerC,
-                                 final @NotNull String upperC)
+    public static void checkSize(final int src,
+                                 final int lower,
+                                 final int upper)
             throws ConstraintViolationException {
         if (src <= upper && src >= lower) {
             return;
         }
         throw new ConstraintViolationException(
-                String.format(Locale.ENGLISH, "CheckSize failed on bounds [%s, %s] [lower: %d, upper: %d, real: %d]",
-                        lowerC, upperC, lower, upper, src));
+                String.format(Locale.ENGLISH, "CheckSize failed [lower: %d, upper: %d, real: %d]",
+                        lower, upper, src));
     }
 
     /**
      *
      * @param src
      * @param lower
-     * @param lowerC
      * @throws ConstraintViolationException
      */
-    public static void checkSizeMin(final          int    src,
-                                    final          int    lower,
-                                    final @NotNull String lowerC)
+    public static void checkSizeMin(final int src,
+                                    final int lower)
             throws ConstraintViolationException {
-        checkSize(src, lower, Integer.MAX_VALUE, lowerC, "Integer.MAX_VALUE");
+        checkSize(src, lower, Integer.MAX_VALUE);
     }
 
     /**
@@ -160,42 +149,37 @@ public final class Stodium {
                                          final int offset,
                                          final int len)
             throws ConstraintViolationException {
-        Stodium.checkSize(offset, 0, dataLen, "0", "dataLen");
-        Stodium.checkSize(offset + len, 0, dataLen, "0", "dataLen");
+        Stodium.checkSize(offset, 0, dataLen);
+        Stodium.checkSize(offset + len, 0, dataLen);
         Stodium.checkPositive(len);
     }
 
     /**
      * checkPow2 checks whether the given integer src is a power of 2, and
      * throws an exception otherwise.
+     *
      * @param src
-     * @param descr
      * @throws ConstraintViolationException
      */
-    public static void checkPow2(final          int    src,
-                                 final @NotNull String descr)
+    public static void checkPow2(final int src)
             throws ConstraintViolationException {
         if ((src > 0) && ((src & (~src + 1)) == src)) {
             return;
         }
-        throw new ConstraintViolationException(
-                String.format(Locale.ENGLISH, "checkPow2 failed on [%s: %d]", descr, src));
+        throw new ConstraintViolationException("checkPow2 failed [" + src + "]");
     }
 
     /**
      *
      * @param src
-     * @param descr
      * @throws ConstraintViolationException
      */
-    public static void checkPow2(final          long   src,
-                                 final @NotNull String descr)
+    public static void checkPow2(final long src)
             throws ConstraintViolationException {
         if ((src > 0) && ((src & (~src + 1)) == src)) {
             return;
         }
-        throw new ConstraintViolationException(
-                String.format(Locale.ENGLISH, "checkPow2 failed on [%s: %d]", descr, src));
+        throw new ConstraintViolationException("checkPow2 failed [" + src + "]");
     }
 
     /**
@@ -217,7 +201,7 @@ public final class Stodium {
     }
 
     /**
-     * TODO let this call a native comparator for direct buffers?
+     *
      * @param a
      * @param b
      * @return
@@ -303,25 +287,22 @@ public final class Stodium {
      * @throws ReadOnlyBufferException if the buffer is incorrectly passed as a
      *         read-only buffer, even while being the output for an operation.
      */
-    public static void checkDestinationWritable(final @NotNull ByteBuffer buff,
-                                                final @NotNull String     description) {
+    public static void checkDestinationWritable(final @NotNull ByteBuffer buff) {
         if (buff.isDirect() || !buff.isReadOnly()) {
             return;
         }
-        throw new ReadOnlyBufferException(
-                String.format("Stodion: output for [%s] is readonly", description));
+        throw new ReadOnlyBufferException("Stodium: output buffer is readonly");
     }
 
     /**
      *
      */
-    private static boolean initialized = false;
+    private static volatile boolean initialized = false;
 
     /**
      * runInit wraps a call to sodium_init().
      */
-    private synchronized static void runInit()
-            throws RuntimeException {
+    private synchronized static void runInit() {
         if (initialized) {
             return;
         }
@@ -333,8 +314,8 @@ public final class Stodium {
         initialized = true;
     }
 
-    /**
-     * Load the native library
+    /*
+      Load the native library
      */
     static {
         try {
@@ -378,12 +359,12 @@ public final class Stodium {
     }
 
     /**
-     * SodiumVersionString returns the value of sodium_version_string().
+     * version returns the value of sodium_version_string().
      *
      * @return libsodium's version string
      */
     @NotNull
-    public static String SodiumVersionString() {
+    public static String version() {
         return Sodium.sodium_version_string();
     }
 }

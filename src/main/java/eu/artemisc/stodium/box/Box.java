@@ -7,16 +7,15 @@
  */
 package eu.artemisc.stodium.box;
 
-import org.abstractj.kalium.Sodium;
 import org.jetbrains.annotations.NotNull;
 
 import java.nio.ByteBuffer;
 
 import eu.artemisc.stodium.Stodium;
+import eu.artemisc.stodium.StodiumJNI;
 import eu.artemisc.stodium.exceptions.ConstraintViolationException;
 import eu.artemisc.stodium.exceptions.ReadOnlyBufferException;
 import eu.artemisc.stodium.exceptions.StodiumException;
-import eu.artemisc.stodium.StodiumJNI;
 import eu.artemisc.stodium.scalarmult.Curve25519;
 
 /**
@@ -35,15 +34,17 @@ public final class Box {
     private Box() {}
 
     // constants
-    public static final int PUBLICKEYBYTES = StodiumJNI.crypto_box_publickeybytes();
-    public static final int SECRETKEYBYTES = StodiumJNI.crypto_box_secretkeybytes();
-    public static final int MACBYTES       = StodiumJNI.crypto_box_macbytes();
-    public static final int NONCEBYTES     = StodiumJNI.crypto_box_noncebytes();
-    public static final int SEEDBYTES      = StodiumJNI.crypto_box_seedbytes();
-    public static final int BEFORENMBYTES  = StodiumJNI.crypto_box_beforenmbytes();
+    public static final int SEEDBYTES      = Curve25519XSalsa20Poly1305.SEEDBYTES;
+    public static final int PUBLICKEYBYTES = Curve25519XSalsa20Poly1305.PUBLICKEYBYTES;
+    public static final int SECRETKEYBYTES = Curve25519XSalsa20Poly1305.SECRETKEYBYTES;
+    public static final int BEFORENMBYTES  = Curve25519XSalsa20Poly1305.BEFORENMBYTES;
+    public static final int NONCEBYTES     = Curve25519XSalsa20Poly1305.NONCEBYTES;
+    public static final int ZEROBYTES      = Curve25519XSalsa20Poly1305.ZEROBYTES;
+    public static final int BOXZEROBYTES   = Curve25519XSalsa20Poly1305.BOXZEROBYTES;
+    public static final int MACBYTES       = Curve25519XSalsa20Poly1305.MACBYTES;
     public static final int SEALBYTES      = StodiumJNI.crypto_box_sealbytes();
 
-    public static final String PRIMITIVE = StodiumJNI.crypto_box_primitive();
+    public static final @NotNull String PRIMITIVE = StodiumJNI.crypto_box_primitive();
 
     // wrappers
 
@@ -55,48 +56,37 @@ public final class Box {
      *
      * @param dstPublicKey
      * @param dstPrivateKey
-     * @throws ConstraintViolationException
      * @throws StodiumException
      */
-    public static void keypair(final @NotNull byte[] dstPublicKey,
-                               final @NotNull byte[] dstPrivateKey)
+    public static void keypair(final @NotNull ByteBuffer dstPublicKey,
+                               final @NotNull ByteBuffer dstPrivateKey)
             throws StodiumException {
-        Stodium.checkSize(dstPublicKey.length, PUBLICKEYBYTES, "Box.PUBLICKEYBYTES");
-        Stodium.checkSize(dstPrivateKey.length, SECRETKEYBYTES, "Box.SECRETKEYBYTES");
-        Stodium.checkStatus(Sodium.crypto_box_keypair(dstPublicKey, dstPrivateKey));
+        Curve25519XSalsa20Poly1305.keypair(dstPublicKey, dstPrivateKey);
     }
 
     /**
      *
-     * @param dstPublicKey
-     * @param dstPrivateKey
-     * @param srcSeed
-     * @throws ConstraintViolationException
+     * @param dstPublic
+     * @param dstPrivate
+     * @param seed
      * @throws StodiumException
      */
-    public static void seedKeypair(final @NotNull byte[] dstPublicKey,
-                                   final @NotNull byte[] dstPrivateKey,
-                                   final @NotNull byte[] srcSeed)
+    public static void seedKeypair(final @NotNull ByteBuffer dstPublic,
+                                   final @NotNull ByteBuffer dstPrivate,
+                                   final @NotNull ByteBuffer seed)
             throws StodiumException {
-        Stodium.checkSize(dstPublicKey.length, PUBLICKEYBYTES, "Box.PUBLICKEYBYTES");
-        Stodium.checkSize(dstPrivateKey.length, SECRETKEYBYTES, "Box.SECRETKEYBYTES");
-        Stodium.checkSize(srcSeed.length, SEEDBYTES, "Box.SEEDBYTES");
-        Stodium.checkStatus(Sodium.crypto_box_seed_keypair(dstPublicKey,
-                dstPrivateKey, srcSeed));
+        Curve25519XSalsa20Poly1305.seedKeypair(dstPublic, dstPrivate, seed);
     }
 
     /**
      *
      * @param dstPublicKey
      * @param srcPrivateKey
-     * @throws ConstraintViolationException
      * @throws StodiumException
      */
     public static void publicFromPrivate(final @NotNull ByteBuffer dstPublicKey,
                                          final @NotNull ByteBuffer srcPrivateKey)
             throws StodiumException {
-        Stodium.checkSize(dstPublicKey.remaining(), PUBLICKEYBYTES, "Box.PUBLICKEYBYTES");
-        Stodium.checkSize(srcPrivateKey.remaining(), SECRETKEYBYTES, "Box.SECRETKEYBYTES");
         Curve25519.x25519PrivateToPublic(dstPublicKey, srcPrivateKey);
     }
 
@@ -111,21 +101,15 @@ public final class Box {
      * @param nonce
      * @param remotePubKey
      * @param localPrivKey
-     * @throws ConstraintViolationException
      * @throws StodiumException
      */
-    public static void easy(final @NotNull byte[] dstCipher,
-                            final @NotNull byte[] srcPlain,
-                            final @NotNull byte[] nonce,
-                            final @NotNull byte[] remotePubKey,
-                            final @NotNull byte[] localPrivKey)
+    public static void easy(final @NotNull ByteBuffer dstCipher,
+                            final @NotNull ByteBuffer srcPlain,
+                            final @NotNull ByteBuffer nonce,
+                            final @NotNull ByteBuffer remotePubKey,
+                            final @NotNull ByteBuffer localPrivKey)
             throws StodiumException {
-        Stodium.checkSize(dstCipher.length, srcPlain.length + MACBYTES, "Box.MACBYTES + srcPlain.length");
-        Stodium.checkSize(nonce.length, NONCEBYTES, "Box.NONCEBYTES");
-        Stodium.checkSize(remotePubKey.length, PUBLICKEYBYTES, "Box.PUBLICKEYBYTES");
-        Stodium.checkSize(localPrivKey.length, SECRETKEYBYTES, "Box.SECRETKEYBYTES");
-        Stodium.checkStatus(Sodium.crypto_box_easy(dstCipher, srcPlain,
-                srcPlain.length, nonce, remotePubKey, localPrivKey));
+        Curve25519XSalsa20Poly1305.easy(dstCipher, srcPlain, nonce, remotePubKey, localPrivKey);
     }
 
     /**
@@ -135,80 +119,22 @@ public final class Box {
      * @param nonce
      * @param remotePubKey
      * @param localPrivKey
-     * @throws ConstraintViolationException
      * @throws StodiumException
      */
-    public static void openEasy(final @NotNull byte[] dstPlain,
-                                final @NotNull byte[] srcCipher,
-                                final @NotNull byte[] nonce,
-                                final @NotNull byte[] remotePubKey,
-                                final @NotNull byte[] localPrivKey)
+    public static void openEasy(final @NotNull ByteBuffer dstPlain,
+                                final @NotNull ByteBuffer srcCipher,
+                                final @NotNull ByteBuffer nonce,
+                                final @NotNull ByteBuffer remotePubKey,
+                                final @NotNull ByteBuffer localPrivKey)
             throws StodiumException {
-        Stodium.checkSize(srcCipher.length, dstPlain.length + MACBYTES, "Box.MACBYTES + dstPlain.length");
-        Stodium.checkSize(nonce.length, NONCEBYTES, "Box.NONCEBYTES");
-        Stodium.checkSize(remotePubKey.length, PUBLICKEYBYTES, "Box.PUBLICKEYBYTES");
-        Stodium.checkSize(localPrivKey.length, SECRETKEYBYTES, "Box.SECRETKEYBYTES");
-        Stodium.checkStatus(Sodium.crypto_box_open_easy(dstPlain, srcCipher,
-                srcCipher.length, nonce, remotePubKey, localPrivKey));
+        Curve25519XSalsa20Poly1305.openEasy(dstPlain, srcCipher, nonce, remotePubKey, localPrivKey);
     }
 
     //
     // *_detached
+    // TODO
     //
 
-    /**
-     *
-     * @param dstCipher
-     * @param dstMac
-     * @param srcPlain
-     * @param nonce
-     * @param remotePubKey
-     * @param localPrivKey
-     * @throws ConstraintViolationException
-     * @throws StodiumException
-     */
-    public static void detached(final @NotNull byte[] dstCipher,
-                                final @NotNull byte[] dstMac,
-                                final @NotNull byte[] srcPlain,
-                                final @NotNull byte[] nonce,
-                                final @NotNull byte[] remotePubKey,
-                                final @NotNull byte[] localPrivKey)
-            throws StodiumException {
-        Stodium.checkSize(dstCipher.length, srcPlain.length, "srcPlain.length");
-        Stodium.checkSize(dstMac.length, MACBYTES, "Box.MACBYTES");
-        Stodium.checkSize(nonce.length, NONCEBYTES, "Box.NONCEBYTES");
-        Stodium.checkSize(remotePubKey.length, PUBLICKEYBYTES, "Box.PUBLICKEYBYTES");
-        Stodium.checkSize(localPrivKey.length, SECRETKEYBYTES, "Box.SECRETKEYBYTES");
-        Stodium.checkStatus(Sodium.crypto_box_detached(dstCipher, dstMac,
-                srcPlain, srcPlain.length, nonce, remotePubKey, localPrivKey));
-    }
-
-    /**
-     *
-     * @param dstPlain
-     * @param srcCipher
-     * @param srcMac
-     * @param nonce
-     * @param remotePubKey
-     * @param localPrivKey
-     * @throws ConstraintViolationException
-     * @throws StodiumException
-     */
-    public static void openDetached(final @NotNull byte[] dstPlain,
-                                    final @NotNull byte[] srcCipher,
-                                    final @NotNull byte[] srcMac,
-                                    final @NotNull byte[] nonce,
-                                    final @NotNull byte[] remotePubKey,
-                                    final @NotNull byte[] localPrivKey)
-            throws StodiumException {
-        Stodium.checkSize(srcCipher.length,    dstPlain.length, "dstPlain.length");
-        Stodium.checkSize(srcMac.length,       MACBYTES,        "Box.MACBYTES");
-        Stodium.checkSize(nonce.length,        NONCEBYTES,      "Box.NONCEBYTES");
-        Stodium.checkSize(remotePubKey.length, PUBLICKEYBYTES,  "Box.PUBLICKEYBYTES");
-        Stodium.checkSize(localPrivKey.length, SECRETKEYBYTES,  "Box.SECRETKEYBYTES");
-        Stodium.checkStatus(Sodium.crypto_box_detached(srcCipher, srcMac,
-                dstPlain, srcCipher.length, nonce, remotePubKey, localPrivKey));
-    }
 
     //
     // _beforenm
@@ -219,18 +145,13 @@ public final class Box {
      * @param dstSharedKey
      * @param remotePubKey
      * @param localPrivKey
-     * @throws ConstraintViolationException
      * @throws StodiumException
      */
-    public static void beforenm(final @NotNull byte[] dstSharedKey,
-                                final @NotNull byte[] remotePubKey,
-                                final @NotNull byte[] localPrivKey)
+    public static void beforenm(final @NotNull ByteBuffer dstSharedKey,
+                                final @NotNull ByteBuffer remotePubKey,
+                                final @NotNull ByteBuffer localPrivKey)
             throws StodiumException {
-        Stodium.checkSize(dstSharedKey.length, BEFORENMBYTES,  "Box.BEFORENMBYTES");
-        Stodium.checkSize(remotePubKey.length, PUBLICKEYBYTES, "Box.PUBLICKEYBYTES");
-        Stodium.checkSize(localPrivKey.length, SECRETKEYBYTES, "Box.SECRETKEYBYTES");
-        Stodium.checkStatus(Sodium.crypto_box_beforenm(dstSharedKey,
-                remotePubKey, localPrivKey));
+        Curve25519XSalsa20Poly1305.beforenm(dstSharedKey, remotePubKey, localPrivKey);
     }
 
     //
@@ -243,19 +164,14 @@ public final class Box {
      * @param srcPlain
      * @param nonce
      * @param sharedKey
-     * @throws ConstraintViolationException
      * @throws StodiumException
      */
-    public static void easyAfternm(final @NotNull byte[] dstCipher,
-                                   final @NotNull byte[] srcPlain,
-                                   final @NotNull byte[] nonce,
-                                   final @NotNull byte[] sharedKey)
+    public static void easyAfternm(final @NotNull ByteBuffer dstCipher,
+                                   final @NotNull ByteBuffer srcPlain,
+                                   final @NotNull ByteBuffer nonce,
+                                   final @NotNull ByteBuffer sharedKey)
             throws StodiumException {
-        Stodium.checkSize(dstCipher.length, srcPlain.length + MACBYTES, "Box.MACBYTES + srcPlain.length");
-        Stodium.checkSize(nonce.length,     NONCEBYTES,    "Box.NONCEBYTES");
-        Stodium.checkSize(sharedKey.length, BEFORENMBYTES, "Box.BEFORENMBYTES");
-        Stodium.checkStatus(Sodium.crypto_box_easy_afternm(dstCipher, srcPlain,
-                srcPlain.length, nonce, sharedKey));
+        Curve25519XSalsa20Poly1305.afternm(dstCipher, srcPlain, nonce, sharedKey);
     }
 
     /**
@@ -264,72 +180,20 @@ public final class Box {
      * @param srcCipher
      * @param nonce
      * @param sharedKey
-     * @throws ConstraintViolationException
      * @throws StodiumException
      */
-    public static void easyOpenAfternm(final @NotNull byte[] dstPlain,
-                                       final @NotNull byte[] srcCipher,
-                                       final @NotNull byte[] nonce,
-                                       final @NotNull byte[] sharedKey)
+    public static void easyOpenAfternm(final @NotNull ByteBuffer dstPlain,
+                                       final @NotNull ByteBuffer srcCipher,
+                                       final @NotNull ByteBuffer nonce,
+                                       final @NotNull ByteBuffer sharedKey)
             throws StodiumException {
-        Stodium.checkSize(srcCipher.length, dstPlain.length + MACBYTES, "Box.MACBYTES + dstPlain.length");
-        Stodium.checkSize(nonce.length,     NONCEBYTES,    "Box.NONCEBYTES");
-        Stodium.checkSize(sharedKey.length, BEFORENMBYTES, "Box.BEFORENMBYTES");
-        Stodium.checkStatus(Sodium.crypto_box_open_easy_afternm(dstPlain,
-                srcCipher, srcCipher.length, nonce, sharedKey));
+        Curve25519XSalsa20Poly1305.openAfternm(dstPlain, srcCipher, nonce, sharedKey);
     }
 
     //
     // *_detached_afternm
+    // TODO
     //
-
-    /**
-     *
-     * @param srcPlain
-     * @param dstCipher
-     * @param dstMac
-     * @param nonce
-     * @param sharedKey
-     * @throws ConstraintViolationException
-     * @throws StodiumException
-     */
-    public static void detachedAfternm(final @NotNull byte[] srcPlain,
-                                       final @NotNull byte[] dstCipher,
-                                       final @NotNull byte[] dstMac,
-                                       final @NotNull byte[] nonce,
-                                       final @NotNull byte[] sharedKey)
-            throws StodiumException {
-        Stodium.checkSize(dstCipher.length, srcPlain.length, "srcPlain.length");
-        Stodium.checkSize(dstMac.length,    MACBYTES,        "Box.MACBYTES");
-        Stodium.checkSize(nonce.length,     NONCEBYTES,      "Box.NONCEBYTES");
-        Stodium.checkSize(sharedKey.length, BEFORENMBYTES,   "Box.BEFORENMBYTES");
-        Stodium.checkStatus(Sodium.crypto_box_open_detached_afternm(dstCipher,
-                dstMac, srcPlain, srcPlain.length, nonce, sharedKey));
-    }
-
-    /**
-     *
-     * @param dstPlain
-     * @param srcCipher
-     * @param srcMac
-     * @param nonce
-     * @param sharedKey
-     * @throws ConstraintViolationException
-     * @throws StodiumException
-     */
-    public static void openDetachedAfternm(final @NotNull byte[] dstPlain,
-                                           final @NotNull byte[] srcCipher,
-                                           final @NotNull byte[] srcMac,
-                                           final @NotNull byte[] nonce,
-                                           final @NotNull byte[] sharedKey)
-            throws StodiumException {
-        Stodium.checkSize(srcCipher.length, dstPlain.length, "dstPlain.length");
-        Stodium.checkSize(srcMac.length,    MACBYTES,        "Box.MACBYTES");
-        Stodium.checkSize(nonce.length,     NONCEBYTES,      "Box.NONCEBYTES");
-        Stodium.checkSize(sharedKey.length, BEFORENMBYTES,   "Box.BEFORENMBYTES");
-        Stodium.checkStatus(Sodium.crypto_box_open_detached_afternm(dstPlain,
-                srcCipher, srcMac, srcCipher.length, nonce, sharedKey));
-    }
 
     //
     // _seal
@@ -349,14 +213,16 @@ public final class Box {
     public static void seal(final @NotNull ByteBuffer dstCipher,
                             final @NotNull ByteBuffer srcPlain,
                             final @NotNull ByteBuffer remotePubKey)
-            throws StodiumException, ReadOnlyBufferException {
-        Stodium.checkDestinationWritable(dstCipher, "Stodium.Box#seal(dstCipher)");
+            throws StodiumException {
+        Stodium.checkDestinationWritable(dstCipher);
 
-        Stodium.checkSize(dstCipher.remaining(),    SEALBYTES + srcPlain.remaining(), "srcPlain.remaining() + Box#SEALBYTES");
-        Stodium.checkSize(remotePubKey.remaining(), PUBLICKEYBYTES,                   "Box#PUBLICKEYBYTES");
+        Stodium.checkSizeMin(dstCipher.remaining(), SEALBYTES + srcPlain.remaining());
+        Stodium.checkSizeMin(remotePubKey.remaining(), PUBLICKEYBYTES);
 
-        Stodium.checkStatus(
-                StodiumJNI.crypto_box_seal(dstCipher, srcPlain, remotePubKey));
+        Stodium.checkStatus(StodiumJNI.crypto_box_seal(
+                Stodium.ensureUsableByteBuffer(dstCipher),
+                Stodium.ensureUsableByteBuffer(srcPlain),
+                Stodium.ensureUsableByteBuffer(remotePubKey)));
     }
 
     /**
@@ -366,9 +232,7 @@ public final class Box {
      * @param localPubKey
      * @param localPrivKey
      * @return true if the sealed box was decrypted correctly, false otherwise.
-     * @throws ConstraintViolationException
      * @throws StodiumException
-     * @throws ReadOnlyBufferException
      *
      * @see <a href="https://download.libsodium.org/doc/public-key_cryptography/sealed_boxes.html#usage">libsodium docs</a>
      */
@@ -376,14 +240,18 @@ public final class Box {
                                    final @NotNull ByteBuffer srcCipher,
                                    final @NotNull ByteBuffer localPubKey,
                                    final @NotNull ByteBuffer localPrivKey)
-            throws StodiumException, ReadOnlyBufferException {
-        Stodium.checkDestinationWritable(dstPlain, "Stodium.Box#sealOpen(dstPlain)");
+            throws StodiumException {
+        Stodium.checkDestinationWritable(dstPlain);
 
-        Stodium.checkSize(srcCipher.remaining(),    SEALBYTES + dstPlain.remaining(), "dstPlain. + Box.SEALBYTES");
-        Stodium.checkSize(localPubKey.remaining(),  PUBLICKEYBYTES, "Box.PUBLICKEYBYTES");
-        Stodium.checkSize(localPrivKey.remaining(), SECRETKEYBYTES, "Box.SECRETKEYBYTES");
+        Stodium.checkSize(localPrivKey.remaining(), SECRETKEYBYTES);
+        Stodium.checkSizeMin(localPubKey.remaining(), PUBLICKEYBYTES);
+        Stodium.checkPositive(srcCipher.remaining() - SEALBYTES);
+        Stodium.checkSizeMin(dstPlain.remaining(), srcCipher.remaining() - SEALBYTES);
 
         return StodiumJNI.crypto_box_seal_open(
-                dstPlain, srcCipher, localPubKey, localPrivKey) == 0;
+                Stodium.ensureUsableByteBuffer(dstPlain),
+                Stodium.ensureUsableByteBuffer(srcCipher),
+                Stodium.ensureUsableByteBuffer(localPubKey),
+                Stodium.ensureUsableByteBuffer(localPrivKey)) == 0;
     }
 }

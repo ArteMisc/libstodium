@@ -45,13 +45,13 @@ public class HSalsa20 {
                                 final @NotNull  ByteBuffer key,
                                 final @Nullable ByteBuffer constant)
             throws StodiumException {
-        Stodium.checkDestinationWritable(dst, "Stodium.HSalsa20#hsalsa20(dst)");
+        Stodium.checkDestinationWritable(dst);
 
-        Stodium.checkSize(dst.remaining(), OUTPUTBYTES, "HSalsa20.OUTPUTBYTES");
-        Stodium.checkSize(src.remaining(), INPUTBYTES,  "HSalsa20.INPUTBYTES");
-        Stodium.checkSize(key.remaining(), KEYBYTES,    "HSalsa20.KEYBYTES");
+        Stodium.checkSize(dst.remaining(), OUTPUTBYTES);
+        Stodium.checkSize(src.remaining(), INPUTBYTES);
+        Stodium.checkSize(key.remaining(), KEYBYTES);
         if (constant != null) {
-            Stodium.checkSize(constant.remaining(), CONSTBYTES, "HSalsa20.CONSTBYTES");
+            Stodium.checkSize(constant.remaining(), CONSTBYTES);
         }
 
         StodiumJNI.crypto_core_hsalsa20(

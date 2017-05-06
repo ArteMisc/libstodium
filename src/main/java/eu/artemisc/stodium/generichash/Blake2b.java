@@ -62,7 +62,7 @@ public class Blake2b {
      */
     public Blake2b(final int outlen)
             throws StodiumException {
-        Stodium.checkSize(outlen, BYTES_MIN, BYTES_MAX, "Blake2b.BYTES_MIN", "Blake2b.BYTES_MAX");
+        Stodium.checkSize(outlen, BYTES_MIN, BYTES_MAX);
         this.state  = ByteBuffer.allocateDirect(STATE_BYTES);
         this.outlen = outlen;
     }
@@ -116,8 +116,8 @@ public class Blake2b {
     public void init(final @Nullable ByteBuffer key)
             throws StodiumException {
         if (key != null) {
-            Stodium.checkSize(key.remaining(), KEYBYTES_MIN, KEYBYTES_MAX,
-                    "Blake2b.KEYBYTES_MIN", "Blake2b.KEYBYTES_MAX");
+            Stodium.checkSize(key.remaining(), KEYBYTES_MIN, KEYBYTES_MAX
+            );
         }
 
         Stodium.checkStatus(StodiumJNI.crypto_generichash_blake2b_init(
@@ -145,8 +145,8 @@ public class Blake2b {
      */
     public void doFinal(final @NotNull ByteBuffer out)
             throws StodiumException {
-        Stodium.checkSize(out.remaining(), 1, outlen, "1", "Blake2b.outlen");
-        Stodium.checkDestinationWritable(out, "Blake2b#doFinal(out)");
+        Stodium.checkSize(out.remaining(), 1, outlen);
+        Stodium.checkDestinationWritable(out);
         Stodium.checkStatus(StodiumJNI.crypto_generichash_blake2b_final(
                 state, Stodium.ensureUsableByteBuffer(out)));
     }
