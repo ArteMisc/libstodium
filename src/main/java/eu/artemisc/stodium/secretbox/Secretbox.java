@@ -26,10 +26,6 @@ import eu.artemisc.stodium.StodiumJNI;
  * @author Jan van de Molengraft [jan@artemisc.eu]
  */
 public final class Secretbox {
-    static {
-        // Require sodium_init();
-        Stodium.StodiumInit();
-    }
 
     // block the constructor
     private Secretbox() {}

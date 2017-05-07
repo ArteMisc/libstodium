@@ -18,13 +18,21 @@ import eu.artemisc.stodium.exceptions.StodiumException;
 /**
  * @author Jan van de Molengraft [jan@artemisc.eu]
  */
-final class Chacha20Poly1305
+final class Aes256Gcm
         extends AEAD {
-    Chacha20Poly1305() {
-        super(StodiumJNI.crypto_aead_chacha20poly1305_keybytes(),
-                StodiumJNI.crypto_aead_chacha20poly1305_nsecbytes(),
-                StodiumJNI.crypto_aead_chacha20poly1305_npubbytes(),
-                StodiumJNI.crypto_aead_chacha20poly1305_abytes());
+    /**
+     *
+     * @return true if the hardware supports the required AES instruction sets.
+     */
+    static boolean isAvailable() {
+        return StodiumJNI.crypto_aead_aes256gcm_is_available() == 1;
+    }
+
+    Aes256Gcm() {
+        super(StodiumJNI.crypto_aead_aes256gcm_keybytes(),
+                StodiumJNI.crypto_aead_aes256gcm_nsecbytes(),
+                StodiumJNI.crypto_aead_aes256gcm_npubbytes(),
+                StodiumJNI.crypto_aead_aes256gcm_abytes());
     }
 
     @Override
@@ -42,7 +50,7 @@ final class Chacha20Poly1305
         Stodium.checkSizeMin(nonce.remaining(), NPUBBYTES);
         Stodium.checkSize(key.remaining(), KEYBYTES);
 
-        Stodium.checkStatus(StodiumJNI.crypto_aead_chacha20poly1305_encrypt_detached(
+        Stodium.checkStatus(StodiumJNI.crypto_aead_aes256gcm_encrypt_detached(
                 Stodium.ensureUsableByteBuffer(dstCipher),
                 Stodium.ensureUsableByteBuffer(dstMac),
                 Stodium.ensureUsableByteBuffer(srcPlain),
@@ -64,7 +72,7 @@ final class Chacha20Poly1305
         Stodium.checkSizeMin(nonce.remaining(), NPUBBYTES);
         Stodium.checkSize(key.remaining(), KEYBYTES);
 
-        Stodium.checkStatus(StodiumJNI.crypto_aead_chacha20poly1305_encrypt(
+        Stodium.checkStatus(StodiumJNI.crypto_aead_aes256gcm_encrypt(
                 Stodium.ensureUsableByteBuffer(dstCipher),
                 Stodium.ensureUsableByteBuffer(srcPlain),
                 Stodium.ensureUsableByteBuffer(ad),
@@ -86,7 +94,7 @@ final class Chacha20Poly1305
         Stodium.checkSizeMin(nonce.remaining(), NPUBBYTES);
         Stodium.checkSize(key.remaining(), KEYBYTES);
 
-        Stodium.checkStatus(StodiumJNI.crypto_aead_chacha20poly1305_decrypt_detached(
+        Stodium.checkStatus(StodiumJNI.crypto_aead_aes256gcm_decrypt_detached(
                 Stodium.ensureUsableByteBuffer(dstPlain),
                 Stodium.ensureUsableByteBuffer(srcCipher),
                 Stodium.ensureUsableByteBuffer(srcMac),
@@ -108,7 +116,7 @@ final class Chacha20Poly1305
         Stodium.checkSizeMin(nonce.remaining(), NPUBBYTES);
         Stodium.checkSize(key.remaining(), KEYBYTES);
 
-        Stodium.checkStatus(StodiumJNI.crypto_aead_chacha20poly1305_decrypt(
+        Stodium.checkStatus(StodiumJNI.crypto_aead_aes256gcm_decrypt(
                 Stodium.ensureUsableByteBuffer(dstPlain),
                 Stodium.ensureUsableByteBuffer(srcCipher),
                 Stodium.ensureUsableByteBuffer(ad),

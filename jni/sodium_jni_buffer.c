@@ -216,6 +216,160 @@ STODIUM_JNI(void, randombytes_1buf) (JNIEnv *jenv, jclass jcls,
 
 /** ****************************************************************************
  *
+ * AEAD - AES-256-GCM
+ *
+ **************************************************************************** */
+
+STODIUM_CONSTANT(aead, aes256gcm, keybytes)
+STODIUM_CONSTANT(aead, aes256gcm, nsecbytes)
+STODIUM_CONSTANT(aead, aes256gcm, npubbytes)
+STODIUM_CONSTANT(aead, aes256gcm, abytes)
+
+STODIUM_JNI(jint, crypto_1aead_1aes256gcm_1is_1available) (JNIEnv *jenv, jclass jcls) {
+       return (jint) crypto_aead_aes256gcm_is_available();
+}
+
+STODIUM_JNI(jint, crypto_1aead_1aes256gcm_1encrypt_1detached) (JNIEnv *jenv, jclass jcls,
+        jobject dst,
+        jobject mac,
+        jobject src,
+        jobject ad,
+        jobject nonce,
+        jobject key) {
+    stodium_buffer dst_buffer, mac_buffer, src_buffer, ad_buffer, nonce_buffer, key_buffer;
+    stodium_get_buffer(jenv, &dst_buffer,   dst);
+    stodium_get_buffer(jenv, &mac_buffer,   mac);
+    stodium_get_buffer(jenv, &src_buffer,   src);
+    stodium_get_buffer(jenv, &ad_buffer,    ad);
+    stodium_get_buffer(jenv, &nonce_buffer, nonce);
+    stodium_get_buffer(jenv, &key_buffer,   key);
+ 
+    jint result = (jint) crypto_aead_aes256gcm_encrypt_detached(
+            AS_OUTPUT(unsigned char, dst_buffer),
+            AS_OUTPUT(unsigned char, mac_buffer),
+            AS_OUTPUT_LEN(unsigned long long, mac_buffer),
+            AS_INPUT(unsigned char, src_buffer),
+            AS_INPUT_LEN(unsigned long long, src_buffer),
+            AS_INPUT(unsigned char, ad_buffer),
+            AS_INPUT_LEN(unsigned long long, ad_buffer),
+            NULL, // nsec
+            AS_INPUT(unsigned char, nonce_buffer),
+            AS_INPUT(unsigned char, key_buffer));
+
+    stodium_release_output(jenv, dst,   &dst_buffer);
+    stodium_release_output(jenv, mac,   &mac_buffer);
+    stodium_release_input(jenv,  src,   &src_buffer);
+    stodium_release_input(jenv,  ad,    &ad_buffer);
+    stodium_release_input(jenv,  nonce, &nonce_buffer);
+    stodium_release_input(jenv,  key,   &key_buffer);
+
+    return result;
+}
+
+STODIUM_JNI(jint, crypto_1aead_1aes256gcm_1encrypt) (JNIEnv *jenv, jclass jcls,
+        jobject dst,
+        jobject src,
+        jobject ad,
+        jobject nonce,
+        jobject key) {
+    stodium_buffer dst_buffer, src_buffer, ad_buffer, nonce_buffer, key_buffer;
+    stodium_get_buffer(jenv, &dst_buffer,   dst);
+    stodium_get_buffer(jenv, &src_buffer,   src);
+    stodium_get_buffer(jenv, &ad_buffer,    ad);
+    stodium_get_buffer(jenv, &nonce_buffer, nonce);
+    stodium_get_buffer(jenv, &key_buffer,   key);
+ 
+    jint result = (jint) crypto_aead_aes256gcm_encrypt(
+            AS_OUTPUT(unsigned char, dst_buffer),
+            AS_OUTPUT_LEN(unsigned long long, dst_buffer),
+            AS_INPUT(unsigned char, src_buffer),
+            AS_INPUT_LEN(unsigned long long, src_buffer),
+            AS_INPUT(unsigned char, ad_buffer),
+            AS_INPUT_LEN(unsigned long long, ad_buffer),
+            NULL, // nsec
+            AS_INPUT(unsigned char, nonce_buffer),
+            AS_INPUT(unsigned char, key_buffer));
+
+    stodium_release_output(jenv, dst,   &dst_buffer);
+    stodium_release_input(jenv,  src,   &src_buffer);
+    stodium_release_input(jenv,  ad,    &ad_buffer);
+    stodium_release_input(jenv,  nonce, &nonce_buffer);
+    stodium_release_input(jenv,  key,   &key_buffer);
+
+    return result;
+}
+
+STODIUM_JNI(jint, crypto_1aead_1aes256gcm_1decrypt_1detached) (JNIEnv *jenv, jclass jcls,
+        jobject dst,
+        jobject src,
+        jobject mac,
+        jobject ad,
+        jobject nonce,
+        jobject key) {
+    stodium_buffer dst_buffer, mac_buffer, src_buffer, ad_buffer, nonce_buffer, key_buffer;
+    stodium_get_buffer(jenv, &dst_buffer,   dst);
+    stodium_get_buffer(jenv, &src_buffer,   src);
+    stodium_get_buffer(jenv, &mac_buffer,   mac);
+    stodium_get_buffer(jenv, &ad_buffer,    ad);
+    stodium_get_buffer(jenv, &nonce_buffer, nonce);
+    stodium_get_buffer(jenv, &key_buffer,   key);
+ 
+    jint result = (jint) crypto_aead_aes256gcm_decrypt_detached(
+            AS_OUTPUT(unsigned char, dst_buffer),
+            NULL, // nsec
+            AS_INPUT(unsigned char, src_buffer),
+            AS_INPUT_LEN(unsigned long long, src_buffer),
+            AS_OUTPUT(unsigned char, mac_buffer),
+            AS_INPUT(unsigned char, ad_buffer),
+            AS_INPUT_LEN(unsigned long long, ad_buffer),
+            AS_INPUT(unsigned char, nonce_buffer),
+            AS_INPUT(unsigned char, key_buffer));
+
+    stodium_release_output(jenv, dst,   &dst_buffer);
+    stodium_release_input(jenv,  mac,   &mac_buffer);
+    stodium_release_input(jenv,  src,   &src_buffer);
+    stodium_release_input(jenv,  ad,    &ad_buffer);
+    stodium_release_input(jenv,  nonce, &nonce_buffer);
+    stodium_release_input(jenv,  key,   &key_buffer);
+
+    return result;
+}
+
+STODIUM_JNI(jint, crypto_1aead_1aes256gcm_1decrypt) (JNIEnv *jenv, jclass jcls,
+        jobject dst,
+        jobject src,
+        jobject ad,
+        jobject nonce,
+        jobject key) {
+    stodium_buffer dst_buffer, src_buffer, ad_buffer, nonce_buffer, key_buffer;
+    stodium_get_buffer(jenv, &dst_buffer,   dst);
+    stodium_get_buffer(jenv, &src_buffer,   src);
+    stodium_get_buffer(jenv, &ad_buffer,    ad);
+    stodium_get_buffer(jenv, &nonce_buffer, nonce);
+    stodium_get_buffer(jenv, &key_buffer,   key);
+ 
+    jint result = (jint) crypto_aead_aes256gcm_decrypt(
+            AS_OUTPUT(unsigned char, dst_buffer),
+            AS_OUTPUT_LEN(unsigned long long, dst_buffer),
+            NULL, // nsec
+            AS_INPUT(unsigned char, src_buffer),
+            AS_INPUT_LEN(unsigned long long, src_buffer),
+            AS_INPUT(unsigned char, ad_buffer),
+            AS_INPUT_LEN(unsigned long long, ad_buffer),
+            AS_INPUT(unsigned char, nonce_buffer),
+            AS_INPUT(unsigned char, key_buffer));
+
+    stodium_release_output(jenv, dst,   &dst_buffer);
+    stodium_release_input(jenv,  src,   &src_buffer);
+    stodium_release_input(jenv,  ad,    &ad_buffer);
+    stodium_release_input(jenv,  nonce, &nonce_buffer);
+    stodium_release_input(jenv,  key,   &key_buffer);
+
+    return result;
+}
+
+/** ****************************************************************************
+ *
  * AEAD - Chacha20Poly1305
  *
  **************************************************************************** */

@@ -48,6 +48,42 @@ public class StodiumJNI {
     //
     // AEAD - Chacha20Poly1305
     //
+    public static native int crypto_aead_aes256gcm_is_available();
+    public static native int crypto_aead_aes256gcm_keybytes();
+    public static native int crypto_aead_aes256gcm_nsecbytes();
+    public static native int crypto_aead_aes256gcm_npubbytes();
+    public static native int crypto_aead_aes256gcm_abytes();
+
+    public static native int crypto_aead_aes256gcm_encrypt_detached(
+            @NotNull ByteBuffer dstCipher,
+            @NotNull ByteBuffer dstMac,
+            @NotNull ByteBuffer srcPlain,
+            @NotNull ByteBuffer ad,
+            @NotNull ByteBuffer nonce,
+            @NotNull ByteBuffer key);
+    public static native int crypto_aead_aes256gcm_encrypt(
+            @NotNull ByteBuffer dstCipher,
+            @NotNull ByteBuffer srcPlain,
+            @NotNull ByteBuffer ad,
+            @NotNull ByteBuffer nonce,
+            @NotNull ByteBuffer key);
+    public static native int crypto_aead_aes256gcm_decrypt_detached(
+            @NotNull ByteBuffer dstPlain,
+            @NotNull ByteBuffer srcCipher,
+            @NotNull ByteBuffer srcMac,
+            @NotNull ByteBuffer ad,
+            @NotNull ByteBuffer nonce,
+            @NotNull ByteBuffer key);
+    public static native int crypto_aead_aes256gcm_decrypt(
+            @NotNull ByteBuffer dstPlain,
+            @NotNull ByteBuffer srcCipher,
+            @NotNull ByteBuffer ad,
+            @NotNull ByteBuffer nonce,
+            @NotNull ByteBuffer key);
+
+    //
+    // AEAD - Chacha20Poly1305
+    //
     public static native int crypto_aead_chacha20poly1305_keybytes();
     public static native int crypto_aead_chacha20poly1305_nsecbytes();
     public static native int crypto_aead_chacha20poly1305_npubbytes();
@@ -79,7 +115,6 @@ public class StodiumJNI {
             @NotNull ByteBuffer ad,
             @NotNull ByteBuffer nonce,
             @NotNull ByteBuffer key);
-
 
     //
     // AEAD - Chacha20Poly1305 (ietf)
@@ -219,7 +254,7 @@ public class StodiumJNI {
     // Box - X25519XChachaPoly1305
     //
     public static native int crypto_box_curve25519xchacha20poly1305_seedbytes();
-    public static native int crypto_box_curve25519xchachac20poly1305_publickeybytes();
+    public static native int crypto_box_curve25519xchacha20poly1305_publickeybytes();
     public static native int crypto_box_curve25519xchacha20poly1305_secretkeybytes();
     public static native int crypto_box_curve25519xchacha20poly1305_beforenmbytes();
     public static native int crypto_box_curve25519xchacha20poly1305_noncebytes();

@@ -20,10 +20,6 @@ import eu.artemisc.stodium.StodiumJNI;
  * @author Jan van de Molengraft [jan@artemisc.eu]
  */
 public class HSalsa20 {
-    static {
-        // Require sodium_init();
-        Stodium.StodiumInit();
-    }
 
     // constants
     public static final int INPUTBYTES  = StodiumJNI.crypto_core_hsalsa20_inputbytes();

@@ -20,10 +20,6 @@ import eu.artemisc.stodium.StodiumJNI;
  * @author Jan van de Molengraft [jan@artemisc.eu]
  */
 public final class Argon2i {
-    static {
-        // Require sodium_init();
-        Stodium.StodiumInit();
-    }
 
     // block the constructor
     private Argon2i() {}
@@ -85,7 +81,7 @@ public final class Argon2i {
         Stodium.checkDestinationWritable(dstKey);
 
         Stodium.checkSize(srcSalt.remaining(), SALTBYTES);
-        Stodium.checkPow2(memLimit,                       "Argon2i.pwhashArgon2i(memLimit)");
+        Stodium.checkPow2(memLimit);
 
         Stodium.checkStatus(StodiumJNI.crypto_pwhash(
                 Stodium.ensureUsableByteBuffer(dstKey),

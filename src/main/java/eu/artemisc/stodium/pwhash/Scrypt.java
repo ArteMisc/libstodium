@@ -20,10 +20,6 @@ import eu.artemisc.stodium.StodiumJNI;
  * @author Jan van de Molengraft [jan@artemisc.eu]
  */
 public final class Scrypt {
-    static {
-        // Require sodium_init();
-        Stodium.StodiumInit();
-    }
 
     // block the constructor
     private Scrypt() {}
@@ -82,7 +78,7 @@ public final class Scrypt {
         Stodium.checkDestinationWritable(dstKey);
 
         Stodium.checkSize(srcSalt.remaining(), SALTBYTES);
-        Stodium.checkPow2(memLimit,                       "SCrypt.pwhashScrypt(memLimit)");
+        Stodium.checkPow2(memLimit);
 
         Stodium.checkStatus(StodiumJNI.crypto_pwhash_scryptsalsa208sha256(
                 Stodium.ensureUsableByteBuffer(dstKey),

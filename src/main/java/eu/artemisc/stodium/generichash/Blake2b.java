@@ -21,10 +21,6 @@ import eu.artemisc.stodium.StodiumJNI;
  * @author Jan van de Molengraft [jan@artemisc.eu]
  */
 public class Blake2b {
-    static {
-        // Require sodium_init();
-        Stodium.StodiumInit();
-    }
 
     // constants
     public static final int BYTES         = StodiumJNI.crypto_generichash_blake2b_bytes();

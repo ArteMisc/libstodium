@@ -18,10 +18,6 @@ import eu.artemisc.stodium.exceptions.StodiumException;
  * @author Jan van de Molengraft [jan@artemisc.eu]
  */
 public final class Sign {
-    static {
-        // Require sodium_init();
-        Stodium.StodiumInit();
-    }
 
     // block the constructor
     private Sign() {}
@@ -30,7 +26,7 @@ public final class Sign {
     public static final int SIGNBYTES       = Sodium.crypto_sign_bytes();
     public static final int PUBLICKEYBYTES  = Sodium.crypto_sign_publickeybytes();
     public static final int PRIVATEKEYBYTES = Sodium.crypto_sign_secretkeybytes();
-    public static final int SEEDBYTES       = Sodium.crypto_box_seedbytes();
+    public static final int SEEDBYTES       = Sodium.crypto_sign_seedbytes();
 
     public static final @NotNull String PRIMITIVE = Sodium.crypto_sign_primitive();
 

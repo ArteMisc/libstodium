@@ -266,13 +266,13 @@ public final class Stodium {
      */
     @NotNull
     public static ByteBuffer ensureUsableByteBuffer(final @NotNull ByteBuffer buff) {
-        if (buff.isDirect() || (buff.hasArray() && !buff.isReadOnly())) {
+        if (buff.isDirect() || !buff.isReadOnly()) {
             return buff;
         }
 
         final ByteBuffer direct = ByteBuffer.allocateDirect(buff.remaining());
         direct.mark();
-        direct.put(buff);
+        direct.put(buff.slice());
         direct.reset();
         return direct;
     }
@@ -292,26 +292,6 @@ public final class Stodium {
             return;
         }
         throw new ReadOnlyBufferException("Stodium: output buffer is readonly");
-    }
-
-    /**
-     *
-     */
-    private static volatile boolean initialized = false;
-
-    /**
-     * runInit wraps a call to sodium_init().
-     */
-    private synchronized static void runInit() {
-        if (initialized) {
-            return;
-        }
-
-        if (StodiumJNI.stodium_init() != 0) {
-            throw new RuntimeException("StodiumInit: could not initialize with stodium_init()");
-        }
-
-        initialized = true;
     }
 
     /*
@@ -345,17 +325,12 @@ public final class Stodium {
                 try { if (in  != null) { in.close();  } } catch (IOException e) { e.printStackTrace(); }
                 try { if (out != null) { out.close(); } } catch (IOException e) { e.printStackTrace(); }
             }*/
-            throw new RuntimeException("Cannot load libstorium native library");
+            throw new RuntimeException("Cannot load libstodium native library");
         }
-    }
 
-    /**
-     * Stodium constructor should be called once per application, or at least
-     * before any class is used that requires the native methods to be
-     * available. This ensures the library is loaded and initialized.
-     */
-    public static void StodiumInit() {
-        runInit();
+        if (StodiumJNI.stodium_init() != 0) {
+            throw new RuntimeException("Stodium: could not initialize with stodium_init()");
+        }
     }
 
     /**

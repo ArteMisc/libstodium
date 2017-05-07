@@ -22,10 +22,6 @@ import eu.artemisc.stodium.StodiumJNI;
  * @author Jan van de Molengraft [jan@artemisc.eu]
  */
 public final class Curve25519 {
-    static {
-        // Require sodium_init();
-        Stodium.StodiumInit();
-    }
 
     // block the constructor
     private Curve25519() {}

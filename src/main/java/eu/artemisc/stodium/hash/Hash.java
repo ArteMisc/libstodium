@@ -20,16 +20,12 @@ import eu.artemisc.stodium.exceptions.StodiumException;
  * @author Jan van de Molengraft [jan@artemisc.eu]
  */
 public class Hash {
-    static {
-        // Require sodium_init();
-        Stodium.StodiumInit();
-    }
 
     // constants
     public static final int BYTES       = Sodium.crypto_hash_bytes();
     public static final int STATE_BYTES = Sodium.crypto_hash_statebytes();
 
-    public static final @NotNull String PRIMITIVE = Sodium.crypto_generichash_primitive();
+    public static final @NotNull String PRIMITIVE = Sodium.crypto_hash_primitive();
 
     /**
      * state holds the binary representation of the crypto_hash_state value.

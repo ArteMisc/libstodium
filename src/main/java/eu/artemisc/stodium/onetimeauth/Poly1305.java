@@ -22,10 +22,6 @@ import eu.artemisc.stodium.exceptions.StodiumException;
  * @author Jan van de Molengraft [jan@artemisc.eu]
  */
 public class Poly1305 {
-    static {
-        // Require sodium_init();
-        Stodium.StodiumInit();
-    }
 
     // constants
     public static final int BYTES      = Sodium.crypto_onetimeauth_poly1305_bytes();

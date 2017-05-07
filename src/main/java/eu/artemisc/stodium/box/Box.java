@@ -11,12 +11,9 @@ import org.jetbrains.annotations.NotNull;
 
 import java.nio.ByteBuffer;
 
-import eu.artemisc.stodium.Stodium;
+import eu.artemisc.stodium.Singleton;
 import eu.artemisc.stodium.StodiumJNI;
-import eu.artemisc.stodium.exceptions.ConstraintViolationException;
-import eu.artemisc.stodium.exceptions.ReadOnlyBufferException;
 import eu.artemisc.stodium.exceptions.StodiumException;
-import eu.artemisc.stodium.scalarmult.Curve25519;
 
 /**
  * ox is a static class that maps all calls to the corresponding native
@@ -24,29 +21,122 @@ import eu.artemisc.stodium.scalarmult.Curve25519;
  *
  * @author Jan van de Molengraft [jan@artemisc.eu]
  */
-public final class Box {
-    static {
-        // Require sodium_init();
-        Stodium.StodiumInit();
-    }
-
-    // block the constructor
-    private Box() {}
+public abstract class Box {
 
     // constants
-    public static final int SEEDBYTES      = Curve25519XSalsa20Poly1305.SEEDBYTES;
-    public static final int PUBLICKEYBYTES = Curve25519XSalsa20Poly1305.PUBLICKEYBYTES;
-    public static final int SECRETKEYBYTES = Curve25519XSalsa20Poly1305.SECRETKEYBYTES;
-    public static final int BEFORENMBYTES  = Curve25519XSalsa20Poly1305.BEFORENMBYTES;
-    public static final int NONCEBYTES     = Curve25519XSalsa20Poly1305.NONCEBYTES;
-    public static final int ZEROBYTES      = Curve25519XSalsa20Poly1305.ZEROBYTES;
-    public static final int BOXZEROBYTES   = Curve25519XSalsa20Poly1305.BOXZEROBYTES;
-    public static final int MACBYTES       = Curve25519XSalsa20Poly1305.MACBYTES;
-    public static final int SEALBYTES      = StodiumJNI.crypto_box_sealbytes();
-
     public static final @NotNull String PRIMITIVE = StodiumJNI.crypto_box_primitive();
 
-    // wrappers
+    private static final @NotNull Singleton<Box> CURVE_XSALSA = new Singleton<Box>() {
+        @NotNull
+        @Override
+        protected Box initialize() {
+            return new Curve25519XSalsa20Poly1305();
+        }
+    };
+
+    private static final @NotNull Singleton<Box> CURVE_XCHACHA = new Singleton<Box>() {
+        @NotNull
+        @Override
+        protected Box initialize() {
+            return new Curve25519XChacha20Poly1305();
+        }
+    };
+
+    @NotNull
+    public static Box instance() {
+        return CURVE_XSALSA.get();
+    }
+
+    @NotNull
+    public static Box curve25519xsalsa20poly1305Instance() {
+        return CURVE_XSALSA.get();
+    }
+
+    @NotNull
+    public static Box curve25519xchacha20poly1305Instance() {
+        return CURVE_XCHACHA.get();
+    }
+
+    // constants
+    final int SEEDBYTES;
+    final int PUBLICKEYBYTES;
+    final int SECRETKEYBYTES;
+    final int BEFORENMBYTES;
+    final int NONCEBYTES;
+    final int MACBYTES;
+    final int SEALBYTES;
+
+    Box(final int seed,
+        final int pub,
+        final int secret,
+        final int beforenm,
+        final int nonce,
+        final int mac,
+        final int seal) {
+        SEEDBYTES      = seed;
+        PUBLICKEYBYTES = pub;
+        SECRETKEYBYTES = secret;
+        BEFORENMBYTES  = beforenm;
+        NONCEBYTES     = nonce;
+        MACBYTES       = mac;
+        SEALBYTES      = seal;
+    }
+
+    /**
+     *
+     * @return
+     */
+    public final int seedBytes() {
+        return SEEDBYTES;
+    }
+
+    /**
+     *
+     * @return
+     */
+    public final int publicBytes() {
+        return PUBLICKEYBYTES;
+    }
+
+    /**
+     *
+     * @return
+     */
+    public final int secretBytes() {
+        return SECRETKEYBYTES;
+    }
+
+    /**
+     *
+     * @return
+     */
+    public final int beforenmBytes() {
+        return BEFORENMBYTES;
+    }
+
+    /**
+     *
+     * @return
+     */
+    public final int nonceBytes() {
+        return NONCEBYTES;
+    }
+
+    /**
+     *
+     * @return
+     */
+    public final int macBytes() {
+        return MACBYTES;
+    }
+
+    /**
+     *
+     * @return
+     */
+    public final int sealBytes() {
+        return SEALBYTES;
+    }
 
     //
     // *_keypair
@@ -54,15 +144,13 @@ public final class Box {
 
     /**
      *
-     * @param dstPublicKey
-     * @param dstPrivateKey
+     * @param dstPublic
+     * @param dstPrivate
      * @throws StodiumException
      */
-    public static void keypair(final @NotNull ByteBuffer dstPublicKey,
-                               final @NotNull ByteBuffer dstPrivateKey)
-            throws StodiumException {
-        Curve25519XSalsa20Poly1305.keypair(dstPublicKey, dstPrivateKey);
-    }
+    public abstract void keypair(final @NotNull ByteBuffer dstPublic,
+                                 final @NotNull ByteBuffer dstPrivate)
+            throws StodiumException;
 
     /**
      *
@@ -71,24 +159,20 @@ public final class Box {
      * @param seed
      * @throws StodiumException
      */
-    public static void seedKeypair(final @NotNull ByteBuffer dstPublic,
-                                   final @NotNull ByteBuffer dstPrivate,
-                                   final @NotNull ByteBuffer seed)
-            throws StodiumException {
-        Curve25519XSalsa20Poly1305.seedKeypair(dstPublic, dstPrivate, seed);
-    }
+    public abstract void seedKeypair(final @NotNull ByteBuffer dstPublic,
+                                     final @NotNull ByteBuffer dstPrivate,
+                                     final @NotNull ByteBuffer seed)
+            throws StodiumException;
 
     /**
      *
-     * @param dstPublicKey
-     * @param srcPrivateKey
+     * @param dstPublic
+     * @param srcPrivate
      * @throws StodiumException
      */
-    public static void publicFromPrivate(final @NotNull ByteBuffer dstPublicKey,
-                                         final @NotNull ByteBuffer srcPrivateKey)
-            throws StodiumException {
-        Curve25519.x25519PrivateToPublic(dstPublicKey, srcPrivateKey);
-    }
+    public abstract void publicFromPrivate(final @NotNull ByteBuffer dstPublic,
+                                           final @NotNull ByteBuffer srcPrivate)
+            throws StodiumException;
 
     //
     // *_easy
@@ -103,14 +187,12 @@ public final class Box {
      * @param localPrivKey
      * @throws StodiumException
      */
-    public static void easy(final @NotNull ByteBuffer dstCipher,
-                            final @NotNull ByteBuffer srcPlain,
-                            final @NotNull ByteBuffer nonce,
-                            final @NotNull ByteBuffer remotePubKey,
-                            final @NotNull ByteBuffer localPrivKey)
-            throws StodiumException {
-        Curve25519XSalsa20Poly1305.easy(dstCipher, srcPlain, nonce, remotePubKey, localPrivKey);
-    }
+    public abstract void easy(final @NotNull ByteBuffer dstCipher,
+                              final @NotNull ByteBuffer srcPlain,
+                              final @NotNull ByteBuffer nonce,
+                              final @NotNull ByteBuffer remotePubKey,
+                              final @NotNull ByteBuffer localPrivKey)
+            throws StodiumException;
 
     /**
      *
@@ -119,22 +201,20 @@ public final class Box {
      * @param nonce
      * @param remotePubKey
      * @param localPrivKey
+     * @return
      * @throws StodiumException
      */
-    public static void openEasy(final @NotNull ByteBuffer dstPlain,
-                                final @NotNull ByteBuffer srcCipher,
-                                final @NotNull ByteBuffer nonce,
-                                final @NotNull ByteBuffer remotePubKey,
-                                final @NotNull ByteBuffer localPrivKey)
-            throws StodiumException {
-        Curve25519XSalsa20Poly1305.openEasy(dstPlain, srcCipher, nonce, remotePubKey, localPrivKey);
-    }
+    public abstract boolean openEasy(final @NotNull ByteBuffer dstPlain,
+                                     final @NotNull ByteBuffer srcCipher,
+                                     final @NotNull ByteBuffer nonce,
+                                     final @NotNull ByteBuffer remotePubKey,
+                                     final @NotNull ByteBuffer localPrivKey)
+            throws StodiumException;
 
     //
     // *_detached
     // TODO
     //
-
 
     //
     // _beforenm
@@ -147,12 +227,10 @@ public final class Box {
      * @param localPrivKey
      * @throws StodiumException
      */
-    public static void beforenm(final @NotNull ByteBuffer dstSharedKey,
-                                final @NotNull ByteBuffer remotePubKey,
-                                final @NotNull ByteBuffer localPrivKey)
-            throws StodiumException {
-        Curve25519XSalsa20Poly1305.beforenm(dstSharedKey, remotePubKey, localPrivKey);
-    }
+    public abstract void beforenm(final @NotNull ByteBuffer dstSharedKey,
+                                  final @NotNull ByteBuffer remotePubKey,
+                                  final @NotNull ByteBuffer localPrivKey)
+            throws StodiumException;
 
     //
     // *_easy_afternm
@@ -163,32 +241,29 @@ public final class Box {
      * @param dstCipher
      * @param srcPlain
      * @param nonce
-     * @param sharedKey
+     * @param key
      * @throws StodiumException
      */
-    public static void easyAfternm(final @NotNull ByteBuffer dstCipher,
-                                   final @NotNull ByteBuffer srcPlain,
-                                   final @NotNull ByteBuffer nonce,
-                                   final @NotNull ByteBuffer sharedKey)
-            throws StodiumException {
-        Curve25519XSalsa20Poly1305.afternm(dstCipher, srcPlain, nonce, sharedKey);
-    }
+    public abstract void easyAfternm(final @NotNull ByteBuffer dstCipher,
+                                     final @NotNull ByteBuffer srcPlain,
+                                     final @NotNull ByteBuffer nonce,
+                                     final @NotNull ByteBuffer key)
+            throws StodiumException;
 
     /**
      *
      * @param dstPlain
      * @param srcCipher
      * @param nonce
-     * @param sharedKey
+     * @param key
+     * @return
      * @throws StodiumException
      */
-    public static void easyOpenAfternm(final @NotNull ByteBuffer dstPlain,
-                                       final @NotNull ByteBuffer srcCipher,
-                                       final @NotNull ByteBuffer nonce,
-                                       final @NotNull ByteBuffer sharedKey)
-            throws StodiumException {
-        Curve25519XSalsa20Poly1305.openAfternm(dstPlain, srcCipher, nonce, sharedKey);
-    }
+    public abstract boolean openEasyAfternm(final @NotNull ByteBuffer dstPlain,
+                                            final @NotNull ByteBuffer srcCipher,
+                                            final @NotNull ByteBuffer nonce,
+                                            final @NotNull ByteBuffer key)
+            throws StodiumException;
 
     //
     // *_detached_afternm
@@ -204,26 +279,12 @@ public final class Box {
      * @param dstCipher
      * @param srcPlain
      * @param remotePubKey
-     * @throws ConstraintViolationException
      * @throws StodiumException
-     * @throws ReadOnlyBufferException
-     *
-     * @see <a href="https://download.libsodium.org/doc/public-key_cryptography/sealed_boxes.html#usage">libsodium docs</a>
      */
-    public static void seal(final @NotNull ByteBuffer dstCipher,
-                            final @NotNull ByteBuffer srcPlain,
-                            final @NotNull ByteBuffer remotePubKey)
-            throws StodiumException {
-        Stodium.checkDestinationWritable(dstCipher);
-
-        Stodium.checkSizeMin(dstCipher.remaining(), SEALBYTES + srcPlain.remaining());
-        Stodium.checkSizeMin(remotePubKey.remaining(), PUBLICKEYBYTES);
-
-        Stodium.checkStatus(StodiumJNI.crypto_box_seal(
-                Stodium.ensureUsableByteBuffer(dstCipher),
-                Stodium.ensureUsableByteBuffer(srcPlain),
-                Stodium.ensureUsableByteBuffer(remotePubKey)));
-    }
+    public abstract void seal(final @NotNull ByteBuffer dstCipher,
+                              final @NotNull ByteBuffer srcPlain,
+                              final @NotNull ByteBuffer remotePubKey)
+            throws StodiumException;
 
     /**
      *
@@ -233,25 +294,10 @@ public final class Box {
      * @param localPrivKey
      * @return true if the sealed box was decrypted correctly, false otherwise.
      * @throws StodiumException
-     *
-     * @see <a href="https://download.libsodium.org/doc/public-key_cryptography/sealed_boxes.html#usage">libsodium docs</a>
      */
-    public static boolean sealOpen(final @NotNull ByteBuffer dstPlain,
-                                   final @NotNull ByteBuffer srcCipher,
-                                   final @NotNull ByteBuffer localPubKey,
-                                   final @NotNull ByteBuffer localPrivKey)
-            throws StodiumException {
-        Stodium.checkDestinationWritable(dstPlain);
-
-        Stodium.checkSize(localPrivKey.remaining(), SECRETKEYBYTES);
-        Stodium.checkSizeMin(localPubKey.remaining(), PUBLICKEYBYTES);
-        Stodium.checkPositive(srcCipher.remaining() - SEALBYTES);
-        Stodium.checkSizeMin(dstPlain.remaining(), srcCipher.remaining() - SEALBYTES);
-
-        return StodiumJNI.crypto_box_seal_open(
-                Stodium.ensureUsableByteBuffer(dstPlain),
-                Stodium.ensureUsableByteBuffer(srcCipher),
-                Stodium.ensureUsableByteBuffer(localPubKey),
-                Stodium.ensureUsableByteBuffer(localPrivKey)) == 0;
-    }
+    public abstract boolean sealOpen(final @NotNull ByteBuffer dstPlain,
+                                     final @NotNull ByteBuffer srcCipher,
+                                     final @NotNull ByteBuffer localPubKey,
+                                     final @NotNull ByteBuffer localPrivKey)
+            throws StodiumException;
 }

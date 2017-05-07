@@ -24,10 +24,6 @@ import eu.artemisc.stodium.exceptions.StodiumException;
  * @author Jan van de Molengraft [jan@artemisc.eu]
  */
 public class SipHash24 {
-    static {
-        // Require sodium_init();
-        Stodium.StodiumInit();
-    }
 
     // block the constructor
     private SipHash24() {}

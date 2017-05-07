@@ -7,7 +7,6 @@
  */
 package eu.artemisc.stodium.core;
 
-import eu.artemisc.stodium.Stodium;
 import eu.artemisc.stodium.exceptions.ConstraintViolationException;
 import eu.artemisc.stodium.exceptions.StodiumException;
 
@@ -15,10 +14,6 @@ import eu.artemisc.stodium.exceptions.StodiumException;
  * @author Jan van de Molengraft [jan@artemisc.eu]
  */
 public class HChacha20 {
-    static {
-        // Require sodium_init();
-        Stodium.StodiumInit();
-    }
 
     // constants
     //public static final int INPUTBYTES  = Sodium.crypto_core_hchacha20_inputbytes();
