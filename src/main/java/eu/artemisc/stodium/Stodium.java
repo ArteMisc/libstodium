@@ -294,45 +294,6 @@ public final class Stodium {
         throw new ReadOnlyBufferException("Stodium: output buffer is readonly");
     }
 
-    /*
-      Load the native library
-     */
-    static {
-        try {
-            Class.forName("android.Manifest");
-
-            // Load the android JNI libs, as this is libstodium-android
-            System.loadLibrary("kaliumjni");
-
-        } catch (final ClassNotFoundException e1) {
-            /*// This is not android, extract pre-build library from jar
-            File file;
-            InputStream in = null;
-            OutputStream out = null;
-
-            String name = System.mapLibraryName("kaliumjni");
-
-            try {
-                in   = Stodium.class.getResourceAsStream("/eu/artemisc/stodium/libs/" + name);
-                file = File.createTempFile("stodium", name);
-                out  = new FileOutputStream(file);
-                System.load(file.getAbsolutePath());
-
-                System.loadLibrary("kaliumjni");
-            } catch (IOException e) {
-                e.printStackTrace();
-            } finally {
-                try { if (in  != null) { in.close();  } } catch (IOException e) { e.printStackTrace(); }
-                try { if (out != null) { out.close(); } } catch (IOException e) { e.printStackTrace(); }
-            }*/
-            throw new RuntimeException("Cannot load libstodium native library");
-        }
-
-        if (StodiumJNI.stodium_init() != 0) {
-            throw new RuntimeException("Stodium: could not initialize with stodium_init()");
-        }
-    }
-
     /**
      * version returns the value of sodium_version_string().
      *

@@ -23,7 +23,6 @@ public class StodiumJNI {
     // Library methods
     //
     public static native int stodium_init();
-    public static native int sodium_init();
 
     //
     // Utility methods
@@ -416,4 +415,43 @@ public class StodiumJNI {
             @NotNull ByteBuffer mac,
             @NotNull ByteBuffer nonce,
             @NotNull ByteBuffer key);
+
+    /*
+      Load the native library
+     */
+    static {
+        try {
+            Class.forName("android.Manifest");
+
+            // Load the android JNI libs, as this is libstodium-android
+            System.loadLibrary("kaliumjni");
+
+        } catch (final ClassNotFoundException e1) {
+            /*// This is not android, extract pre-build library from jar
+            File file;
+            InputStream in = null;
+            OutputStream out = null;
+
+            String name = System.mapLibraryName("kaliumjni");
+
+            try {
+                in   = Stodium.class.getResourceAsStream("/eu/artemisc/stodium/libs/" + name);
+                file = File.createTempFile("stodium", name);
+                out  = new FileOutputStream(file);
+                System.load(file.getAbsolutePath());
+
+                System.loadLibrary("kaliumjni");
+            } catch (IOException e) {
+                e.printStackTrace();
+            } finally {
+                try { if (in  != null) { in.close();  } } catch (IOException e) { e.printStackTrace(); }
+                try { if (out != null) { out.close(); } } catch (IOException e) { e.printStackTrace(); }
+            }*/
+            throw new RuntimeException("Cannot load libstodium native library");
+        }
+
+        if (StodiumJNI.stodium_init() != 0) {
+            throw new RuntimeException("Stodium: could not initialize with stodium_init()");
+        }
+    }
 }
