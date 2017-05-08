@@ -65,9 +65,9 @@ public abstract class Auth {
     }
 
     // constants
-    final int BYTES;
-    final int KEYBYTES;
-    final int STATEBYTES;
+    protected final int BYTES;
+    protected final int KEYBYTES;
+    protected final int STATEBYTES;
 
     /**
      *
@@ -75,9 +75,9 @@ public abstract class Auth {
      * @param key
      * @param state
      */
-    Auth(final int bytes,
-         final int key,
-         final int state) {
+    protected Auth(final int bytes,
+                   final int key,
+                   final int state) {
         BYTES      = bytes;
         KEYBYTES   = key;
         STATEBYTES = state;

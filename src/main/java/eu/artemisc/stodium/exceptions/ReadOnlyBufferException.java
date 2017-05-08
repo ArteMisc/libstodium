@@ -24,6 +24,13 @@ public final class ReadOnlyBufferException
         extends IllegalArgumentException {
     /**
      *
+     */
+    public ReadOnlyBufferException() {
+        super();
+    }
+
+    /**
+     *
      * @param detailMessage
      */
     public ReadOnlyBufferException(final @NotNull String detailMessage) {

@@ -399,14 +399,12 @@ public class StodiumJNI {
             @NotNull  ByteBuffer dst,
             @NotNull  ByteBuffer src,
             @Nullable ByteBuffer key);
-
     public static native int crypto_generichash_blake2b_salt_personal(
             @NotNull ByteBuffer dst,
             @NotNull ByteBuffer src,
             @NotNull ByteBuffer key,
             @NotNull ByteBuffer salt,
             @NotNull ByteBuffer personal);
-
     public static native int crypto_generichash_blake2b_init(
             @NotNull ByteBuffer state,
             @NotNull ByteBuffer key,
@@ -418,6 +416,76 @@ public class StodiumJNI {
             @NotNull ByteBuffer state,
             @NotNull ByteBuffer out);
 
+    //
+    // Hash
+    //
+    public static native String crypto_hash_primitive();
+
+    //
+    // Hash - SHA-256
+    //
+    public static native int crypto_hash_sha256_bytes();
+    public static native int crypto_hash_sha256_statebytes();
+
+    public static native int crypto_hash_sha256(
+            @NotNull ByteBuffer dst,
+            @NotNull ByteBuffer in);
+    public static native int crypto_hash_sha256_init(
+            @NotNull ByteBuffer dst);
+    public static native int crypto_hash_sha256_update(
+            @NotNull ByteBuffer dst,
+            @NotNull ByteBuffer in);
+    public static native int crypto_hash_sha256_final(
+            @NotNull ByteBuffer state,
+            @NotNull ByteBuffer dst);
+
+    //
+    // Hash - SHA-512
+    //
+    public static native int crypto_hash_sha512_bytes();
+    public static native int crypto_hash_sha512_statebytes();
+
+    public static native int crypto_hash_sha512(
+            @NotNull ByteBuffer dst,
+            @NotNull ByteBuffer in);
+    public static native int crypto_hash_sha512_init(
+            @NotNull ByteBuffer dst);
+    public static native int crypto_hash_sha512_update(
+            @NotNull ByteBuffer dst,
+            @NotNull ByteBuffer in);
+    public static native int crypto_hash_sha512_final(
+            @NotNull ByteBuffer state,
+            @NotNull ByteBuffer dst);
+
+    //
+    // OneTimeAuth
+    //
+    public static native String crypto_onetimeauth_primitive();
+
+    //
+    // OneTimeAuth - Poly1305
+    //
+    public static native int crypto_onetimeauth_poly1305_bytes();
+    public static native int crypto_onetimeauth_poly1305_keybytes();
+    public static native int crypto_onetimeauth_poly1305_statebytes();
+
+    public static native int crypto_onetimeauth_poly1305(
+            @NotNull ByteBuffer dst,
+            @NotNull ByteBuffer in,
+            @NotNull ByteBuffer key);
+    public static native int crypto_onetimeauth_poly1305_verify(
+            @NotNull ByteBuffer src,
+            @NotNull ByteBuffer in,
+            @NotNull ByteBuffer key);
+    public static native int crypto_onetimeauth_poly1305_init(
+            @NotNull ByteBuffer dst,
+            @NotNull ByteBuffer key);
+    public static native int crypto_onetimeauth_poly1305_update(
+            @NotNull ByteBuffer dst,
+            @NotNull ByteBuffer in);
+    public static native int crypto_onetimeauth_poly1305_final(
+            @NotNull ByteBuffer state,
+            @NotNull ByteBuffer dst);
     //
     // PwHash
     //

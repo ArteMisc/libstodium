@@ -7,147 +7,96 @@
  */
 package eu.artemisc.stodium.hash;
 
-import org.abstractj.kalium.Sodium;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Arrays;
+import java.nio.ByteBuffer;
 
-import eu.artemisc.stodium.Stodium;
-import eu.artemisc.stodium.exceptions.ConstraintViolationException;
+import eu.artemisc.stodium.Multipart;
+import eu.artemisc.stodium.Singleton;
 import eu.artemisc.stodium.exceptions.StodiumException;
 
 /**
  * @author Jan van de Molengraft [jan@artemisc.eu]
  */
-public class Hash {
+public abstract class Hash {
+
+    private static final @NotNull Singleton<Hash> SHA_256 = new Singleton<Hash>() {
+        @NotNull
+        @Override
+        protected Hash initialize() {
+            return new Sha256();
+        }
+    };
+
+    private static final @NotNull Singleton<Hash> SHA_512 = new Singleton<Hash>() {
+        @NotNull
+        @Override
+        protected Hash initialize() {
+            return new Sha512();
+        }
+    };
+
+    @NotNull
+    public static Hash instance() {
+        return Sha512Instance();
+    }
+
+    @NotNull
+    public static Hash Sha256Instance() {
+        return SHA_256.get();
+    }
+
+    @NotNull
+    public static Hash Sha512Instance() {
+        return SHA_512.get();
+    }
 
     // constants
-    public static final int BYTES       = Sodium.crypto_hash_bytes();
-    public static final int STATE_BYTES = Sodium.crypto_hash_statebytes();
-
-    public static final @NotNull String PRIMITIVE = Sodium.crypto_hash_primitive();
+    final int BYTES;
+    final int STATEBYTES;
 
     /**
-     * state holds the binary representation of the crypto_hash_state value.
-     */
-    private final @NotNull byte[] state;
-
-    /**
-     * Hash constructor creates a new hash_state. It implicitly calls
-     * {@link #init()}, so calling init manually should only be required when an
-     * application would wish to reuse the Hash instance.
      *
-     * @throws ConstraintViolationException
-     * @throws StodiumException
+     * @param bytes
+     * @param state
      */
-    public Hash()
-            throws StodiumException {
-        this.state = new byte[STATE_BYTES];
-        init();
-    }
-
-    /**
-     * Hash copy constructor, creates a deep copy of the original Hash instance
-     * by copying the internal byte array of the original state value.
-     * @param original
-     */
-    public Hash(final @NotNull Hash original) {
-        this.state = Arrays.copyOf(original.state, STATE_BYTES);
+    protected Hash(final int bytes,
+                   final int state) {
+        BYTES      = bytes;
+        STATEBYTES = state;
     }
 
     /**
      *
-     * @throws ConstraintViolationException
-     * @throws StodiumException
+     * @return
      */
-    public void init()
-            throws StodiumException {
-        Stodium.checkStatus(Sodium.crypto_hash_init(state));
+    public final int bytes() {
+        return BYTES;
     }
 
     /**
      *
-     * @param in
-     * @throws ConstraintViolationException
-     * @throws StodiumException
+     * @return
      */
-    public void update(final @NotNull byte[] in)
-            throws StodiumException {
-        update(in, 0, in.length);
+    public final int stateBytes() {
+        return STATEBYTES;
     }
 
     /**
      *
-     * @param in
-     * @param offset
-     * @param len
-     * @throws ConstraintViolationException
+     * @param dstHash
+     * @param src
      * @throws StodiumException
      */
-    public void update(final @NotNull byte[] in,
-                       final          int    offset,
-                       final          int    len)
-            throws StodiumException {
-        Stodium.checkOffsetParams(in.length, offset, len);
-        Stodium.checkStatus(Sodium.crypto_hash_update_offset(state, in, offset, len));
-    }
+    public abstract void hash(final @NotNull ByteBuffer dstHash,
+                              final @NotNull ByteBuffer src)
+            throws StodiumException;
 
     /**
      *
-     * @param out
-     * @throws ConstraintViolationException
-     * @throws StodiumException
+     * @return
      */
-    public void doFinal(final @NotNull byte[] out)
-            throws StodiumException {
-        doFinal(out, 0);
-    }
-
-    /**
-     *
-     * @param out
-     * @param offset
-     * @throws ConstraintViolationException
-     * @throws StodiumException
-     */
-    public void doFinal(final @NotNull byte[] out,
-                        final          int    offset)
-            throws StodiumException {
-        Stodium.checkOffsetParams(out.length, offset, BYTES);
-        Stodium.checkStatus(Sodium.crypto_hash_final_offset(state, out, offset));
-    }
-
-    /**
-     *
-     * @param out
-     * @param in
-     * @throws ConstraintViolationException
-     * @throws StodiumException
-     */
-    public static void hash(final @NotNull byte[] out,
-                            final @NotNull byte[] in)
-            throws StodiumException {
-        hash(out, 0, in, 0, in.length);
-    }
-
-    /**
-     *
-     * @param out
-     * @param outOffset
-     * @param in
-     * @param inOffset
-     * @param inLen
-     * @throws ConstraintViolationException
-     * @throws StodiumException
-     */
-    public static void hash(final @NotNull byte[] out,
-                            final          int    outOffset,
-                            final @NotNull byte[] in,
-                            final          int    inOffset,
-                            final          int    inLen)
-            throws StodiumException {
-        Stodium.checkOffsetParams(out.length, outOffset, BYTES);
-        Stodium.checkOffsetParams(in.length, inOffset, inLen);
-        Stodium.checkStatus(Sodium.crypto_hash_offset(out, outOffset, in, inOffset, inLen));
-    }
+    @NotNull
+    public abstract Multipart<Hash> init()
+            throws StodiumException;
 }

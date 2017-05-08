@@ -1593,6 +1593,278 @@ STODIUM_JNI(jint, crypto_1box_1curve25519xchacha20poly1305_1open_1easy) (JNIEnv 
 
 /** ****************************************************************************
  *
+ * HASH
+ *
+ **************************************************************************** */
+
+STODIUM_CONSTANT_STR(hash)
+
+/** ****************************************************************************
+ *
+ * HASH - SHA-256
+ *
+ **************************************************************************** */
+
+STODIUM_CONSTANT(hash, sha256, bytes)
+STODIUM_CONSTANT(hash, sha256, statebytes)
+
+STODIUM_JNI(jint, crypto_1hash_1sha256) (JNIEnv *jenv, jclass jcls,
+        jobject mac,
+        jobject src) {
+    stodium_buffer mac_buffer, src_buffer;
+    stodium_get_buffer(jenv, &mac_buffer, mac);
+    stodium_get_buffer(jenv, &src_buffer, src);
+
+    jint result = (jint) crypto_hash_sha256(
+            AS_OUTPUT(unsigned char, mac_buffer),
+            AS_INPUT(unsigned char, src_buffer),
+            AS_INPUT_LEN(unsigned long long, src_buffer));
+
+    stodium_release_output(jenv, mac, &mac_buffer);
+    stodium_release_input(jenv, src, &src_buffer);
+
+    return result;
+}
+
+STODIUM_JNI(jint, crypto_1hash_1sha256_1init) (JNIEnv *jenv, jclass jcls,
+        jobject dst) {
+    stodium_buffer dst_buffer;
+    stodium_get_buffer(jenv, &dst_buffer, dst);
+
+    jint result = (jint) crypto_hash_sha256_init(
+            AS_OUTPUT(crypto_hash_sha256_state, dst_buffer));
+
+    stodium_release_output(jenv, dst, &dst_buffer);
+
+    return result;
+}
+
+STODIUM_JNI(jint, crypto_1hash_1sha256_1update) (JNIEnv *jenv, jclass jcls,
+        jobject dst,
+        jobject src) {
+    stodium_buffer dst_buffer, src_buffer;
+    stodium_get_buffer(jenv, &dst_buffer, dst);
+    stodium_get_buffer(jenv, &src_buffer, src);
+
+    jint result = (jint) crypto_hash_sha256_update(
+            AS_OUTPUT(crypto_hash_sha256_state, dst_buffer),
+            AS_INPUT(unsigned char, src_buffer),
+            AS_INPUT_LEN(unsigned long long, src_buffer));
+
+    stodium_release_output(jenv, dst, &dst_buffer);
+    stodium_release_input(jenv, src, &src_buffer);
+
+    return result;
+}
+
+STODIUM_JNI(jint, crypto_1hash_1sha256_1final) (JNIEnv *jenv, jclass jcls,
+        jobject state,
+        jobject dst) {
+    stodium_buffer state_buffer, dst_buffer;
+    stodium_get_buffer(jenv, &state_buffer, state);
+    stodium_get_buffer(jenv, &dst_buffer, dst);
+
+    jint result = (jint) crypto_hash_sha256_final(
+            AS_OUTPUT(crypto_hash_sha256_state, state_buffer),
+            AS_OUTPUT(unsigned char, dst_buffer));
+
+    stodium_release_output(jenv, state, &state_buffer);
+    stodium_release_output(jenv, dst, &dst_buffer);
+
+    return result;
+}
+
+/** ****************************************************************************
+ *
+ * HASH - SHA-512
+ *
+ **************************************************************************** */
+
+STODIUM_CONSTANT(hash, sha512, bytes)
+STODIUM_CONSTANT(hash, sha512, statebytes)
+
+STODIUM_JNI(jint, crypto_1hash_1sha512) (JNIEnv *jenv, jclass jcls,
+        jobject mac,
+        jobject src) {
+    stodium_buffer mac_buffer, src_buffer;
+    stodium_get_buffer(jenv, &mac_buffer, mac);
+    stodium_get_buffer(jenv, &src_buffer, src);
+
+    jint result = (jint) crypto_hash_sha512(
+            AS_OUTPUT(unsigned char, mac_buffer),
+            AS_INPUT(unsigned char, src_buffer),
+            AS_INPUT_LEN(unsigned long long, src_buffer));
+
+    stodium_release_output(jenv, mac, &mac_buffer);
+    stodium_release_input(jenv, src, &src_buffer);
+
+    return result;
+}
+
+STODIUM_JNI(jint, crypto_1hash_1sha512_1init) (JNIEnv *jenv, jclass jcls,
+        jobject dst) {
+    stodium_buffer dst_buffer;
+    stodium_get_buffer(jenv, &dst_buffer, dst);
+
+    jint result = (jint) crypto_hash_sha512_init(
+            AS_OUTPUT(crypto_hash_sha512_state, dst_buffer));
+
+    stodium_release_output(jenv, dst, &dst_buffer);
+
+    return result;
+}
+
+STODIUM_JNI(jint, crypto_1hash_1sha512_1update) (JNIEnv *jenv, jclass jcls,
+        jobject dst,
+        jobject src) {
+    stodium_buffer dst_buffer, src_buffer;
+    stodium_get_buffer(jenv, &dst_buffer, dst);
+    stodium_get_buffer(jenv, &src_buffer, src);
+
+    jint result = (jint) crypto_hash_sha512_update(
+            AS_OUTPUT(crypto_hash_sha512_state, dst_buffer),
+            AS_INPUT(unsigned char, src_buffer),
+            AS_INPUT_LEN(unsigned long long, src_buffer));
+
+    stodium_release_output(jenv, dst, &dst_buffer);
+    stodium_release_input(jenv, src, &src_buffer);
+
+    return result;
+}
+
+STODIUM_JNI(jint, crypto_1hash_1sha512_1final) (JNIEnv *jenv, jclass jcls,
+        jobject state,
+        jobject dst) {
+    stodium_buffer state_buffer, dst_buffer;
+    stodium_get_buffer(jenv, &state_buffer, state);
+    stodium_get_buffer(jenv, &dst_buffer, dst);
+
+    jint result = (jint) crypto_hash_sha512_final(
+            AS_OUTPUT(crypto_hash_sha512_state, state_buffer),
+            AS_OUTPUT(unsigned char, dst_buffer));
+
+    stodium_release_output(jenv, state, &state_buffer);
+    stodium_release_output(jenv, dst, &dst_buffer);
+
+    return result;
+}
+
+/** ****************************************************************************
+ *
+ * ONETIMEAUTH
+ *
+ **************************************************************************** */
+
+STODIUM_CONSTANT_STR(onetimeauth)
+
+/** ****************************************************************************
+ *
+ * ONETIMEAUTH - Poly1305
+ *
+ **************************************************************************** */
+
+STODIUM_CONSTANT(onetimeauth, poly1305, bytes)
+STODIUM_CONSTANT(onetimeauth, poly1305, keybytes)
+STODIUM_CONSTANT(onetimeauth, poly1305, statebytes)
+
+STODIUM_JNI(jint, crypto_1onetimeauth_1poly1305) (JNIEnv *jenv, jclass jcls,
+        jobject mac,
+        jobject src,
+        jobject key) {
+    stodium_buffer mac_buffer, src_buffer, key_buffer;
+    stodium_get_buffer(jenv, &mac_buffer, mac);
+    stodium_get_buffer(jenv, &src_buffer, src);
+    stodium_get_buffer(jenv, &key_buffer, key);
+
+    jint result = (jint) crypto_onetimeauth_poly1305(
+            AS_OUTPUT(unsigned char, mac_buffer),
+            AS_INPUT(unsigned char, src_buffer),
+            AS_INPUT_LEN(unsigned long long, src_buffer),
+            AS_INPUT(unsigned char, key_buffer));
+
+    stodium_release_output(jenv, mac, &mac_buffer);
+    stodium_release_input(jenv, src, &src_buffer);
+    stodium_release_input(jenv, key, &key_buffer);
+
+    return result;
+}
+
+STODIUM_JNI(jint, crypto_1onetimeauth_1poly1305_1verify) (JNIEnv *jenv, jclass jcls,
+        jobject mac,
+        jobject src,
+        jobject key) {
+    stodium_buffer mac_buffer, src_buffer, key_buffer;
+    stodium_get_buffer(jenv, &mac_buffer, mac);
+    stodium_get_buffer(jenv, &src_buffer, src);
+    stodium_get_buffer(jenv, &key_buffer, key);
+
+    jint result = (jint) crypto_onetimeauth_poly1305_verify(
+            AS_OUTPUT(unsigned char, mac_buffer),
+            AS_INPUT(unsigned char, src_buffer),
+            AS_INPUT_LEN(unsigned long long, src_buffer),
+            AS_INPUT(unsigned char, key_buffer));
+
+    stodium_release_input(jenv, mac, &mac_buffer);
+    stodium_release_input(jenv, src, &src_buffer);
+    stodium_release_input(jenv, key, &key_buffer);
+
+    return result;
+}
+
+STODIUM_JNI(jint, crypto_1onetimeauth_1poly1305_1init) (JNIEnv *jenv, jclass jcls,
+        jobject dst,
+        jobject key) {
+    stodium_buffer dst_buffer, key_buffer;
+    stodium_get_buffer(jenv, &dst_buffer, dst);
+    stodium_get_buffer(jenv, &key_buffer, key);
+
+    jint result = (jint) crypto_onetimeauth_poly1305_init(
+            AS_OUTPUT(crypto_onetimeauth_poly1305_state, dst_buffer),
+            AS_INPUT(unsigned char, key_buffer));
+
+    stodium_release_output(jenv, dst, &dst_buffer);
+    stodium_release_input(jenv, key, &key_buffer);
+
+    return result;
+}
+
+STODIUM_JNI(jint, crypto_1onetimeauth_1poly1305_1update) (JNIEnv *jenv, jclass jcls,
+        jobject dst,
+        jobject src) {
+    stodium_buffer dst_buffer, src_buffer;
+    stodium_get_buffer(jenv, &dst_buffer, dst);
+    stodium_get_buffer(jenv, &src_buffer, src);
+
+    jint result = (jint) crypto_onetimeauth_poly1305_update(
+            AS_OUTPUT(crypto_onetimeauth_poly1305_state, dst_buffer),
+            AS_INPUT(unsigned char, src_buffer),
+            AS_INPUT_LEN(unsigned long long, src_buffer));
+
+    stodium_release_output(jenv, dst, &dst_buffer);
+    stodium_release_input(jenv, src, &src_buffer);
+
+    return result;
+}
+
+STODIUM_JNI(jint, crypto_1onetimeauth_1poly1305_1final) (JNIEnv *jenv, jclass jcls,
+        jobject state,
+        jobject dst) {
+    stodium_buffer state_buffer, dst_buffer;
+    stodium_get_buffer(jenv, &state_buffer, state);
+    stodium_get_buffer(jenv, &dst_buffer, dst);
+
+    jint result = (jint) crypto_onetimeauth_poly1305_final(
+            AS_OUTPUT(crypto_onetimeauth_poly1305_state, state_buffer),
+            AS_OUTPUT(unsigned char, dst_buffer));
+
+    stodium_release_output(jenv, state, &state_buffer);
+    stodium_release_output(jenv, dst, &dst_buffer);
+
+    return result;
+}
+
+/** ****************************************************************************
+ *
  * SECRETBOX - XSalsa20Poly1305
  *
  **************************************************************************** */
@@ -1892,6 +2164,7 @@ STODIUM_JNI(jint, crypto_1generichash_1blake2b_1final) (JNIEnv *jenv, jclass jcl
  * PWHASH
  *
  **************************************************************************** */
+
 STODIUM_CONSTANT_STR(pwhash)
 
 STODIUM_CONSTANT_HL(pwhash, saltbytes)
@@ -1952,6 +2225,7 @@ STODIUM_JNI(jint, crypto_1pwhash) (JNIEnv *jenv, jclass jcls,
  * PWHASH - Scrypt
  *
  **************************************************************************** */
+
 STODIUM_CONSTANT(pwhash, scryptsalsa208sha256, saltbytes)
 STODIUM_CONSTANT(pwhash, scryptsalsa208sha256, strbytes)
 //STODIUM_CONSTANT(pwhash, scryptsalsa208sha256, strprefix)
