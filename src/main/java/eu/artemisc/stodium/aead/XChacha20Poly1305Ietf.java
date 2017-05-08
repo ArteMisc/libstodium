@@ -73,12 +73,12 @@ final class XChacha20Poly1305Ietf
     }
 
     @Override
-    public void decryptDetached(final @NotNull ByteBuffer dstPlain,
-                                final @NotNull ByteBuffer srcCipher,
-                                final @NotNull ByteBuffer srcMac,
-                                final @NotNull ByteBuffer ad,
-                                final @NotNull ByteBuffer nonce,
-                                final @NotNull ByteBuffer key)
+    public boolean decryptDetached(final @NotNull ByteBuffer dstPlain,
+                                   final @NotNull ByteBuffer srcCipher,
+                                   final @NotNull ByteBuffer srcMac,
+                                   final @NotNull ByteBuffer ad,
+                                   final @NotNull ByteBuffer nonce,
+                                   final @NotNull ByteBuffer key)
             throws StodiumException {
         Stodium.checkDestinationWritable(dstPlain);
 
@@ -86,21 +86,21 @@ final class XChacha20Poly1305Ietf
         Stodium.checkSizeMin(nonce.remaining(), NPUBBYTES);
         Stodium.checkSize(key.remaining(), KEYBYTES);
 
-        Stodium.checkStatus(StodiumJNI.crypto_aead_xchacha20poly1305_ietf_decrypt_detached(
+        return StodiumJNI.NOERR == StodiumJNI.crypto_aead_xchacha20poly1305_ietf_decrypt_detached(
                 Stodium.ensureUsableByteBuffer(dstPlain),
                 Stodium.ensureUsableByteBuffer(srcCipher),
                 Stodium.ensureUsableByteBuffer(srcMac),
                 Stodium.ensureUsableByteBuffer(ad),
                 Stodium.ensureUsableByteBuffer(nonce),
-                Stodium.ensureUsableByteBuffer(key)));
+                Stodium.ensureUsableByteBuffer(key));
     }
 
     @Override
-    public void decrypt(final @NotNull ByteBuffer dstPlain,
-                        final @NotNull ByteBuffer srcCipher,
-                        final @NotNull ByteBuffer ad,
-                        final @NotNull ByteBuffer nonce,
-                        final @NotNull ByteBuffer key)
+    public boolean decrypt(final @NotNull ByteBuffer dstPlain,
+                           final @NotNull ByteBuffer srcCipher,
+                           final @NotNull ByteBuffer ad,
+                           final @NotNull ByteBuffer nonce,
+                           final @NotNull ByteBuffer key)
             throws StodiumException {
         Stodium.checkDestinationWritable(dstPlain);
 
@@ -108,11 +108,11 @@ final class XChacha20Poly1305Ietf
         Stodium.checkSizeMin(nonce.remaining(), NPUBBYTES);
         Stodium.checkSize(key.remaining(), KEYBYTES);
 
-        Stodium.checkStatus(StodiumJNI.crypto_aead_xchacha20poly1305_ietf_decrypt(
+        return StodiumJNI.NOERR == StodiumJNI.crypto_aead_xchacha20poly1305_ietf_decrypt(
                 Stodium.ensureUsableByteBuffer(dstPlain),
                 Stodium.ensureUsableByteBuffer(srcCipher),
                 Stodium.ensureUsableByteBuffer(ad),
                 Stodium.ensureUsableByteBuffer(nonce),
-                Stodium.ensureUsableByteBuffer(key)));
+                Stodium.ensureUsableByteBuffer(key));
     }
 }

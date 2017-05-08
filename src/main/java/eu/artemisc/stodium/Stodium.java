@@ -15,8 +15,6 @@ import java.nio.ByteBuffer;
 import java.util.Arrays;
 import java.util.Locale;
 
-import javax.crypto.AEADBadTagException;
-
 import eu.artemisc.stodium.exceptions.ConstraintViolationException;
 import eu.artemisc.stodium.exceptions.OperationFailedException;
 import eu.artemisc.stodium.exceptions.ReadOnlyBufferException;
@@ -39,7 +37,7 @@ public final class Stodium {
     /**
      *
      */
-    private static final @NotNull byte[] EMPTY_BUFFER = new byte[8];
+    private static final @NotNull byte[] EMPTY_BUFFER = new byte[1024];
 
     /**
      *
@@ -48,31 +46,10 @@ public final class Stodium {
      */
     public static void checkStatus(final int status)
             throws StodiumException {
-        if (status == 0) {
+        if (status == StodiumJNI.NOERR) {
             return;
         }
         throw new OperationFailedException("operation returned non-zero status " + status);
-    }
-
-    /**
-     *
-     * @param status
-     * @throws AEADBadTagException If the status value does not equal 0,
-     *         indicating an invalid authentication tag was encountered.
-     * @throws StodiumException If the API level does not support
-     *         AEADBadTagException, the method will call
-     *         {@link #checkStatus(int)} instead.
-     */
-    public static void checkStatusSealOpen(final int status)
-            throws AEADBadTagException, StodiumException {
-        if (status == 0) {
-            return;
-        }
-
-        // FIXME: 9-7-16 On android, this API is too new. In JAR, this can be used. For now just defer to checkStatus
-        //throw new AEADBadTagException(
-        //        methodDescription + ": cannot open sealed box (invalid tag?)");
-        checkStatus(status);
     }
 
     /**
@@ -245,7 +222,7 @@ public final class Stodium {
         }
 
         while (a.hasRemaining()) {
-            a.put(EMPTY_BUFFER, 0, a.remaining() < 8 ? a.remaining() : 8);
+            a.put(EMPTY_BUFFER, 0, a.remaining() < 1024 ? a.remaining() : 1024);
         }
     }
 

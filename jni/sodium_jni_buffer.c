@@ -841,21 +841,328 @@ STODIUM_JNI(jint, crypto_1aead_1xchacha20poly1305_1ietf_1decrypt) (JNIEnv *jenv,
  *
  **************************************************************************** */
 
+STODIUM_CONSTANT_STR(auth)
+
 /** ****************************************************************************
  *
  * AUTH - HMAC-256
  *
  **************************************************************************** */
+
+STODIUM_CONSTANT(auth, hmacsha256, bytes)
+STODIUM_CONSTANT(auth, hmacsha256, keybytes)
+STODIUM_CONSTANT(auth, hmacsha256, statebytes)
+
+STODIUM_JNI(jint, crypto_1auth_1hmacsha256) (JNIEnv *jenv, jclass jcls,
+        jobject mac,
+        jobject src,
+        jobject key) {
+    stodium_buffer mac_buffer, src_buffer, key_buffer;
+    stodium_get_buffer(jenv, &mac_buffer, mac);
+    stodium_get_buffer(jenv, &src_buffer, src);
+    stodium_get_buffer(jenv, &key_buffer, key);
+
+    jint result = (jint) crypto_auth_hmacsha256(
+            AS_OUTPUT(unsigned char, mac_buffer),
+            AS_INPUT(unsigned char, src_buffer),
+            AS_INPUT_LEN(unsigned long long, src_buffer),
+            AS_INPUT(unsigned char, key_buffer));
+
+    stodium_release_output(jenv, mac, &mac_buffer);
+    stodium_release_input(jenv, src, &src_buffer);
+    stodium_release_input(jenv, key, &key_buffer);
+
+    return result;
+}
+
+STODIUM_JNI(jint, crypto_1auth_1hmacsha256_1verify) (JNIEnv *jenv, jclass jcls,
+        jobject mac,
+        jobject src,
+        jobject key) {
+    stodium_buffer mac_buffer, src_buffer, key_buffer;
+    stodium_get_buffer(jenv, &mac_buffer, mac);
+    stodium_get_buffer(jenv, &src_buffer, src);
+    stodium_get_buffer(jenv, &key_buffer, key);
+
+    jint result = (jint) crypto_auth_hmacsha256_verify(
+            AS_OUTPUT(unsigned char, mac_buffer),
+            AS_INPUT(unsigned char, src_buffer),
+            AS_INPUT_LEN(unsigned long long, src_buffer),
+            AS_INPUT(unsigned char, key_buffer));
+
+    stodium_release_input(jenv, mac, &mac_buffer);
+    stodium_release_input(jenv, src, &src_buffer);
+    stodium_release_input(jenv, key, &key_buffer);
+
+    return result;
+}
+
+STODIUM_JNI(jint, crypto_1auth_1hmacsha256_1init) (JNIEnv *jenv, jclass jcls,
+        jobject dst,
+        jobject key) {
+    stodium_buffer dst_buffer, key_buffer;
+    stodium_get_buffer(jenv, &dst_buffer, dst);
+    stodium_get_buffer(jenv, &key_buffer, key);
+
+    jint result = (jint) crypto_auth_hmacsha256_init(
+            AS_OUTPUT(crypto_auth_hmacsha256_state, dst_buffer),
+            AS_INPUT(unsigned char, key_buffer),
+            AS_INPUT_LEN(size_t, key_buffer));
+
+    stodium_release_output(jenv, dst, &dst_buffer);
+    stodium_release_input(jenv, key, &key_buffer);
+
+    return result;
+}
+
+STODIUM_JNI(jint, crypto_1auth_1hmacsha256_1update) (JNIEnv *jenv, jclass jcls,
+        jobject dst,
+        jobject src) {
+    stodium_buffer dst_buffer, src_buffer;
+    stodium_get_buffer(jenv, &dst_buffer, dst);
+    stodium_get_buffer(jenv, &src_buffer, src);
+
+    jint result = (jint) crypto_auth_hmacsha256_update(
+            AS_OUTPUT(crypto_auth_hmacsha256_state, dst_buffer),
+            AS_INPUT(unsigned char, src_buffer),
+            AS_INPUT_LEN(unsigned long long, src_buffer));
+
+    stodium_release_output(jenv, dst, &dst_buffer);
+    stodium_release_input(jenv, src, &src_buffer);
+
+    return result;
+}
+
+STODIUM_JNI(jint, crypto_1auth_1hmacsha256_1final) (JNIEnv *jenv, jclass jcls,
+        jobject state,
+        jobject dst) {
+    stodium_buffer state_buffer, dst_buffer;
+    stodium_get_buffer(jenv, &state_buffer, state);
+    stodium_get_buffer(jenv, &dst_buffer, dst);
+
+    jint result = (jint) crypto_auth_hmacsha256_final(
+            AS_OUTPUT(crypto_auth_hmacsha256_state, state_buffer),
+            AS_OUTPUT(unsigned char, dst_buffer));
+
+    stodium_release_output(jenv, state, &state_buffer);
+    stodium_release_output(jenv, dst, &dst_buffer);
+
+    return result;
+}
+
 /** ****************************************************************************
  *
  * AUTH - HMAC-512
  *
  **************************************************************************** */
+
+STODIUM_CONSTANT(auth, hmacsha512, bytes)
+STODIUM_CONSTANT(auth, hmacsha512, keybytes)
+STODIUM_CONSTANT(auth, hmacsha512, statebytes)
+
+STODIUM_JNI(jint, crypto_1auth_1hmacsha512) (JNIEnv *jenv, jclass jcls,
+        jobject mac,
+        jobject src,
+        jobject key) {
+    stodium_buffer mac_buffer, src_buffer, key_buffer;
+    stodium_get_buffer(jenv, &mac_buffer, mac);
+    stodium_get_buffer(jenv, &src_buffer, src);
+    stodium_get_buffer(jenv, &key_buffer, key);
+
+    jint result = (jint) crypto_auth_hmacsha512(
+            AS_OUTPUT(unsigned char, mac_buffer),
+            AS_INPUT(unsigned char, src_buffer),
+            AS_INPUT_LEN(unsigned long long, src_buffer),
+            AS_INPUT(unsigned char, key_buffer));
+
+    stodium_release_output(jenv, mac, &mac_buffer);
+    stodium_release_input(jenv, src, &src_buffer);
+    stodium_release_input(jenv, key, &key_buffer);
+
+    return result;
+}
+
+STODIUM_JNI(jint, crypto_1auth_1hmacsha512_1verify) (JNIEnv *jenv, jclass jcls,
+        jobject mac,
+        jobject src,
+        jobject key) {
+    stodium_buffer mac_buffer, src_buffer, key_buffer;
+    stodium_get_buffer(jenv, &mac_buffer, mac);
+    stodium_get_buffer(jenv, &src_buffer, src);
+    stodium_get_buffer(jenv, &key_buffer, key);
+
+    jint result = (jint) crypto_auth_hmacsha512_verify(
+            AS_OUTPUT(unsigned char, mac_buffer),
+            AS_INPUT(unsigned char, src_buffer),
+            AS_INPUT_LEN(unsigned long long, src_buffer),
+            AS_INPUT(unsigned char, key_buffer));
+
+    stodium_release_input(jenv, mac, &mac_buffer);
+    stodium_release_input(jenv, src, &src_buffer);
+    stodium_release_input(jenv, key, &key_buffer);
+
+    return result;
+}
+
+STODIUM_JNI(jint, crypto_1auth_1hmacsha512_1init) (JNIEnv *jenv, jclass jcls,
+        jobject dst,
+        jobject key) {
+    stodium_buffer dst_buffer, key_buffer;
+    stodium_get_buffer(jenv, &dst_buffer, dst);
+    stodium_get_buffer(jenv, &key_buffer, key);
+
+    jint result = (jint) crypto_auth_hmacsha512_init(
+            AS_OUTPUT(crypto_auth_hmacsha512_state, dst_buffer),
+            AS_INPUT(unsigned char, key_buffer),
+            AS_INPUT_LEN(size_t, key_buffer));
+
+    stodium_release_output(jenv, dst, &dst_buffer);
+    stodium_release_input(jenv, key, &key_buffer);
+
+    return result;
+}
+
+STODIUM_JNI(jint, crypto_1auth_1hmacsha512_1update) (JNIEnv *jenv, jclass jcls,
+        jobject dst,
+        jobject src) {
+    stodium_buffer dst_buffer, src_buffer;
+    stodium_get_buffer(jenv, &dst_buffer, dst);
+    stodium_get_buffer(jenv, &src_buffer, src);
+
+    jint result = (jint) crypto_auth_hmacsha512_update(
+            AS_OUTPUT(crypto_auth_hmacsha512_state, dst_buffer),
+            AS_INPUT(unsigned char, src_buffer),
+            AS_INPUT_LEN(unsigned long long, src_buffer));
+
+    stodium_release_output(jenv, dst, &dst_buffer);
+    stodium_release_input(jenv, src, &src_buffer);
+
+    return result;
+}
+
+STODIUM_JNI(jint, crypto_1auth_1hmacsha512_1final) (JNIEnv *jenv, jclass jcls,
+        jobject state,
+        jobject dst) {
+    stodium_buffer state_buffer, dst_buffer;
+    stodium_get_buffer(jenv, &state_buffer, state);
+    stodium_get_buffer(jenv, &dst_buffer, dst);
+
+    jint result = (jint) crypto_auth_hmacsha512_final(
+            AS_OUTPUT(crypto_auth_hmacsha512_state, state_buffer),
+            AS_OUTPUT(unsigned char, dst_buffer));
+
+    stodium_release_output(jenv, state, &state_buffer);
+    stodium_release_output(jenv, dst, &dst_buffer);
+
+    return result;
+}
+
 /** ****************************************************************************
  *
  * AUTH - HMAC-512/256
  *
  **************************************************************************** */
+
+STODIUM_CONSTANT(auth, hmacsha512256, bytes)
+STODIUM_CONSTANT(auth, hmacsha512256, keybytes)
+STODIUM_CONSTANT(auth, hmacsha512256, statebytes)
+
+STODIUM_JNI(jint, crypto_1auth_1hmacsha512256) (JNIEnv *jenv, jclass jcls,
+        jobject mac,
+        jobject src,
+        jobject key) {
+    stodium_buffer mac_buffer, src_buffer, key_buffer;
+    stodium_get_buffer(jenv, &mac_buffer, mac);
+    stodium_get_buffer(jenv, &src_buffer, src);
+    stodium_get_buffer(jenv, &key_buffer, key);
+
+    jint result = (jint) crypto_auth_hmacsha512256(
+            AS_OUTPUT(unsigned char, mac_buffer),
+            AS_INPUT(unsigned char, src_buffer),
+            AS_INPUT_LEN(unsigned long long, src_buffer),
+            AS_INPUT(unsigned char, key_buffer));
+
+    stodium_release_output(jenv, mac, &mac_buffer);
+    stodium_release_input(jenv, src, &src_buffer);
+    stodium_release_input(jenv, key, &key_buffer);
+
+    return result;
+}
+
+STODIUM_JNI(jint, crypto_1auth_1hmacsha512256_1verify) (JNIEnv *jenv, jclass jcls,
+        jobject mac,
+        jobject src,
+        jobject key) {
+    stodium_buffer mac_buffer, src_buffer, key_buffer;
+    stodium_get_buffer(jenv, &mac_buffer, mac);
+    stodium_get_buffer(jenv, &src_buffer, src);
+    stodium_get_buffer(jenv, &key_buffer, key);
+
+    jint result = (jint) crypto_auth_hmacsha512256_verify(
+            AS_OUTPUT(unsigned char, mac_buffer),
+            AS_INPUT(unsigned char, src_buffer),
+            AS_INPUT_LEN(unsigned long long, src_buffer),
+            AS_INPUT(unsigned char, key_buffer));
+
+    stodium_release_input(jenv, mac, &mac_buffer);
+    stodium_release_input(jenv, src, &src_buffer);
+    stodium_release_input(jenv, key, &key_buffer);
+
+    return result;
+}
+
+STODIUM_JNI(jint, crypto_1auth_1hmacsha512256_1init) (JNIEnv *jenv, jclass jcls,
+        jobject dst,
+        jobject key) {
+    stodium_buffer dst_buffer, key_buffer;
+    stodium_get_buffer(jenv, &dst_buffer, dst);
+    stodium_get_buffer(jenv, &key_buffer, key);
+
+    jint result = (jint) crypto_auth_hmacsha512256_init(
+            AS_OUTPUT(crypto_auth_hmacsha512256_state, dst_buffer),
+            AS_INPUT(unsigned char, key_buffer),
+            AS_INPUT_LEN(size_t, key_buffer));
+
+    stodium_release_output(jenv, dst, &dst_buffer);
+    stodium_release_input(jenv, key, &key_buffer);
+
+    return result;
+}
+
+STODIUM_JNI(jint, crypto_1auth_1hmacsha512256_1update) (JNIEnv *jenv, jclass jcls,
+        jobject dst,
+        jobject src) {
+    stodium_buffer dst_buffer, src_buffer;
+    stodium_get_buffer(jenv, &dst_buffer, dst);
+    stodium_get_buffer(jenv, &src_buffer, src);
+
+    jint result = (jint) crypto_auth_hmacsha512256_update(
+            AS_OUTPUT(crypto_auth_hmacsha512256_state, dst_buffer),
+            AS_INPUT(unsigned char, src_buffer),
+            AS_INPUT_LEN(unsigned long long, src_buffer));
+
+    stodium_release_output(jenv, dst, &dst_buffer);
+    stodium_release_input(jenv, src, &src_buffer);
+
+    return result;
+}
+
+STODIUM_JNI(jint, crypto_1auth_1hmacsha512256_1final) (JNIEnv *jenv, jclass jcls,
+        jobject state,
+        jobject dst) {
+    stodium_buffer state_buffer, dst_buffer;
+    stodium_get_buffer(jenv, &state_buffer, state);
+    stodium_get_buffer(jenv, &dst_buffer, dst);
+
+    jint result = (jint) crypto_auth_hmacsha512256_final(
+            AS_OUTPUT(crypto_auth_hmacsha512256_state, state_buffer),
+            AS_OUTPUT(unsigned char, dst_buffer));
+
+    stodium_release_output(jenv, state, &state_buffer);
+    stodium_release_output(jenv, dst, &dst_buffer);
+
+    return result;
+}
 
 /** ****************************************************************************
  *

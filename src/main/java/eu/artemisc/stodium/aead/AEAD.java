@@ -47,7 +47,7 @@ public abstract class AEAD {
 
     @NotNull
     public static AEAD instance() {
-        return CHACHA.get();
+        return chachaInstance();
     }
 
     @Nullable
@@ -167,14 +167,15 @@ public abstract class AEAD {
      * @param ad
      * @param nonce
      * @param key
+     * @return
      * @throws StodiumException
      */
-    public abstract void decryptDetached(final @NotNull ByteBuffer dstPlain,
-                                         final @NotNull ByteBuffer srcCipher,
-                                         final @NotNull ByteBuffer srcMac,
-                                         final @NotNull ByteBuffer ad,
-                                         final @NotNull ByteBuffer nonce,
-                                         final @NotNull ByteBuffer key)
+    public abstract boolean decryptDetached(final @NotNull ByteBuffer dstPlain,
+                                            final @NotNull ByteBuffer srcCipher,
+                                            final @NotNull ByteBuffer srcMac,
+                                            final @NotNull ByteBuffer ad,
+                                            final @NotNull ByteBuffer nonce,
+                                            final @NotNull ByteBuffer key)
             throws StodiumException;
 
     /**
@@ -184,12 +185,13 @@ public abstract class AEAD {
      * @param ad
      * @param nonce
      * @param key
+     * @return
      * @throws StodiumException
      */
-    public abstract void decrypt(final @NotNull ByteBuffer dstPlain,
-                                 final @NotNull ByteBuffer srcCipher,
-                                 final @NotNull ByteBuffer ad,
-                                 final @NotNull ByteBuffer nonce,
-                                 final @NotNull ByteBuffer key)
+    public abstract boolean decrypt(final @NotNull ByteBuffer dstPlain,
+                                    final @NotNull ByteBuffer srcCipher,
+                                    final @NotNull ByteBuffer ad,
+                                    final @NotNull ByteBuffer nonce,
+                                    final @NotNull ByteBuffer key)
             throws StodiumException;
 }

@@ -7,65 +7,137 @@
  */
 package eu.artemisc.stodium.auth;
 
-import org.abstractj.kalium.Sodium;
 import org.jetbrains.annotations.NotNull;
 
-import eu.artemisc.stodium.Stodium;
-import eu.artemisc.stodium.exceptions.ConstraintViolationException;
+import java.nio.ByteBuffer;
+
+import eu.artemisc.stodium.Multipart;
+import eu.artemisc.stodium.Singleton;
 import eu.artemisc.stodium.exceptions.StodiumException;
 
 /**
- * Auth wraps calls to crypto_auth, based on HMAC-SHA512256
- *
  * @author Jan van de Molengraft [jan@artemisc.eu]
  */
-public class Auth {
+public abstract class Auth {
 
-    // block the constructor
-    private Auth() {}
+    private static final @NotNull Singleton<Auth> HMAC_SHA_256 = new Singleton<Auth>() {
+        @NotNull
+        @Override
+        protected Auth initialize() {
+            return new HmacSha256();
+        }
+    };
+
+    private static final @NotNull Singleton<Auth> HMAC_SHA_512 = new Singleton<Auth>() {
+        @NotNull
+        @Override
+        protected Auth initialize() {
+            return new HmacSha512();
+        }
+    };
+
+    private static final @NotNull Singleton<Auth> HMAC_SHA_512256 = new Singleton<Auth>() {
+        @NotNull
+        @Override
+        protected Auth initialize() {
+            return new HmacSha512256();
+        }
+    };
+
+    @NotNull
+    public static Auth instance() {
+        return HmacSha512256Instance();
+    }
+
+    @NotNull
+    public static Auth HmacSha256Instance() {
+        return HMAC_SHA_256.get();
+    }
+
+    @NotNull
+    public static Auth HmacSha512Instance() {
+        return HMAC_SHA_512.get();
+    }
+
+    @NotNull
+    public static Auth HmacSha512256Instance() {
+        return HMAC_SHA_512256.get();
+    }
 
     // constants
-    public static final int BYTES    = 32;
-    public static final int KEYBYTES = 32;
-
-    public static final @NotNull String PRIMITIVE = Sodium.crypto_auth_primitive();
-
-    // wrappers
+    final int BYTES;
+    final int KEYBYTES;
+    final int STATEBYTES;
 
     /**
      *
-     * @param dstOut
-     * @param srcIn
-     * @param srcKey
-     * @throws ConstraintViolationException
-     * @throws StodiumException
+     * @param bytes
+     * @param key
+     * @param state
      */
-    public static void auth(final @NotNull byte[] dstOut,
-                            final @NotNull byte[] srcIn,
-                            final @NotNull byte[] srcKey)
-            throws StodiumException {
-        Stodium.checkSize(dstOut.length, BYTES);
-        Stodium.checkSize(srcKey.length, KEYBYTES);
-        Stodium.checkStatus(
-                Sodium.crypto_auth(dstOut, srcIn, srcIn.length, srcKey));
+    Auth(final int bytes,
+         final int key,
+         final int state) {
+        BYTES      = bytes;
+        KEYBYTES   = key;
+        STATEBYTES = state;
     }
 
     /**
      *
-     * @param srcTag
-     * @param srcIn
-     * @param srcKey
      * @return
-     * @throws ConstraintViolationException
+     */
+    public final int bytes() {
+        return BYTES;
+    }
+
+    /**
+     *
+     * @return
+     */
+    public final int keyBytes() {
+        return KEYBYTES;
+    }
+
+    /**
+     *
+     * @return
+     */
+    public final int stateBytes() {
+        return STATEBYTES;
+    }
+
+    /**
+     *
+     * @param dstMac
+     * @param src
+     * @param key
      * @throws StodiumException
      */
-    public static boolean authVerify(final @NotNull byte[] srcTag,
-                                     final @NotNull byte[] srcIn,
-                                     final @NotNull byte[] srcKey)
-            throws StodiumException {
-        Stodium.checkSize(srcTag.length, BYTES);
-        Stodium.checkSize(srcKey.length, KEYBYTES);
-        return Sodium.crypto_auth_verify(
-                srcTag, srcIn, srcIn.length, srcKey) == 0;
-    }
+    public abstract void mac(final @NotNull ByteBuffer dstMac,
+                             final @NotNull ByteBuffer src,
+                             final @NotNull ByteBuffer key)
+            throws StodiumException;
+
+    /**
+     *
+     * @param srcMac
+     * @param src
+     * @param key
+     * @return
+     * @throws StodiumException
+     */
+    public abstract boolean verify(final @NotNull ByteBuffer srcMac,
+                                   final @NotNull ByteBuffer src,
+                                   final @NotNull ByteBuffer key)
+            throws StodiumException;
+
+    /**
+     *
+     * @param key
+     * @return
+     */
+    @NotNull
+    public abstract Multipart<Auth> init(final @NotNull ByteBuffer key)
+            throws StodiumException;
 }

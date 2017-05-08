@@ -44,7 +44,7 @@ public abstract class Box {
 
     @NotNull
     public static Box instance() {
-        return CURVE_XSALSA.get();
+        return curve25519xsalsa20poly1305Instance();
     }
 
     @NotNull

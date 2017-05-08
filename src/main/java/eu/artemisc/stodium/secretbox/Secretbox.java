@@ -126,9 +126,8 @@ public final class Secretbox {
         Stodium.checkSize(srcCipher.length, dstPlain.length + MACBYTES);
         Stodium.checkSize(nonce.length, NONCEBYTES);
         Stodium.checkSize(secretKey.length, KEYBYTES);
-        Stodium.checkStatusSealOpen(Sodium.crypto_secretbox_open_easy(dstPlain,
-                srcCipher, srcCipher.length, nonce, secretKey)
-        );
+        Stodium.checkStatus(Sodium.crypto_secretbox_open_easy(dstPlain,
+                srcCipher, srcCipher.length, nonce, secretKey));
     }
 
     //
@@ -183,8 +182,7 @@ public final class Secretbox {
         Stodium.checkSize(srcMac.length, MACBYTES);
         Stodium.checkSize(nonce.length, NONCEBYTES);
         Stodium.checkSize(secretKey.length, KEYBYTES);
-        Stodium.checkStatusSealOpen(Sodium.crypto_secretbox_open_detached(dstPlain,
-                        srcCipher, srcMac, srcCipher.length, nonce, secretKey)
-        );
+        Stodium.checkStatus(Sodium.crypto_secretbox_open_detached(dstPlain,
+                        srcCipher, srcMac, srcCipher.length, nonce, secretKey));
     }
 }

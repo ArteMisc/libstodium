@@ -14,11 +14,18 @@ import java.nio.ByteBuffer;
 
 /**
  * StodiumJNI implements the java definitions of native methods for wrappers
- *
  * around Libsodium functions.
+ *
  * @author Jan van de Molengraft [jan@artemisc.eu]
  */
 public class StodiumJNI {
+
+    /**
+     * NOERR is the constant value returned by native functions indicating that
+     * no error has occured.
+     */
+    public static final int NOERR = 0;
+
     //
     // Library methods
     //
@@ -184,6 +191,86 @@ public class StodiumJNI {
             @NotNull ByteBuffer ad,
             @NotNull ByteBuffer nonce,
             @NotNull ByteBuffer key);
+
+    //
+    // Auth
+    //
+    public static native String crypto_auth_primitive();
+
+    //
+    // Auth - HMAC-SHA-256
+    //
+    public static native int crypto_auth_hmacsha256_bytes();
+    public static native int crypto_auth_hmacsha256_keybytes();
+    public static native int crypto_auth_hmacsha256_statebytes();
+
+    public static native int crypto_auth_hmacsha256(
+            @NotNull ByteBuffer dst,
+            @NotNull ByteBuffer in,
+            @NotNull ByteBuffer key);
+    public static native int crypto_auth_hmacsha256_verify(
+            @NotNull ByteBuffer src,
+            @NotNull ByteBuffer in,
+            @NotNull ByteBuffer key);
+    public static native int crypto_auth_hmacsha256_init(
+            @NotNull ByteBuffer dst,
+            @NotNull ByteBuffer key);
+    public static native int crypto_auth_hmacsha256_update(
+            @NotNull ByteBuffer dst,
+            @NotNull ByteBuffer in);
+    public static native int crypto_auth_hmacsha256_final(
+            @NotNull ByteBuffer state,
+            @NotNull ByteBuffer dst);
+
+    //
+    // Auth - HMAC-SHA-512
+    //
+    public static native int crypto_auth_hmacsha512_bytes();
+    public static native int crypto_auth_hmacsha512_keybytes();
+    public static native int crypto_auth_hmacsha512_statebytes();
+
+    public static native int crypto_auth_hmacsha512(
+            @NotNull ByteBuffer dst,
+            @NotNull ByteBuffer in,
+            @NotNull ByteBuffer key);
+    public static native int crypto_auth_hmacsha512_verify(
+            @NotNull ByteBuffer src,
+            @NotNull ByteBuffer in,
+            @NotNull ByteBuffer key);
+    public static native int crypto_auth_hmacsha512_init(
+            @NotNull ByteBuffer dst,
+            @NotNull ByteBuffer key);
+    public static native int crypto_auth_hmacsha512_update(
+            @NotNull ByteBuffer dst,
+            @NotNull ByteBuffer in);
+    public static native int crypto_auth_hmacsha512_final(
+            @NotNull ByteBuffer state,
+            @NotNull ByteBuffer dst);
+
+    //
+    // Auth - HMAC-SHA-512/256
+    //
+    public static native int crypto_auth_hmacsha512256_bytes();
+    public static native int crypto_auth_hmacsha512256_keybytes();
+    public static native int crypto_auth_hmacsha512256_statebytes();
+
+    public static native int crypto_auth_hmacsha512256(
+            @NotNull ByteBuffer dst,
+            @NotNull ByteBuffer in,
+            @NotNull ByteBuffer key);
+    public static native int crypto_auth_hmacsha512256_verify(
+            @NotNull ByteBuffer src,
+            @NotNull ByteBuffer in,
+            @NotNull ByteBuffer key);
+    public static native int crypto_auth_hmacsha512256_init(
+            @NotNull ByteBuffer dst,
+            @NotNull ByteBuffer key);
+    public static native int crypto_auth_hmacsha512256_update(
+            @NotNull ByteBuffer dst,
+            @NotNull ByteBuffer in);
+    public static native int crypto_auth_hmacsha512256_final(
+            @NotNull ByteBuffer state,
+            @NotNull ByteBuffer dst);
 
     //
     // Box
