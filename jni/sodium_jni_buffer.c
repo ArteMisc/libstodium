@@ -1595,6 +1595,78 @@ STODIUM_JNI(jint, crypto_1box_1curve25519xchacha20poly1305_1open_1easy) (JNIEnv 
 
 /** ****************************************************************************
  *
+ * CORE - HCHACHA
+ *
+ **************************************************************************** */
+
+STODIUM_CONSTANT(core, hchacha20, outputbytes)
+STODIUM_CONSTANT(core, hchacha20, inputbytes)
+STODIUM_CONSTANT(core, hchacha20, keybytes)
+STODIUM_CONSTANT(core, hchacha20, constbytes)
+
+STODIUM_JNI(jint, crypto_1core_1hchacha20) (JNIEnv *jenv, jclass jcls,
+        jobject dst,
+        jobject src,
+        jobject key,
+        jobject constant) {
+    stodium_buffer dst_buffer, src_buffer, key_buffer, const_buffer;
+    stodium_get_buffer(jenv, &dst_buffer,   dst);
+    stodium_get_buffer(jenv, &src_buffer,   src);
+    stodium_get_buffer(jenv, &key_buffer,   key);
+    stodium_get_buffer(jenv, &const_buffer, constant);
+
+    jint result = (jint) crypto_core_hchacha20(
+            AS_OUTPUT(unsigned char, dst_buffer),
+            AS_INPUT(unsigned char, src_buffer),
+            AS_INPUT(unsigned char, key_buffer),
+            AS_INPUT(unsigned char, const_buffer));
+
+    stodium_release_output(jenv, dst, &dst_buffer);
+    stodium_release_input(jenv, src, &src_buffer);
+    stodium_release_input(jenv, key, &key_buffer);
+    stodium_release_input(jenv, constant, &const_buffer);
+    
+    return result;
+}
+
+/** ****************************************************************************
+ *
+ * CORE - HSALSA20
+ *
+ **************************************************************************** */
+
+STODIUM_CONSTANT(core, hsalsa20, outputbytes)
+STODIUM_CONSTANT(core, hsalsa20, inputbytes)
+STODIUM_CONSTANT(core, hsalsa20, keybytes)
+STODIUM_CONSTANT(core, hsalsa20, constbytes)
+
+STODIUM_JNI(jint, crypto_1core_1hsalsa20) (JNIEnv *jenv, jclass jcls,
+        jobject dst,
+        jobject src,
+        jobject key,
+        jobject constant) {
+    stodium_buffer dst_buffer, src_buffer, key_buffer, const_buffer;
+    stodium_get_buffer(jenv, &dst_buffer,   dst);
+    stodium_get_buffer(jenv, &src_buffer,   src);
+    stodium_get_buffer(jenv, &key_buffer,   key);
+    stodium_get_buffer(jenv, &const_buffer, constant);
+
+    jint result = (jint) crypto_core_hsalsa20(
+            AS_OUTPUT(unsigned char, dst_buffer),
+            AS_INPUT(unsigned char, src_buffer),
+            AS_INPUT(unsigned char, key_buffer),
+            AS_INPUT(unsigned char, const_buffer));
+
+    stodium_release_output(jenv, dst, &dst_buffer);
+    stodium_release_input(jenv, src, &src_buffer);
+    stodium_release_input(jenv, key, &key_buffer);
+    stodium_release_input(jenv, constant, &const_buffer);
+    
+    return result;
+}
+
+/** ****************************************************************************
+ *
  * GENERICHASH
  *
  **************************************************************************** */
@@ -2129,42 +2201,6 @@ STODIUM_JNI(jint, crypto_1secretbox_1open_1detached) (JNIEnv *jenv, jclass jcls,
     stodium_release_input(jenv, nonce, &nonce_buffer);
     stodium_release_input(jenv, key, &key_buffer);
 
-    return result;
-}
-
-/** ****************************************************************************
- *
- * CORE - HSALSA20
- *
- **************************************************************************** */
-
-STODIUM_CONSTANT(core, hsalsa20, outputbytes)
-STODIUM_CONSTANT(core, hsalsa20, inputbytes)
-STODIUM_CONSTANT(core, hsalsa20, keybytes)
-STODIUM_CONSTANT(core, hsalsa20, constbytes)
-
-STODIUM_JNI(jint, crypto_1core_1hsalsa20) (JNIEnv *jenv, jclass jcls,
-        jobject dst,
-        jobject src,
-        jobject key,
-        jobject constant) {
-    stodium_buffer dst_buffer, src_buffer, key_buffer, const_buffer;
-    stodium_get_buffer(jenv, &dst_buffer,   dst);
-    stodium_get_buffer(jenv, &src_buffer,   src);
-    stodium_get_buffer(jenv, &key_buffer,   key);
-    stodium_get_buffer(jenv, &const_buffer, constant);
-
-    jint result = (jint) crypto_core_hsalsa20(
-            AS_OUTPUT(unsigned char, dst_buffer),
-            AS_INPUT(unsigned char, src_buffer),
-            AS_INPUT(unsigned char, key_buffer),
-            AS_INPUT(unsigned char, const_buffer));
-
-    stodium_release_output(jenv, dst, &dst_buffer);
-    stodium_release_input(jenv, src, &src_buffer);
-    stodium_release_input(jenv, key, &key_buffer);
-    stodium_release_input(jenv, constant, &const_buffer);
-    
     return result;
 }
 

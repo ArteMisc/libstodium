@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 Project ArteMisc
+ * Copyright (c) 2017 Project ArteMisc
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -7,42 +7,47 @@
  */
 package eu.artemisc.stodium.core;
 
-import eu.artemisc.stodium.exceptions.ConstraintViolationException;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+import java.nio.ByteBuffer;
+
+import eu.artemisc.stodium.Stodium;
+import eu.artemisc.stodium.StodiumJNI;
 import eu.artemisc.stodium.exceptions.StodiumException;
 
 /**
  * @author Jan van de Molengraft [jan@artemisc.eu]
  */
-public class HChacha20 {
+final class HChacha20
+        extends Core {
 
-    // constants
-    //public static final int INPUTBYTES  = Sodium.crypto_core_hchacha20_inputbytes();
-    //public static final int OUTPUTBYTES = Sodium.crypto_core_hchacha20_outputbytes();
-    //public static final int CONSTBYTES  = Sodium.crypto_core_hchacha20_constbytes();
-    //public static final int KEYBYTES    = Sodium.crypto_core_hchacha20_keybytes();
+    HChacha20() {
+        super(StodiumJNI.crypto_core_hchacha20_inputbytes(),
+              StodiumJNI.crypto_core_hchacha20_outputbytes(),
+              StodiumJNI.crypto_core_hchacha20_constbytes(),
+              StodiumJNI.crypto_core_hchacha20_keybytes());
+    }
 
-    /**
-     *
-     * @param dst
-     * @param src
-     * @param key
-     * @param constant
-     * @throws ConstraintViolationException
-     * @throws StodiumException
-     */
-    //public void hchacha20(@NonNull final byte[] dst,
-    //                      @NonNull final byte[] src,
-    //                      @NonNull final byte[] key,
-    //                      @Nullable final byte[] constant)
-    //        throws StodiumException {
-    //    if (constant != null) {
-    //        Stodium.checkSize(constant.length, CONSTBYTES, "HChacha20.CONSTBYTES");
-    //    }
-    //    Stodium.checkSize(dst.length, OUTPUTBYTES, "HChacha20.OUTPUTBYTES");
-    //    Stodium.checkSize(src.length, INPUTBYTES, "HChacha20.INPUTBYTES");
-    //    Stodium.checkSize(key.length, KEYBYTES, "HChacha20.KEYBYTES");
-    //    Stodium.checkStatus(Sodium.crypto_core_hsalsa20(
-    //            dst, src, key, constant));
-    //}
+    @Override
+    public void hash(final @NotNull  ByteBuffer dst,
+                     final @NotNull  ByteBuffer src,
+                     final @NotNull  ByteBuffer key,
+                     final @Nullable ByteBuffer constant)
+            throws StodiumException {
+        Stodium.checkDestinationWritable(dst);
 
+        Stodium.checkSize(dst.remaining(), OUTPUTBYTES);
+        Stodium.checkSize(src.remaining(), INPUTBYTES);
+        Stodium.checkSize(key.remaining(), KEYBYTES);
+        if (constant != null) {
+            Stodium.checkSize(constant.remaining(), CONSTBYTES);
+        }
+
+        StodiumJNI.crypto_core_hchacha20(
+                Stodium.ensureUsableByteBuffer(dst),
+                Stodium.ensureUsableByteBuffer(src),
+                Stodium.ensureUsableByteBuffer(key),
+                constant == null ? null : Stodium.ensureUsableByteBuffer(constant));
+    }
 }

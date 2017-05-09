@@ -41,15 +41,32 @@ public class StodiumJNI {
     //
     // Core
     //
+
+    //
+    // HSalsa20
+    //
     public static native int crypto_core_hsalsa20_outputbytes();
     public static native int crypto_core_hsalsa20_inputbytes();
     public static native int crypto_core_hsalsa20_keybytes();
     public static native int crypto_core_hsalsa20_constbytes();
     public static native int crypto_core_hsalsa20(
-            @NotNull ByteBuffer dst,
-            @NotNull ByteBuffer src,
-            @NotNull ByteBuffer key,
-            @NotNull ByteBuffer constant);
+            @NotNull  ByteBuffer dst,
+            @NotNull  ByteBuffer src,
+            @NotNull  ByteBuffer key,
+            @Nullable ByteBuffer constant);
+
+    //
+    // HChacha20
+    //
+    public static native int crypto_core_hchacha20_outputbytes();
+    public static native int crypto_core_hchacha20_inputbytes();
+    public static native int crypto_core_hchacha20_keybytes();
+    public static native int crypto_core_hchacha20_constbytes();
+    public static native int crypto_core_hchacha20(
+            @NotNull  ByteBuffer dst,
+            @NotNull  ByteBuffer src,
+            @NotNull  ByteBuffer key,
+            @Nullable ByteBuffer constant);
 
     //
     // AEAD - Chacha20Poly1305
