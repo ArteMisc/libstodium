@@ -195,7 +195,7 @@ public class StodiumJNI {
     //
     // Auth
     //
-    public static native String crypto_auth_primitive();
+    public static native @NotNull String crypto_auth_primitive();
 
     //
     // Auth - HMAC-SHA-256
@@ -275,7 +275,7 @@ public class StodiumJNI {
     //
     // Box
     //
-    public static native String crypto_box_primitive();
+    public static native @NotNull String crypto_box_primitive();
     public static native int crypto_box_sealbytes();
 
     public static native int crypto_box_seal(
@@ -383,6 +383,11 @@ public class StodiumJNI {
     // todo detached
 
     //
+    // GenericHash
+    //
+    public static native @NotNull String crypto_generichash_primitive();
+
+    //
     // GenericHash Blake2b
     //
     public static native int crypto_generichash_blake2b_bytes();
@@ -406,9 +411,9 @@ public class StodiumJNI {
             @NotNull ByteBuffer salt,
             @NotNull ByteBuffer personal);
     public static native int crypto_generichash_blake2b_init(
-            @NotNull ByteBuffer state,
-            @NotNull ByteBuffer key,
-                     int        outlen);
+            @NotNull  ByteBuffer state,
+            @Nullable ByteBuffer key,
+                      int        outlen);
     public static native int crypto_generichash_blake2b_update(
             @NotNull ByteBuffer state,
             @NotNull ByteBuffer in);
@@ -419,7 +424,7 @@ public class StodiumJNI {
     //
     // Hash
     //
-    public static native String crypto_hash_primitive();
+    public static native @NotNull String crypto_hash_primitive();
 
     //
     // Hash - SHA-256
@@ -460,7 +465,7 @@ public class StodiumJNI {
     //
     // OneTimeAuth
     //
-    public static native String crypto_onetimeauth_primitive();
+    public static native @NotNull String crypto_onetimeauth_primitive();
 
     //
     // OneTimeAuth - Poly1305
@@ -489,7 +494,7 @@ public class StodiumJNI {
     //
     // PwHash
     //
-    public static native String crypto_pwhash_primitive();
+    public static native @NotNull String crypto_pwhash_primitive();
 
     public static native int crypto_pwhash_alg_default();
     public static native int crypto_pwhash_saltbytes();

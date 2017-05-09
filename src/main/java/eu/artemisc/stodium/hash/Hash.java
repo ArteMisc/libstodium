@@ -52,8 +52,8 @@ public abstract class Hash {
     }
 
     // constants
-    final int BYTES;
-    final int STATEBYTES;
+    protected final int BYTES;
+    protected final int STATEBYTES;
 
     /**
      *
