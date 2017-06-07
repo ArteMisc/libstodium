@@ -513,39 +513,77 @@ public class StodiumJNI {
     //
     public static native @NotNull String crypto_pwhash_primitive();
 
-    public static native int crypto_pwhash_alg_default();
-    public static native int crypto_pwhash_saltbytes();
-    public static native int crypto_pwhash_strbytes();
-    public static native int crypto_pwhash_opslimit_interactive();
-    public static native int crypto_pwhash_memlimit_interactive();
-    public static native int crypto_pwhash_opslimit_moderate();
-    public static native int crypto_pwhash_memlimit_moderate();
-    public static native int crypto_pwhash_opslimit_sensitive();
-    public static native int crypto_pwhash_memlimit_sensitive();
+    //
+    // PwHash - Argon2i
+    //
+    public static native int crypto_pwhash_argon2i_bytes_min();
+    public static native int crypto_pwhash_argon2i_bytes_max();
+    public static native int crypto_pwhash_argon2i_passwd_min();
+    public static native int crypto_pwhash_argon2i_passwd_max();
+    public static native int crypto_pwhash_argon2i_saltbytes();
+    public static native int crypto_pwhash_argon2i_strbytes();
+    public static native @NotNull String crypto_pwhash_argon2i_strprefix();
+    public static native long crypto_pwhash_argon2i_opslimit_min();
+    public static native long crypto_pwhash_argon2i_opslimit_max();
+    public static native long crypto_pwhash_argon2i_memlimit_min();
+    public static native long crypto_pwhash_argon2i_memlimit_max();
+    public static native long crypto_pwhash_argon2i_opslimit_interactive();
+    public static native long crypto_pwhash_argon2i_memlimit_interactive();
+    public static native long crypto_pwhash_argon2i_opslimit_sensitive();
+    public static native long crypto_pwhash_argon2i_memlimit_sensitive();
 
-    public static native int crypto_pwhash(
+    public static native int crypto_pwhash_argon2i(
             @NotNull ByteBuffer dst,
             @NotNull ByteBuffer password,
             @NotNull ByteBuffer salt,
-                     int        opslimit,
-                     int        memlimit);
+                     long       opslimit,
+                     long       memlimit);
+
+    public static native int crypto_pwhash_argon2i_str(
+            @NotNull ByteBuffer dst,
+            @NotNull ByteBuffer password,
+                     long       opslimit,
+                     long       memlimit);
+
+    public static native int crypto_pwhash_argon2i_str_verify(
+            @NotNull ByteBuffer str,
+            @NotNull ByteBuffer password);
 
     //
     // PwHash Scrypt
     //
+    public static native int crypto_pwhash_scryptsalsa208sha256_bytes_min();
+    public static native int crypto_pwhash_scryptsalsa208sha256_bytes_max();
+    public static native int crypto_pwhash_scryptsalsa208sha256_passwd_min();
+    public static native int crypto_pwhash_scryptsalsa208sha256_passwd_max();
     public static native int crypto_pwhash_scryptsalsa208sha256_saltbytes();
     public static native int crypto_pwhash_scryptsalsa208sha256_strbytes();
-    public static native int crypto_pwhash_scryptsalsa208sha256_opslimit_interactive();
-    public static native int crypto_pwhash_scryptsalsa208sha256_memlimit_interactive();
-    public static native int crypto_pwhash_scryptsalsa208sha256_opslimit_sensitive();
-    public static native int crypto_pwhash_scryptsalsa208sha256_memlimit_sensitive();
+    public static native @NotNull String crypto_pwhash_scryptsalsa208sha256_strprefix();
+    public static native long crypto_pwhash_scryptsalsa208sha256_opslimit_min();
+    public static native long crypto_pwhash_scryptsalsa208sha256_opslimit_max();
+    public static native long crypto_pwhash_scryptsalsa208sha256_memlimit_min();
+    public static native long crypto_pwhash_scryptsalsa208sha256_memlimit_max();
+    public static native long crypto_pwhash_scryptsalsa208sha256_opslimit_interactive();
+    public static native long crypto_pwhash_scryptsalsa208sha256_memlimit_interactive();
+    public static native long crypto_pwhash_scryptsalsa208sha256_opslimit_sensitive();
+    public static native long crypto_pwhash_scryptsalsa208sha256_memlimit_sensitive();
 
     public static native int crypto_pwhash_scryptsalsa208sha256(
             @NotNull ByteBuffer dst,
             @NotNull ByteBuffer password,
             @NotNull ByteBuffer salt,
-                     int        opslimit,
-                     int        memlimit);
+                     long       opslimit,
+                     long       memlimit);
+
+    public static native int crypto_pwhash_scryptsalsa208sha256_str(
+            @NotNull ByteBuffer dst,
+            @NotNull ByteBuffer password,
+            long       opslimit,
+            long       memlimit);
+
+    public static native int crypto_pwhash_scryptsalsa208sha256_str_verify(
+            @NotNull ByteBuffer str,
+            @NotNull ByteBuffer password);
 
     //
     // ScalarMult

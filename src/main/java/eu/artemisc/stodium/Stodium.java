@@ -92,6 +92,25 @@ public final class Stodium {
      *
      * @param src
      * @param lower
+     * @param upper
+     * @throws ConstraintViolationException
+     */
+    public static void checkSize(final long src,
+                                 final long lower,
+                                 final long upper)
+            throws ConstraintViolationException {
+        if (src <= upper && src >= lower) {
+            return;
+        }
+        throw new ConstraintViolationException(
+                String.format(Locale.ENGLISH, "CheckSize failed [lower: %d, upper: %d, real: %d]",
+                        lower, upper, src));
+    }
+
+    /**
+     *
+     * @param src
+     * @param lower
      * @throws ConstraintViolationException
      */
     public static void checkSizeMin(final int src,
