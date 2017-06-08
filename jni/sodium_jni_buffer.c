@@ -2214,64 +2214,9 @@ STODIUM_JNI(jint, crypto_1secretbox_1open_1detached) (JNIEnv *jenv, jclass jcls,
  *
  * PWHASH
  *
- * FIXME these bindings should be removed when stability is reconfirmed - this piece of code has historical links to headaches
- *
  **************************************************************************** */
 
 STODIUM_CONSTANT_STR(pwhash)
-
-STODIUM_CONSTANT_HL(pwhash, saltbytes)
-STODIUM_CONSTANT_HL(pwhash, strbytes)
-//STODIUM_CONSTANT_HL(pwhash, strprefix)
-STODIUM_JNI(jint, crypto_1pwhash_1alg_1default) (JNIEnv *jenv, jclass jcls) {
-       return (jint) crypto_pwhash_alg_default();
-}
-STODIUM_JNI(jint, crypto_1pwhash_1memlimit_1interactive) (JNIEnv *jenv, jclass jcls) {
-       return (jint) crypto_pwhash_memlimit_interactive();
-}
-STODIUM_JNI(jint, crypto_1pwhash_1opslimit_1interactive) (JNIEnv *jenv, jclass jcls) {
-       return (jint) crypto_pwhash_opslimit_interactive();
-}
-STODIUM_JNI(jint, crypto_1pwhash_1memlimit_1moderate) (JNIEnv *jenv, jclass jcls) {
-       return (jint) crypto_pwhash_memlimit_moderate();
-}
-STODIUM_JNI(jint, crypto_1pwhash_1opslimit_1moderate) (JNIEnv *jenv, jclass jcls) {
-       return (jint) crypto_pwhash_opslimit_moderate();
-}
-STODIUM_JNI(jint, crypto_1pwhash_1memlimit_1sensitive) (JNIEnv *jenv, jclass jcls) {
-       return (jint) crypto_pwhash_memlimit_sensitive();
-}
-STODIUM_JNI(jint, crypto_1pwhash_1opslimit_1sensitive) (JNIEnv *jenv, jclass jcls) {
-       return (jint) crypto_pwhash_opslimit_sensitive();
-}
-
-STODIUM_JNI(jint, crypto_1pwhash) (JNIEnv *jenv, jclass jcls,
-        jobject dst,
-        jobject password,
-        jobject salt,
-        jint opslimit,
-        jint memlimit) {
-    stodium_buffer dst_buffer, pw_buffer, salt_buffer;
-    stodium_get_buffer(jenv, &dst_buffer, dst);
-    stodium_get_buffer(jenv, &pw_buffer, password);
-    stodium_get_buffer(jenv, &salt_buffer, salt);
-
-    jint result = (jint) crypto_pwhash(
-            AS_OUTPUT(unsigned char, dst_buffer),
-            AS_INPUT_LEN(unsigned long long, dst_buffer),
-            AS_INPUT(char, pw_buffer),
-            AS_INPUT_LEN(unsigned long long, pw_buffer),
-            AS_INPUT(unsigned char, salt_buffer),
-            (unsigned long long) opslimit,
-            (size_t) memlimit,
-            crypto_pwhash_ALG_DEFAULT);
-
-    stodium_release_output(jenv, dst, &dst_buffer);
-    stodium_release_input(jenv, password, &pw_buffer);
-    stodium_release_input(jenv, salt, &salt_buffer);
-
-    return result;
-}
 
 /** ****************************************************************************
  *
@@ -2279,17 +2224,17 @@ STODIUM_JNI(jint, crypto_1pwhash) (JNIEnv *jenv, jclass jcls,
  *
  **************************************************************************** */
 
-STODIUM_JNI(jint, crypto_1pwhash_1argon2i_1bytes_1min) (JNIEnv *jenv, jclass jcls) {
-       return (jint) crypto_pwhash_argon2i_bytes_min();
+STODIUM_JNI(jlong, crypto_1pwhash_1argon2i_1bytes_1min) (JNIEnv *jenv, jclass jcls) {
+       return (jlong) crypto_pwhash_argon2i_bytes_min();
 }
-STODIUM_JNI(jint, crypto_1pwhash_1argon2i_1bytes_1max) (JNIEnv *jenv, jclass jcls) {
-       return (jint) crypto_pwhash_argon2i_bytes_max();
+STODIUM_JNI(jlong, crypto_1pwhash_1argon2i_1bytes_1max) (JNIEnv *jenv, jclass jcls) {
+       return (jlong) crypto_pwhash_argon2i_bytes_max();
 }
-STODIUM_JNI(jint, crypto_1pwhash_1argon2i_1passwd_1min) (JNIEnv *jenv, jclass jcls) {
-       return (jint) crypto_pwhash_argon2i_passwd_min();
+STODIUM_JNI(jlong, crypto_1pwhash_1argon2i_1passwd_1min) (JNIEnv *jenv, jclass jcls) {
+       return (jlong) crypto_pwhash_argon2i_passwd_min();
 }
-STODIUM_JNI(jint, crypto_1pwhash_1argon2i_1passwd_1max) (JNIEnv *jenv, jclass jcls) {
-       return (jint) crypto_pwhash_argon2i_passwd_max();
+STODIUM_JNI(jlong, crypto_1pwhash_1argon2i_1passwd_1max) (JNIEnv *jenv, jclass jcls) {
+       return (jlong) crypto_pwhash_argon2i_passwd_max();
 }
 STODIUM_CONSTANT(pwhash, argon2i, saltbytes)
 STODIUM_CONSTANT(pwhash, argon2i, strbytes)
@@ -2396,17 +2341,17 @@ STODIUM_JNI(jint, crypto_1pwhash_1argon2i_1str_1verify) (JNIEnv *jenv, jclass jc
  *
  **************************************************************************** */
 
-STODIUM_JNI(jint, crypto_1pwhash_1scryptsalsa208sha256_1bytes_1min) (JNIEnv *jenv, jclass jcls) {
-       return (jint) crypto_pwhash_scryptsalsa208sha256_bytes_min();
+STODIUM_JNI(jlong, crypto_1pwhash_1scryptsalsa208sha256_1bytes_1min) (JNIEnv *jenv, jclass jcls) {
+       return (jlong) crypto_pwhash_scryptsalsa208sha256_bytes_min();
 }
-STODIUM_JNI(jint, crypto_1pwhash_1scryptsalsa208sha256_1bytes_1max) (JNIEnv *jenv, jclass jcls) {
-       return (jint) crypto_pwhash_scryptsalsa208sha256_bytes_max();
+STODIUM_JNI(jlong, crypto_1pwhash_1scryptsalsa208sha256_1bytes_1max) (JNIEnv *jenv, jclass jcls) {
+       return (jlong) crypto_pwhash_scryptsalsa208sha256_bytes_max();
 }
-STODIUM_JNI(jint, crypto_1pwhash_1scryptsalsa208sha256_1passwd_1min) (JNIEnv *jenv, jclass jcls) {
-       return (jint) crypto_pwhash_scryptsalsa208sha256_passwd_min();
+STODIUM_JNI(jlong, crypto_1pwhash_1scryptsalsa208sha256_1passwd_1min) (JNIEnv *jenv, jclass jcls) {
+       return (jlong) crypto_pwhash_scryptsalsa208sha256_passwd_min();
 }
-STODIUM_JNI(jint, crypto_1pwhash_1scryptsalsa208sha256_1passwd_1max) (JNIEnv *jenv, jclass jcls) {
-       return (jint) crypto_pwhash_scryptsalsa208sha256_passwd_max();
+STODIUM_JNI(jlong, crypto_1pwhash_1scryptsalsa208sha256_1passwd_1max) (JNIEnv *jenv, jclass jcls) {
+       return (jlong) crypto_pwhash_scryptsalsa208sha256_passwd_max();
 }
 STODIUM_CONSTANT(pwhash, scryptsalsa208sha256, saltbytes)
 STODIUM_CONSTANT(pwhash, scryptsalsa208sha256, strbytes)

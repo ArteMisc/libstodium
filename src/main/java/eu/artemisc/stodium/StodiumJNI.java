@@ -516,10 +516,10 @@ public class StodiumJNI {
     //
     // PwHash - Argon2i
     //
-    public static native int crypto_pwhash_argon2i_bytes_min();
-    public static native int crypto_pwhash_argon2i_bytes_max();
-    public static native int crypto_pwhash_argon2i_passwd_min();
-    public static native int crypto_pwhash_argon2i_passwd_max();
+    public static native long crypto_pwhash_argon2i_bytes_min();
+    public static native long crypto_pwhash_argon2i_bytes_max();
+    public static native long crypto_pwhash_argon2i_passwd_min();
+    public static native long crypto_pwhash_argon2i_passwd_max();
     public static native int crypto_pwhash_argon2i_saltbytes();
     public static native int crypto_pwhash_argon2i_strbytes();
     public static native @NotNull String crypto_pwhash_argon2i_strprefix();
@@ -552,10 +552,10 @@ public class StodiumJNI {
     //
     // PwHash Scrypt
     //
-    public static native int crypto_pwhash_scryptsalsa208sha256_bytes_min();
-    public static native int crypto_pwhash_scryptsalsa208sha256_bytes_max();
-    public static native int crypto_pwhash_scryptsalsa208sha256_passwd_min();
-    public static native int crypto_pwhash_scryptsalsa208sha256_passwd_max();
+    public static native long crypto_pwhash_scryptsalsa208sha256_bytes_min();
+    public static native long crypto_pwhash_scryptsalsa208sha256_bytes_max();
+    public static native long crypto_pwhash_scryptsalsa208sha256_passwd_min();
+    public static native long crypto_pwhash_scryptsalsa208sha256_passwd_max();
     public static native int crypto_pwhash_scryptsalsa208sha256_saltbytes();
     public static native int crypto_pwhash_scryptsalsa208sha256_strbytes();
     public static native @NotNull String crypto_pwhash_scryptsalsa208sha256_strprefix();

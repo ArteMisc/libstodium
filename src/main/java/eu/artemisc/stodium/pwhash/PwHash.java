@@ -51,10 +51,10 @@ public abstract class PwHash {
     }
 
     // constants
-    final          int    BYTES_MIN;
-    final          int    BYTES_MAX;
-    final          int    PASSWD_MIN;
-    final          int    PASSWD_MAX;
+    final          long   BYTES_MIN;
+    final          long   BYTES_MAX;
+    final          long   PASSWD_MIN;
+    final          long   PASSWD_MAX;
     final          int    SALTBYTES;
     final          int    STRBYTES;
     final @NotNull String STRPREFIX;
@@ -89,10 +89,10 @@ public abstract class PwHash {
      * @param opsSensitive
      * @param memSensitive
      */
-    PwHash(final          int    bytesMin,
-           final          int    bytesMax,
-           final          int    pwMin,
-           final          int    pwMax,
+    PwHash(final          long   bytesMin,
+           final          long   bytesMax,
+           final          long   pwMin,
+           final          long   pwMax,
            final          int    salt,
            final          int    str,
            final @NotNull String prefix,
@@ -129,7 +129,7 @@ public abstract class PwHash {
      *
      * @return
      */
-    public final int bytesMin() {
+    public final long bytesMin() {
         return BYTES_MIN;
     }
 
@@ -137,7 +137,7 @@ public abstract class PwHash {
      *
      * @return
      */
-    public final int bytesMax() {
+    public final long bytesMax() {
         return BYTES_MAX;
     }
 
@@ -145,7 +145,7 @@ public abstract class PwHash {
      *
      * @return
      */
-    public final int passwdMin() {
+    public final long passwdMin() {
         return PASSWD_MIN;
     }
 
@@ -153,7 +153,7 @@ public abstract class PwHash {
      *
      * @return
      */
-    public final int passwdMax() {
+    public final long passwdMax() {
         return PASSWD_MAX;
     }
 
