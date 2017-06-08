@@ -104,7 +104,7 @@ public final class Secretbox {
         Stodium.checkSize(nonce.remaining(),     NONCEBYTES);
         Stodium.checkSize(secretKey.remaining(), KEYBYTES);
         return StodiumJNI.crypto_secretbox_open_easy(
-                dstPlain, srcCipher, nonce, secretKey) == 0;
+                dstPlain, srcCipher, nonce, secretKey) == StodiumJNI.NOERR;
     }
 
     /**

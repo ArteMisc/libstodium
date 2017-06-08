@@ -11,12 +11,12 @@ import eu.artemisc.stodium.exceptions.StodiumException;
 /**
  * @author Jan van de Molengraft [jan@artemisc.eu]
  */
-final class SipHash24
+final class SipHashX24
         extends ShortHash {
 
-    SipHash24() {
-        super(StodiumJNI.crypto_shorthash_siphash24_bytes(),
-                StodiumJNI.crypto_shorthash_siphash24_keybytes());
+    SipHashX24() {
+        super(StodiumJNI.crypto_shorthash_siphashx24_bytes(),
+                StodiumJNI.crypto_shorthash_siphashx24_keybytes());
     }
 
     @Override
@@ -29,7 +29,7 @@ final class SipHash24
         Stodium.checkSizeMin(out.remaining(), BYTES);
         Stodium.checkSize(key.remaining(), KEYBYTES);
 
-        Stodium.checkStatus(StodiumJNI.crypto_shorthash_siphash24(
+        Stodium.checkStatus(StodiumJNI.crypto_shorthash_siphashx24(
                 Stodium.ensureUsableByteBuffer(out),
                 Stodium.ensureUsableByteBuffer(in),
                 Stodium.ensureUsableByteBuffer(key)));

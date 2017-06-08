@@ -38,16 +38,16 @@ public abstract class Hash {
 
     @NotNull
     public static Hash instance() {
-        return Sha512Instance();
+        return sha512Instance();
     }
 
     @NotNull
-    public static Hash Sha256Instance() {
+    public static Hash sha256Instance() {
         return SHA_256.get();
     }
 
     @NotNull
-    public static Hash Sha512Instance() {
+    public static Hash sha512Instance() {
         return SHA_512.get();
     }
 

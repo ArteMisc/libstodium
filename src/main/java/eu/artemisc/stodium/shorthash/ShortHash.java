@@ -7,73 +7,89 @@
  */
 package eu.artemisc.stodium.shorthash;
 
-import org.abstractj.kalium.Sodium;
 import org.jetbrains.annotations.NotNull;
 
 import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
 
-import eu.artemisc.stodium.Stodium;
-import eu.artemisc.stodium.exceptions.ConstraintViolationException;
+import eu.artemisc.stodium.Singleton;
 import eu.artemisc.stodium.exceptions.StodiumException;
 
 /**
- * ShortHash wraps calls to sodium's crypto_shorthash API.
- *
  * @author Jan van de Molengraft [jan@artemisc.eu]
  */
-public class ShortHash {
+public abstract class ShortHash {
 
-    // block the constructor
-    private ShortHash() {}
+    private static final @NotNull Singleton<ShortHash> SIPHASH24 = new Singleton<ShortHash>() {
+        @NotNull
+        @Override
+        protected ShortHash initialize() {
+            return new SipHash24();
+        }
+    };
+
+    private static final @NotNull Singleton<ShortHash> SIPHASHX24 = new Singleton<ShortHash>() {
+        @NotNull
+        @Override
+        protected ShortHash initialize() {
+            return new SipHashX24();
+        }
+    };
+
+    @NotNull
+    public static ShortHash instance() {
+        return siphash24Instance();
+    }
+
+    @NotNull
+    public static ShortHash siphash24Instance() {
+        return SIPHASH24.get();
+    }
+
+    @NotNull
+    public static ShortHash siphashx24Instance() {
+        return SIPHASHX24.get();
+    }
 
     // constants
-    public static final int BYTES    = Sodium.crypto_shorthash_bytes();
-    public static final int KEYBYTES = Sodium.crypto_shorthash_keybytes();
-
-    public static final @NotNull String PRIMITIVE = Sodium.crypto_shorthash_primitive();
+    final int BYTES;
+    final int KEYBYTES;
 
     /**
      *
-     * @param srcIn
-     * @param srcKey
-     * @return a Long that holds the (BigEndian) representation of the resulting
-     *         64-bit Hash value.
-     * @throws ConstraintViolationException
-     * @throws StodiumException
+     * @param bytes
+     * @param key
      */
-    @NotNull
-    static Long shorthash(final @NotNull byte[] srcIn,
-                          final @NotNull byte[] srcKey)
-            throws StodiumException {
-        Stodium.checkSize(srcKey.length, KEYBYTES);
-
-        byte[] dst = new byte[BYTES];
-        Stodium.checkStatus(
-                Sodium.crypto_shorthash(dst, srcIn, srcIn.length, srcKey));
-
-        // Return as long
-        return ByteBuffer.wrap(dst)
-                .order(ByteOrder.BIG_ENDIAN)
-                .getLong();
+    ShortHash(final int bytes,
+              final int key) {
+        this.BYTES    = bytes;
+        this.KEYBYTES = key;
     }
 
     /**
      *
-     * @param dstHash The destination array to which the resulting 8-byte hash.
-     *                The bytes are considered to be BigEndian.
-     * @param srcIn
-     * @param srcKey
-     * @throws ConstraintViolationException
+     * @return
+     */
+    public final int bytes() {
+        return BYTES;
+    }
+
+    /**
+     *
+     * @return
+     */
+    public final int keyBytes() {
+        return KEYBYTES;
+    }
+
+    /**
+     *
+     * @param out
+     * @param in
+     * @param key
      * @throws StodiumException
      */
-    static void shorthash(final @NotNull byte[] dstHash,
-                          final @NotNull byte[] srcIn,
-                          final @NotNull byte[] srcKey)
-            throws StodiumException {
-        Stodium.checkSize(dstHash.length, BYTES);
-        Stodium.checkSize(srcKey.length, KEYBYTES);
-        Stodium.checkStatus(
-                Sodium.crypto_shorthash(dstHash, srcIn, srcIn.length, srcKey));
-    }
+    public abstract void hash(final @NotNull ByteBuffer out,
+                              final @NotNull ByteBuffer in,
+                              final @NotNull ByteBuffer key)
+            throws StodiumException;
 }

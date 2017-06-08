@@ -30,6 +30,7 @@ public class StodiumJNI {
     // Library methods
     //
     public static native int stodium_init();
+    public static native @NotNull String sodium_version_string();
 
     //
     // Utility methods
@@ -590,8 +591,12 @@ public class StodiumJNI {
     //
     public static native String crypto_scalarmult_primitive();
 
+    //
+    // ScalarMult Curve25519
+    //
     public static native int crypto_scalarmult_curve25519_bytes();
     public static native int crypto_scalarmult_curve25519_scalarbytes();
+
     public static native int crypto_scalarmult_curve25519(
             @NotNull ByteBuffer dst,
             @NotNull ByteBuffer src,
@@ -629,6 +634,33 @@ public class StodiumJNI {
             @NotNull ByteBuffer src,
             @NotNull ByteBuffer mac,
             @NotNull ByteBuffer nonce,
+            @NotNull ByteBuffer key);
+
+    //
+    // ShortHash
+    //
+    public static native @NotNull String crypto_shorthash_primitive();
+
+    //
+    // ShortHash SipHash24
+    //
+    public static native int crypto_shorthash_siphash24_bytes();
+    public static native int crypto_shorthash_siphash24_keybytes();
+
+    public static native int crypto_shorthash_siphash24(
+            @NotNull ByteBuffer out,
+            @NotNull ByteBuffer in,
+            @NotNull ByteBuffer key);
+
+    //
+    // ShortHash SipHashx24
+    //
+    public static native int crypto_shorthash_siphashx24_bytes();
+    public static native int crypto_shorthash_siphashx24_keybytes();
+
+    public static native int crypto_shorthash_siphashx24(
+            @NotNull ByteBuffer out,
+            @NotNull ByteBuffer in,
             @NotNull ByteBuffer key);
 
     /*

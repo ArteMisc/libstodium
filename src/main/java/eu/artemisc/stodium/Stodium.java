@@ -7,7 +7,7 @@
  */
 package eu.artemisc.stodium;
 
-import org.abstractj.kalium.Sodium;
+import org.abstractj.kalium.SodiumJNI;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -297,7 +297,7 @@ public final class Stodium {
      */
     @NotNull
     public static String version() {
-        return Sodium.sodium_version_string();
+        return StodiumJNI.sodium_version_string();
     }
 }
 

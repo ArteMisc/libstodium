@@ -7,13 +7,15 @@ import java.nio.ByteBuffer;
 import eu.artemisc.stodium.Stodium;
 import eu.artemisc.stodium.StodiumJNI;
 import eu.artemisc.stodium.exceptions.StodiumException;
-import eu.artemisc.stodium.scalarmult.Curve25519;
+import eu.artemisc.stodium.scalarmult.ScalarMult;
 
 /**
  * @author Jan van de Molengraft [jan@artemisc.eu]
  */
 final class Curve25519XChacha20Poly1305
         extends Box {
+    private static final @NotNull ScalarMult CURVE = ScalarMult.curve25519Instance();
+
     Curve25519XChacha20Poly1305() {
         super(StodiumJNI.crypto_box_curve25519xchacha20poly1305_seedbytes(),
                 StodiumJNI.crypto_box_curve25519xchacha20poly1305_publickeybytes(),
@@ -65,7 +67,7 @@ final class Curve25519XChacha20Poly1305
     public void publicFromPrivate(final @NotNull ByteBuffer dstPublicKey,
                                   final @NotNull ByteBuffer srcPrivateKey)
             throws StodiumException {
-        Curve25519.x25519PrivateToPublic(dstPublicKey, srcPrivateKey);
+        CURVE.scalarMultBase(dstPublicKey, srcPrivateKey);
     }
 
     @Override
