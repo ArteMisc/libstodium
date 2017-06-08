@@ -50,12 +50,6 @@ final class Argon2i
         Stodium.checkSize(memLimit, MEMLIMIT_MIN, MEMLIMIT_MAX);
         Stodium.checkSize(opsLimit, OPSLIMIT_MIN, OPSLIMIT_MAX);
 
-        thrStodiumJNI.crypto_pwhash_argon2i(
-                Stodium.ensureUsableByteBuffer(dstKey),
-                Stodium.ensureUsableByteBuffer(srcPw),
-                Stodium.ensureUsableByteBuffer(srcSalt),
-                opsLimit, memLimit));
-
         Stodium.checkStatus(StodiumJNI.crypto_pwhash_argon2i(
                 Stodium.ensureUsableByteBuffer(dstKey),
                 Stodium.ensureUsableByteBuffer(srcPw),
