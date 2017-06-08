@@ -31,6 +31,7 @@ public class StodiumJNI {
     //
     public static native int stodium_init();
     public static native @NotNull String sodium_version_string();
+    // TODO: 8-6-17 add constant time utility methods? like sodium_increment
 
     //
     // Utility methods

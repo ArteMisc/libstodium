@@ -9,8 +9,6 @@
 package org.abstractj.kalium;
 
 public class SodiumJNI {
-  public final static native String sodium_version_string();
-  public final static native void sodium_increment(byte[] jarg1, int jarg2);
   public final static native int crypto_secretbox_keybytes();
   public final static native int crypto_secretbox_noncebytes();
   public final static native int crypto_secretbox_macbytes();
@@ -46,22 +44,4 @@ public class SodiumJNI {
   public final static native int crypto_sign_ed25519_seed_keypair(byte[] jarg1, byte[] jarg2, byte[] jarg3);
   public final static native int crypto_sign_ed25519_pk_to_curve25519(byte[] jarg1, byte[] jarg2);
   public final static native int crypto_sign_ed25519_sk_to_curve25519(byte[] jarg1, byte[] jarg2);
-  public final static native int crypto_stream_chacha20_keybytes();
-  public final static native int crypto_stream_chacha20_noncebytes();
-  public final static native int crypto_stream_chacha20(byte[] jarg1, int jarg2, byte[] jarg3, byte[] jarg4);
-  public final static native int crypto_stream_chacha20_xor(byte[] jarg1, byte[] jarg2, int jarg3, byte[] jarg4, byte[] jarg5);
-  public final static native int crypto_stream_chacha20_xor_ic(byte[] jarg1, byte[] jarg2, int jarg3, byte[] jarg4, int jarg5, byte[] jarg6);
-  public final static native int crypto_stream_chacha20_ietf_noncebytes();
-  public final static native int crypto_stream_chacha20_ietf(byte[] jarg1, int jarg2, byte[] jarg3, byte[] jarg4);
-  public final static native int crypto_stream_chacha20_ietf_xor(byte[] jarg1, byte[] jarg2, int jarg3, byte[] jarg4, byte[] jarg5);
-  public final static native int crypto_stream_chacha20_ietf_xor_ic(byte[] jarg1, byte[] jarg2, int jarg3, byte[] jarg4, int jarg5, byte[] jarg6);
-  public final static native int crypto_stream_salsa20_keybytes();
-  public final static native int crypto_stream_salsa20_noncebytes();
-  public final static native int crypto_stream_salsa20(byte[] jarg1, int jarg2, byte[] jarg3, byte[] jarg4);
-  public final static native int crypto_stream_salsa20_xor(byte[] jarg1, byte[] jarg2, int jarg3, byte[] jarg4, byte[] jarg5);
-  public final static native int crypto_stream_salsa20_xor_ic(byte[] jarg1, byte[] jarg2, int jarg3, byte[] jarg4, int jarg5, byte[] jarg6);
-  public final static native int crypto_stream_xsalsa20_keybytes();
-  public final static native int crypto_stream_xsalsa20_noncebytes();
-  public final static native int crypto_stream_xsalsa20(byte[] jarg1, int jarg2, byte[] jarg3, byte[] jarg4);
-  public final static native int crypto_stream_xsalsa20_xor(byte[] jarg1, byte[] jarg2, int jarg3, byte[] jarg4, byte[] jarg5);
 }
