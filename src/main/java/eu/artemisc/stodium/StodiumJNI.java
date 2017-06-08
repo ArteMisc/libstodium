@@ -664,6 +664,57 @@ public class StodiumJNI {
             @NotNull ByteBuffer in,
             @NotNull ByteBuffer key);
 
+    //
+    // Sign
+    //
+    public static native @NotNull String crypto_sign_primitive();
+
+    //
+    // Sign - Ed25519
+    //
+    public static native int crypto_sign_ed25519_publickeybytes();
+    public static native int crypto_sign_ed25519_secretkeybytes();
+    public static native int crypto_sign_ed25519_bytes();
+    public static native int crypto_sign_ed25519_seedbytes();
+    public static native int crypto_sign_ed25519ph_statebytes();
+
+    public static native int crypto_sign_ed25519_keypair(
+            @NotNull ByteBuffer dstPub,
+            @NotNull ByteBuffer dstPriv);
+    public static native int crypto_sign_ed25519_seed_keypair(
+            @NotNull ByteBuffer dstPub,
+            @NotNull ByteBuffer dstPriv,
+            @NotNull ByteBuffer srcSeed);
+    public static native int crypto_sign_ed25519(
+            @NotNull ByteBuffer dstSigned,
+            @NotNull ByteBuffer srcMsg,
+            @NotNull ByteBuffer priv);
+    public static native int crypto_sign_ed25519_open(
+            @NotNull ByteBuffer dstMsg,
+            @NotNull ByteBuffer srcSigned,
+            @NotNull ByteBuffer priv);
+    public static native int crypto_sign_ed25519_detached(
+            @NotNull ByteBuffer dstSig,
+            @NotNull ByteBuffer srcMsg,
+            @NotNull ByteBuffer priv);
+    public static native int crypto_sign_ed25519_verify_detached(
+            @NotNull ByteBuffer srcSig,
+            @NotNull ByteBuffer srcMsg,
+            @NotNull ByteBuffer priv);
+    public static native int crypto_sign_ed25519ph_init(
+            @NotNull ByteBuffer state);
+    public static native int crypto_sign_ed25519ph_update(
+            @NotNull ByteBuffer state,
+            @NotNull ByteBuffer srcMsg);
+    public static native int crypto_sign_ed25519ph_final_create(
+            @NotNull ByteBuffer state,
+            @NotNull ByteBuffer dstSig,
+            @NotNull ByteBuffer priv);
+    public static native int crypto_sign_ed25519ph_final_verify(
+            @NotNull ByteBuffer state,
+            @NotNull ByteBuffer srcSig,
+            @NotNull ByteBuffer priv);
+
     /*
       Load the native library
      */

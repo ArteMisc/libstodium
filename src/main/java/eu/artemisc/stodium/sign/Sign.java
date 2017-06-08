@@ -10,6 +10,9 @@ package eu.artemisc.stodium.sign;
 import org.abstractj.kalium.Sodium;
 import org.jetbrains.annotations.NotNull;
 
+import java.nio.ByteBuffer;
+
+import eu.artemisc.stodium.Singleton;
 import eu.artemisc.stodium.Stodium;
 import eu.artemisc.stodium.exceptions.ConstraintViolationException;
 import eu.artemisc.stodium.exceptions.StodiumException;
@@ -17,16 +20,179 @@ import eu.artemisc.stodium.exceptions.StodiumException;
 /**
  * @author Jan van de Molengraft [jan@artemisc.eu]
  */
-public final class Sign {
+public abstract class Sign {
 
-    // block the constructor
-    private Sign() {}
+    private static final @NotNull Singleton<Sign> ED25519 = new Singleton<Sign>() {
+        @NotNull
+        @Override
+        protected Sign initialize() {
+            return new Ed25519Impl();
+        }
+    };
+
+    @NotNull
+    public static Sign instance() {
+        return ed25519Instance();
+    }
+
+    @NotNull
+    public static Sign ed25519Instance() {
+        return ED25519.get();
+    }
 
     // constants
-    public static final int SIGNBYTES       = Sodium.crypto_sign_bytes();
-    public static final int PUBLICKEYBYTES  = Sodium.crypto_sign_publickeybytes();
-    public static final int PRIVATEKEYBYTES = Sodium.crypto_sign_secretkeybytes();
-    public static final int SEEDBYTES       = Sodium.crypto_sign_seedbytes();
+    final int PUBLICKEYBYTES;
+    final int SECRETKEYBYTES;
+    final int BYTES;
+    final int SEEDBYTES;
+    final int STATEBYTES;
+
+    /**
+     *
+     * @param pub
+     * @param secret
+     * @param bytes
+     * @param seed
+     */
+    Sign(final int pub,
+         final int secret,
+         final int bytes,
+         final int seed,
+         final int state) {
+        this.PUBLICKEYBYTES = pub;
+        this.SECRETKEYBYTES = secret;
+        this.BYTES          = bytes;
+        this.SEEDBYTES      = seed;
+        this.STATEBYTES     = state;
+    }
+
+    /**
+     *
+     * @return
+     */
+    public final int publicKeyBytes() {
+        return PUBLICKEYBYTES;
+    }
+
+    /**
+     *
+     * @return
+     */
+    public final int secretKeyBytes() {
+        return SECRETKEYBYTES;
+    }
+
+    /**
+     *
+     * @return
+     */
+    public final int bytes() {
+        return BYTES;
+    }
+
+    /**
+     *
+     * @return
+     */
+    public final int seedBytes() {
+        return SEEDBYTES;
+    }
+
+    /**
+     *
+     * @param dstPub
+     * @param dstPriv
+     * @throws StodiumException
+     */
+    public abstract void keypair(final @NotNull ByteBuffer dstPub,
+                                 final @NotNull ByteBuffer dstPriv)
+            throws StodiumException;
+
+    /**
+     *
+     * @param dstPub
+     * @param dstPriv
+     * @param seed
+     * @throws StodiumException
+     */
+    public abstract void keypair(final @NotNull ByteBuffer dstPub,
+                                 final @NotNull ByteBuffer dstPriv,
+                                 final @NotNull ByteBuffer seed)
+            throws StodiumException;
+
+    /**
+     *
+     * @param dstSigned
+     * @param srcMsg
+     * @param priv
+     * @throws StodiumException
+     */
+    public abstract void sign(final @NotNull ByteBuffer dstSigned,
+                              final @NotNull ByteBuffer srcMsg,
+                              final @NotNull ByteBuffer priv)
+            throws StodiumException;
+
+    /**
+     *
+     * @param dstMsg
+     * @param srcSigned
+     * @param priv
+     * @return
+     * @throws StodiumException
+     */
+    public abstract boolean open(final @NotNull ByteBuffer dstMsg,
+                                 final @NotNull ByteBuffer srcSigned,
+                                 final @NotNull ByteBuffer priv)
+            throws StodiumException;
+
+    /**
+     *
+     * @param dstSig
+     * @param srcMsg
+     * @param priv
+     * @throws StodiumException
+     */
+    public abstract void signDetached(final @NotNull ByteBuffer dstSig,
+                                      final @NotNull ByteBuffer srcMsg,
+                                      final @NotNull ByteBuffer priv)
+            throws StodiumException;
+
+    /**
+     *
+     * @param srcSig
+     * @param srcMsg
+     * @param priv
+     * @return
+     * @throws StodiumException
+     */
+    public abstract boolean verifyDetached(final @NotNull ByteBuffer srcSig,
+                                           final @NotNull ByteBuffer srcMsg,
+                                           final @NotNull ByteBuffer priv)
+            throws StodiumException;
+
+    /**
+     *
+     * @return
+     * @throws StodiumException
+     */
+    @NotNull
+    public abstract MultipartSign init()
+            throws StodiumException;
+
+
+
+
+
+
+
+
+
+
+    // constants
+    public static final int SIGNBYTES_1       = Sodium.crypto_sign_bytes();
+    public static final int PUBLICKEYBYTES_1  = Sodium.crypto_sign_publickeybytes();
+    public static final int PRIVATEKEYBYTES_1 = Sodium.crypto_sign_secretkeybytes();
+    public static final int SEEDBYTES_1       = Sodium.crypto_sign_seedbytes();
 
     public static final @NotNull String PRIMITIVE = Sodium.crypto_sign_primitive();
 
@@ -50,8 +216,8 @@ public final class Sign {
     public static void keypair(final @NotNull byte[] dstPublicKey,
                                final @NotNull byte[] dstPrivateKey)
             throws StodiumException {
-        Stodium.checkSize(dstPublicKey.length, PUBLICKEYBYTES);
-        Stodium.checkSize(dstPrivateKey.length, PRIVATEKEYBYTES);
+        Stodium.checkSize(dstPublicKey.length, PUBLICKEYBYTES_1);
+        Stodium.checkSize(dstPrivateKey.length, PRIVATEKEYBYTES_1);
         Stodium.checkStatus(
                 Sodium.crypto_sign_keypair(dstPublicKey, dstPrivateKey));
     }
@@ -72,9 +238,9 @@ public final class Sign {
                                    final @NotNull byte[] dstPrivateKey,
                                    final @NotNull byte[] srcSeed)
             throws StodiumException {
-        Stodium.checkSize(dstPublicKey.length, PUBLICKEYBYTES);
-        Stodium.checkSize(dstPrivateKey.length, PRIVATEKEYBYTES);
-        Stodium.checkSize(srcSeed.length, SEEDBYTES);
+        Stodium.checkSize(dstPublicKey.length, PUBLICKEYBYTES_1);
+        Stodium.checkSize(dstPrivateKey.length, PRIVATEKEYBYTES_1);
+        Stodium.checkSize(srcSeed.length, SEEDBYTES_1);
         Stodium.checkStatus(Sodium.crypto_sign_seed_keypair(dstPublicKey,
                 dstPrivateKey, srcSeed));
     }
@@ -97,8 +263,8 @@ public final class Sign {
     public static void publicFromPrivate(final @NotNull byte[] dstPublicKey,
                                          final @NotNull byte[] srcPrivateKey)
             throws StodiumException {
-        Stodium.checkSize(dstPublicKey.length, PUBLICKEYBYTES);
-        Stodium.checkSize(srcPrivateKey.length, PRIVATEKEYBYTES);
+        Stodium.checkSize(dstPublicKey.length, PUBLICKEYBYTES_1);
+        Stodium.checkSize(srcPrivateKey.length, PRIVATEKEYBYTES_1);
         Stodium.checkStatus(
                 Sodium.crypto_sign_ed25519_sk_to_pk(dstPublicKey, srcPrivateKey));
     }
@@ -116,8 +282,8 @@ public final class Sign {
     public static void seedFromPrivate(final @NotNull byte[] dstSeed,
                                        final @NotNull byte[] srcPrivateKey)
             throws StodiumException {
-        Stodium.checkSize(srcPrivateKey.length, PRIVATEKEYBYTES);
-        Stodium.checkSize(dstSeed.length, SEEDBYTES);
+        Stodium.checkSize(srcPrivateKey.length, PRIVATEKEYBYTES_1);
+        Stodium.checkSize(dstSeed.length, SEEDBYTES_1);
         Stodium.checkStatus(Sodium.crypto_sign_ed25519_sk_to_seed(dstSeed,
                 srcPrivateKey));
     }
@@ -148,8 +314,8 @@ public final class Sign {
                            final @NotNull byte[] srcMsg,
                            final @NotNull byte[] localPrivKey)
             throws StodiumException {
-        Stodium.checkSize(dstSignedMsg.length, srcMsg.length + SIGNBYTES);
-        Stodium.checkSize(localPrivKey.length, PRIVATEKEYBYTES);
+        Stodium.checkSize(dstSignedMsg.length, srcMsg.length + SIGNBYTES_1);
+        Stodium.checkSize(localPrivKey.length, PRIVATEKEYBYTES_1);
         final int[] dstSize = new int[1];
         Stodium.checkStatus(Sodium.crypto_sign(dstSignedMsg, dstSize, srcMsg,
                 srcMsg.length, localPrivKey));
@@ -178,8 +344,8 @@ public final class Sign {
                            final @NotNull byte[] srcSignedMsg,
                            final @NotNull byte[] remotePubKey)
             throws StodiumException {
-        Stodium.checkSize(srcSignedMsg.length, dstMsg.length + SIGNBYTES);
-        Stodium.checkSize(remotePubKey.length, PUBLICKEYBYTES);
+        Stodium.checkSize(srcSignedMsg.length, dstMsg.length + SIGNBYTES_1);
+        Stodium.checkSize(remotePubKey.length, PUBLICKEYBYTES_1);
         final int[] dstSize = new int[1];
         Stodium.checkStatus(Sodium.crypto_sign_open(dstMsg, dstSize,
                 srcSignedMsg, srcSignedMsg.length, remotePubKey));
@@ -206,8 +372,8 @@ public final class Sign {
                                    final @NotNull byte[] srcMsg,
                                    final @NotNull byte[] localPrivKey)
             throws StodiumException {
-        Stodium.checkSize(dstSignature.length, SIGNBYTES);
-        Stodium.checkSize(localPrivKey.length, PRIVATEKEYBYTES);
+        Stodium.checkSize(dstSignature.length, SIGNBYTES_1);
+        Stodium.checkSize(localPrivKey.length, PRIVATEKEYBYTES_1);
         final int[] dstSize = new int[1];
         Stodium.checkStatus(Sodium.crypto_sign_detached(dstSignature, dstSize,
                 srcMsg, srcMsg.length, localPrivKey));
@@ -228,8 +394,8 @@ public final class Sign {
                                       final @NotNull byte[] srcMsg,
                                       final @NotNull byte[] remotePubKey)
             throws StodiumException {
-        Stodium.checkSize(srcSignature.length, SIGNBYTES);
-        Stodium.checkSize(remotePubKey.length, PUBLICKEYBYTES);
+        Stodium.checkSize(srcSignature.length, SIGNBYTES_1);
+        Stodium.checkSize(remotePubKey.length, PUBLICKEYBYTES_1);
         Stodium.checkStatus(Sodium.crypto_sign_verify_detached(srcSignature,
                 srcMsg, srcMsg.length, remotePubKey));
     }
