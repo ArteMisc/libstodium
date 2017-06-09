@@ -611,26 +611,60 @@ public class StodiumJNI {
     //
     public static native String crypto_secretbox_primitive();
 
-    public static native int crypto_secretbox_keybytes();
-    public static native int crypto_secretbox_macbytes();
-    public static native int crypto_secretbox_noncebytes();
-    public static native int crypto_secretbox_easy(
+    //
+    // SecretBox XSalsa20Poly1305
+    //
+    public static native int crypto_secretbox_xsalsa20poly1305_keybytes();
+    public static native int crypto_secretbox_xsalsa20poly1305_macbytes();
+    public static native int crypto_secretbox_xsalsa20poly1305_noncebytes();
+
+    public static native int crypto_secretbox_xsalsa20poly1305_easy(
             @NotNull ByteBuffer dst,
             @NotNull ByteBuffer src,
             @NotNull ByteBuffer nonce,
             @NotNull ByteBuffer key);
-    public static native int crypto_secretbox_open_easy(
+    public static native int crypto_secretbox_xsalsa20poly1305_open_easy(
             @NotNull ByteBuffer dst,
             @NotNull ByteBuffer src,
             @NotNull ByteBuffer nonce,
             @NotNull ByteBuffer key);
-    public static native int crypto_secretbox_detached(
+    public static native int crypto_secretbox_xsalsa20poly1305_detached(
             @NotNull ByteBuffer dst,
             @NotNull ByteBuffer mac,
             @NotNull ByteBuffer src,
             @NotNull ByteBuffer nonce,
             @NotNull ByteBuffer key);
-    public static native int crypto_secretbox_open_detached(
+    public static native int crypto_secretbox_xsalsa20poly1305_open_detached(
+            @NotNull ByteBuffer dst,
+            @NotNull ByteBuffer src,
+            @NotNull ByteBuffer mac,
+            @NotNull ByteBuffer nonce,
+            @NotNull ByteBuffer key);
+
+    //
+    // SecretBox XChacha20Poly1305
+    //
+    public static native int crypto_secretbox_xchacha20poly1305_keybytes();
+    public static native int crypto_secretbox_xchacha20poly1305_macbytes();
+    public static native int crypto_secretbox_xchacha20poly1305_noncebytes();
+
+    public static native int crypto_secretbox_xchacha20poly1305_easy(
+            @NotNull ByteBuffer dst,
+            @NotNull ByteBuffer src,
+            @NotNull ByteBuffer nonce,
+            @NotNull ByteBuffer key);
+    public static native int crypto_secretbox_xchacha20poly1305_open_easy(
+            @NotNull ByteBuffer dst,
+            @NotNull ByteBuffer src,
+            @NotNull ByteBuffer nonce,
+            @NotNull ByteBuffer key);
+    public static native int crypto_secretbox_xchacha20poly1305_detached(
+            @NotNull ByteBuffer dst,
+            @NotNull ByteBuffer mac,
+            @NotNull ByteBuffer src,
+            @NotNull ByteBuffer nonce,
+            @NotNull ByteBuffer key);
+    public static native int crypto_secretbox_xchacha20poly1305_open_detached(
             @NotNull ByteBuffer dst,
             @NotNull ByteBuffer src,
             @NotNull ByteBuffer mac,

@@ -12,7 +12,6 @@ import org.jetbrains.annotations.NotNull;
 import java.nio.ByteBuffer;
 
 import eu.artemisc.stodium.Singleton;
-import eu.artemisc.stodium.StodiumJNI;
 import eu.artemisc.stodium.exceptions.StodiumException;
 
 /**
@@ -22,9 +21,6 @@ import eu.artemisc.stodium.exceptions.StodiumException;
  * @author Jan van de Molengraft [jan@artemisc.eu]
  */
 public abstract class Box {
-
-    // constants
-    public static final @NotNull String PRIMITIVE = StodiumJNI.crypto_box_primitive();
 
     private static final @NotNull Singleton<Box> CURVE_XSALSA = new Singleton<Box>() {
         @NotNull

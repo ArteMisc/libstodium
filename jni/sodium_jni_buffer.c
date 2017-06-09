@@ -2392,11 +2392,11 @@ STODIUM_CONSTANT_STR(secretbox)
  *
  **************************************************************************** */
 
-STODIUM_CONSTANT_HL(secretbox, keybytes)
-STODIUM_CONSTANT_HL(secretbox, macbytes)
-STODIUM_CONSTANT_HL(secretbox, noncebytes)
+STODIUM_CONSTANT(secretbox, xsalsa20poly1305, keybytes)
+STODIUM_CONSTANT(secretbox, xsalsa20poly1305, macbytes)
+STODIUM_CONSTANT(secretbox, xsalsa20poly1305, noncebytes)
 
-STODIUM_JNI(jint, crypto_1secretbox_1easy) (JNIEnv *jenv, jclass jcls,
+STODIUM_JNI(jint, crypto_1secretbox_1xsalsa20poly1305_1easy) (JNIEnv *jenv, jclass jcls,
         jobject dst,
         jobject src,
         jobject nonce,
@@ -2422,7 +2422,7 @@ STODIUM_JNI(jint, crypto_1secretbox_1easy) (JNIEnv *jenv, jclass jcls,
     return result;
 }
 
-STODIUM_JNI(jint, crypto_1secretbox_1open_1easy) (JNIEnv *jenv, jclass jcls,
+STODIUM_JNI(jint, crypto_1secretbox_1xsalsa20poly1305_1open_1easy) (JNIEnv *jenv, jclass jcls,
         jobject dst,
         jobject src,
         jobject nonce,
@@ -2448,7 +2448,7 @@ STODIUM_JNI(jint, crypto_1secretbox_1open_1easy) (JNIEnv *jenv, jclass jcls,
     return result;
 }
 
-STODIUM_JNI(jint, crypto_1secretbox_1detached) (JNIEnv *jenv, jclass jcls,
+STODIUM_JNI(jint, crypto_1secretbox_xsalsa20poly1305_1detached) (JNIEnv *jenv, jclass jcls,
         jobject dst,
         jobject dst_mac,
         jobject src,
@@ -2478,7 +2478,7 @@ STODIUM_JNI(jint, crypto_1secretbox_1detached) (JNIEnv *jenv, jclass jcls,
     return result;
 }
 
-STODIUM_JNI(jint, crypto_1secretbox_1open_1detached) (JNIEnv *jenv, jclass jcls,
+STODIUM_JNI(jint, crypto_1secretbox_1xsalsa20poly1305_1open_1detached) (JNIEnv *jenv, jclass jcls,
         jobject dst,
         jobject src,
         jobject src_mac,
@@ -2492,6 +2492,128 @@ STODIUM_JNI(jint, crypto_1secretbox_1open_1detached) (JNIEnv *jenv, jclass jcls,
     stodium_get_buffer(jenv, &key_buffer, key);
 
     jint result = (jint) crypto_secretbox_open_detached(
+            AS_OUTPUT(unsigned char, dst_buffer),
+            AS_INPUT(unsigned char, src_buffer),
+            AS_INPUT(unsigned char, mac_buffer),
+            AS_INPUT_LEN(unsigned long long, src_buffer),
+            AS_INPUT(unsigned char, nonce_buffer),
+            AS_INPUT(unsigned char, key_buffer));
+
+    stodium_release_output(jenv, dst, &dst_buffer);
+    stodium_release_input(jenv, src, &src_buffer);
+    stodium_release_input(jenv, src_mac, &mac_buffer);
+    stodium_release_input(jenv, nonce, &nonce_buffer);
+    stodium_release_input(jenv, key, &key_buffer);
+
+    return result;
+}
+
+/** ****************************************************************************
+ *
+ * SECRETBOX - XSalsa20Poly1305
+ *
+ **************************************************************************** */
+
+STODIUM_CONSTANT(secretbox, xchacha20poly1305, keybytes)
+STODIUM_CONSTANT(secretbox, xchacha20poly1305, macbytes)
+STODIUM_CONSTANT(secretbox, xchacha20poly1305, noncebytes)
+
+STODIUM_JNI(jint, crypto_1secretbox_1xchacha20poly1305_1easy) (JNIEnv *jenv, jclass jcls,
+        jobject dst,
+        jobject src,
+        jobject nonce,
+        jobject key) {
+    stodium_buffer dst_buffer, src_buffer, nonce_buffer, key_buffer;
+    stodium_get_buffer(jenv, &dst_buffer, dst);
+    stodium_get_buffer(jenv, &src_buffer, src);
+    stodium_get_buffer(jenv, &nonce_buffer, nonce);
+    stodium_get_buffer(jenv, &key_buffer, key);
+
+    jint result = (jint) crypto_secretbox_xchacha20poly1305_easy(
+            AS_OUTPUT(unsigned char, dst_buffer),
+            AS_INPUT(unsigned char, src_buffer),
+            AS_INPUT_LEN(unsigned long long, src_buffer),
+            AS_INPUT(unsigned char, nonce_buffer),
+            AS_INPUT(unsigned char, key_buffer));
+
+    stodium_release_output(jenv, dst, &dst_buffer);
+    stodium_release_input(jenv, src, &src_buffer);
+    stodium_release_input(jenv, nonce, &nonce_buffer);
+    stodium_release_input(jenv, key, &key_buffer);
+
+    return result;
+}
+
+STODIUM_JNI(jint, crypto_1secretbox_1xchacha20poly1305_1open_1easy) (JNIEnv *jenv, jclass jcls,
+        jobject dst,
+        jobject src,
+        jobject nonce,
+        jobject key) {
+    stodium_buffer dst_buffer, src_buffer, nonce_buffer, key_buffer;
+    stodium_get_buffer(jenv, &dst_buffer, dst);
+    stodium_get_buffer(jenv, &src_buffer, src);
+    stodium_get_buffer(jenv, &nonce_buffer, nonce);
+    stodium_get_buffer(jenv, &key_buffer, key);
+
+    jint result = (jint) crypto_secretbox_xchacha20poly1305_open_easy(
+            AS_OUTPUT(unsigned char, dst_buffer),
+            AS_INPUT(unsigned char, src_buffer),
+            AS_INPUT_LEN(unsigned long long, src_buffer),
+            AS_INPUT(unsigned char, nonce_buffer),
+            AS_INPUT(unsigned char, key_buffer));
+
+    stodium_release_output(jenv, dst, &dst_buffer);
+    stodium_release_input(jenv, src, &src_buffer);
+    stodium_release_input(jenv, nonce, &nonce_buffer);
+    stodium_release_input(jenv, key, &key_buffer);
+
+    return result;
+}
+
+STODIUM_JNI(jint, crypto_1secretbox_xchacha20poly1305_1detached) (JNIEnv *jenv, jclass jcls,
+        jobject dst,
+        jobject dst_mac,
+        jobject src,
+        jobject nonce,
+        jobject key) {
+    stodium_buffer dst_buffer, mac_buffer, src_buffer, nonce_buffer, key_buffer;
+    stodium_get_buffer(jenv, &dst_buffer, dst);
+    stodium_get_buffer(jenv, &mac_buffer, dst_mac);
+    stodium_get_buffer(jenv, &src_buffer, src);
+    stodium_get_buffer(jenv, &nonce_buffer, nonce);
+    stodium_get_buffer(jenv, &key_buffer, key);
+
+    jint result = (jint) crypto_secretbox_xchacha20poly1305_detached(
+            AS_OUTPUT(unsigned char, dst_buffer),
+            AS_OUTPUT(unsigned char, mac_buffer),
+            AS_INPUT(unsigned char, src_buffer),
+            AS_INPUT_LEN(unsigned long long, src_buffer),
+            AS_INPUT(unsigned char, nonce_buffer),
+            AS_INPUT(unsigned char, key_buffer));
+
+    stodium_release_output(jenv, dst, &dst_buffer);
+    stodium_release_output(jenv, dst_mac, &mac_buffer);
+    stodium_release_input(jenv, src, &src_buffer);
+    stodium_release_input(jenv, nonce, &nonce_buffer);
+    stodium_release_input(jenv, key, &key_buffer);
+
+    return result;
+}
+
+STODIUM_JNI(jint, crypto_1secretbox_1xchacha20poly1305_1open_1detached) (JNIEnv *jenv, jclass jcls,
+        jobject dst,
+        jobject src,
+        jobject src_mac,
+        jobject nonce,
+        jobject key) {
+    stodium_buffer dst_buffer, mac_buffer, src_buffer, nonce_buffer, key_buffer;
+    stodium_get_buffer(jenv, &dst_buffer, dst);
+    stodium_get_buffer(jenv, &mac_buffer, src_mac);
+    stodium_get_buffer(jenv, &src_buffer, src);
+    stodium_get_buffer(jenv, &nonce_buffer, nonce);
+    stodium_get_buffer(jenv, &key_buffer, key);
+
+    jint result = (jint) crypto_secretbox_xchacha20poly1305_open_detached(
             AS_OUTPUT(unsigned char, dst_buffer),
             AS_INPUT(unsigned char, src_buffer),
             AS_INPUT(unsigned char, mac_buffer),
