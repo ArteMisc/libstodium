@@ -22,51 +22,54 @@ specifics depend entirely on the JVM used to run the code.
 
 ### Implemented primitives
 * AEAD
---* aes256gcm
---* chacha20poly1305
---* chacha20poly1305_ietf
---* xchacha20poly1305_ietf
+    * aes256gcm
+    * chacha20poly1305
+    * chacha20poly1305\_ietf
+    * xchacha20poly1305\_ietf
 * Auth
---* hmacsha256
---* hmacsha512
---* hmacsha256256
+    * hmacsha256
+    * hmacsha512
+    * hmacsha256256
 * Box
---* curve25519xchacha20poly1305
---* curve25519xsalsa20poly1305
+    * curve25519xchacha20poly1305
+    * curve25519xsalsa20poly1305
 * Core
---* hchacha20
---* hsalsa20
+    * hchacha20
+    * hsalsa20
 * Generic Hash
---* blake2b
+    * blake2b
 * Hash
---* sha256
---* sha512
+    * sha256
+    * sha512
 * KDF (Key Derivation Function)
---* blake2b
+    * blake2b
 * KX (Key Exchange)
---* x25519blake2b
+    * x25519blake2b
 * OneTimeAuth
---* poly1305
+    * poly1305
 * Password Hash
---* argon2i
---* scrypt
+    * argon2i
+    * scrypt
 * Random bytes
---* sodium randombytes
+    * sodium randombytes
 * Scalar Mult
---* curve25519
-* SecretBox
---* xchacha20poly1305
---* xsalsa20poly1305
+    * curve25519
+* Secret Box
+    * xchacha20poly1305
+    * xsalsa20poly1305
+* Secret Stream
+    * TODO
 * Short Hash
---* siphash24
---* siphashx24
+    * siphash24
+    * siphashx24
 * Signature
---* ed25519 (EdDSA-25519)
+    * ed25519 (EdDSA-25519)
 * Stream
+    * TODO
 * Misc/Util
---* Multipart API interface
---* hex encode/decode
---* base64 encode/decode
+    * Multipart API interface
+    * hex encode/decode
+    * base64 encode/decode
 
 ### Target platform
 
