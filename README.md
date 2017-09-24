@@ -1,24 +1,21 @@
 # libstodium
 
-*Though the API is reaching a stable point, there may still be breaking changes between commits.*
+*The API can be considered stable.*
 
-The goal of this library is to provide complete bindings of libsodium using JNI
-for the Android platform. It also provides implementations that try to handle
-the passing of data between the JVM and native code in a more efficient way, by
-supporting Java's method(array, offset, length) style for native methods.
+Libstodium provides Java (JNI) bindings for the libsodium methods.
 
-Credits to:
-* [**Libsodium**](https://github.com/jedisct1/libsodium): author [Frank Denis](https://github.com/jedisct1) and [Contributors](https://github.com/jedisct1/libsodium/graphs/contributors)
-* [**libsodium-jni**](https://github.com/joshjdevl/libsodium-jni): author [joshjdevl](https://github.com/joshjdevl) and [Contributors](https://github.com/joshjdevl/libsodium-jni/graphs/contributors)
-* [**Robosodium**](https://github.com/GerardSoleCa/Robosodium): author [GerardSoleCa](https://github.com/GerardSoleCa) and [Contributors](https://github.com/GerardSoleCa/Robosodium/graphs/contributors)
-
-## Implemented APIs
+## Implementation note
 This library implements JNI wrappers to functions from the libsodium library. The
 library tries to implement zero-copy wherever possible through the use of direct
 ByteBuffers. For applications using byte[] arrays, calls to libstodium methods can
 still be made by wrapping each array with a call to ByteBuffer.wrap(). When using
 arrays, the library will try to keep the amount of copying to a minimum, but
 specifics depend entirely on the JVM used to run the code.
+
+Credits to:
+* [**Libsodium**](https://github.com/jedisct1/libsodium): author [Frank Denis](https://github.com/jedisct1) and [Contributors](https://github.com/jedisct1/libsodium/graphs/contributors)
+* [**libsodium-jni**](https://github.com/joshjdevl/libsodium-jni): author [joshjdevl](https://github.com/joshjdevl) and [Contributors](https://github.com/joshjdevl/libsodium-jni/graphs/contributors)
+* [**Robosodium**](https://github.com/GerardSoleCa/Robosodium): author [GerardSoleCa](https://github.com/GerardSoleCa) and [Contributors](https://github.com/GerardSoleCa/Robosodium/graphs/contributors)
 
 ### Implemented primitives
 * AEAD
@@ -78,7 +75,7 @@ on Android systems.
 
 The supported Android API versions are:
 * Min SDK Version: 16 (4.1 Jelly Bean)
-* Target SDK Version: 23 (6.0 Marshmallow)
+* Target SDK Version: 26 (8.0 Oreo)
 
 ### How to install
 
@@ -124,10 +121,7 @@ Each part has its own software license, including:
 * **libstodium** [Apache License. Version 2.0](https://github.com/ArteMisc/libstodium/blob/master/LICENSE.txt)
 
 ### TODO
-* Improve the API, provide more docs.
-* Make the API compatible with Java's native Security interfaces.
 * Add tests.
-* Support more architectures as they come along (mainly 64-bits archs).
+* Support more architectures (64-bits archs).
 * Add code examples to the Readme.
-* Add a guide for adding the project as Android Studio module to a project.
 * Add support for Maven.
