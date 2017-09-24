@@ -10,18 +10,10 @@ fi
 C_INCLUDE_PATH="${JAVA_HOME}/include:${JAVA_HOME}/include/linux:/System/Library/Frameworks/JavaVM.framework/Headers"
 export C_INCLUDE_PATH
 
-#   rm -f *.java
-#   rm -f sodium_wrap.c
-#   rm -f *.so
-
-#   swig -java sodium.i
-#   swig -java -package org.abstractj.kalium -outdir ../src/main/java/org/abstractj/kalium sodium.i
-
-
-jnilib=libkaliumjni.so
+jnilib=libstodiumjni.so
 destlib=/usr/lib
 if uname -a | grep -q -i darwin; then
-  jnilib=libkaliumjni.jnilib
+  jnilib=libstodiumjni.jnilib
   destlib=/usr/lib/java
   if [ ! -d $destlib ]; then
       sudo mkdir $destlib

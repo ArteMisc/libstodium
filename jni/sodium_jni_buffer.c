@@ -1605,6 +1605,131 @@ STODIUM_JNI(jint, crypto_1box_1curve25519xchacha20poly1305_1open_1easy) (JNIEnv 
 
 /** ****************************************************************************
  *
+ * CODECS
+ *
+ **************************************************************************** */
+
+/** ****************************************************************************
+ *
+ * CODECS - HEX
+ *
+ **************************************************************************** */
+
+STODIUM_JNI(jint, sodium_1bin2hex) (JNIEnv *jenv, jclass jcls,
+        jobject dst,
+        jobject src) {
+    stodium_buffer dst_buffer, src_buffer;
+    stodium_get_buffer(jenv, &dst_buffer, dst);
+    stodium_get_buffer(jenv, &src_buffer, src);
+
+    jint result = (jint) sodium_bin2hex(
+            AS_OUTPUT(char, dst_buffer),
+            AS_INPUT_LEN(size_t, dst_buffer),
+            AS_INPUT(unsigned char, src_buffer),
+            AS_INPUT_LEN(size_t, bin_len));
+
+    stodium_release_output(jenv, dst, &dst_buffer);
+    stodium_release_input(jenv, src, &src_buffer);
+    
+    return result;
+}
+
+STODIUM_JNI(jint, sodium_1hex2bin) (JNIEnv *jenv, jclass jcls,
+        jobject dst,
+        jobject src) {
+    stodium_buffer dst_buffer, src_buffer;
+    stodium_get_buffer(jenv, &dst_buffer, dst);
+    stodium_get_buffer(jenv, &src_buffer, src);
+
+    jint result = (jint) sodium_hex2bin(
+            AS_OUTPUT(unsigned char, dst_buffer),
+            AS_INPUT_LEN(size_t, dst_buffer),
+            AS_INPUT(char, src_buffer),
+            AS_INPUT_LEN(size_t, src_buffer),
+            NULL,
+            AS_OUTPUT_LEN(size_t, dst_buffer),
+            NULL);
+
+    stodium_release_output(jenv, dst, &dst_buffer);
+    stodium_release_input(jenv, src, &src_buffer);
+    
+    return result;
+}
+
+/** ****************************************************************************
+ *
+ * CODECS - BASE64
+ *
+ **************************************************************************** */
+
+STODIUM_JNI(jint, stodium_1base64_1variant_1original) (JNIEnv *jenv, jclass jcls) {
+        return (jint) sodium_base64_VARIANT_ORIGINAL;
+}
+STODIUM_JNI(jint, stodium_1base64_1variant_1original_1no_1padding) (JNIEnv *jenv, jclass jcls) {
+        return (jint) sodium_base64_VARIANT_ORIGINAL_NO_PADDING;
+}
+STODIUM_JNI(jint, stodium_1base64_1variant_1urlsafe) (JNIEnv *jenv, jclass jcls) {
+        return (jint) sodium_base64_VARIANT_URLSAFE;
+}
+STODIUM_JNI(jint, stodium_1base64_1variant_1urlsafe_1no_1padding) (JNIEnv *jenv, jclass jcls) {
+        return (jint) sodium_base64_VARIANT_URLSAFE_NO_PADDING;
+}
+
+STODIUM_JNI(jint, sodium_1base64_1encoded_1len) (JNIEnv *jenv, jclass jcls,
+        jint bin_len,
+        jint variant) {
+    return (jint) (sodium_encoded_len(
+            (const size_t) bin_len,
+            (const int) variant);
+}
+
+STODIUM_JNI(jint, sodium_1bin2base64) (JNIEnv *jenv, jclass jcls,
+        jobject dst,
+        jobject src,
+        jint variant) {
+    stodium_buffer dst_buffer, src_buffer;
+    stodium_get_buffer(jenv, &dst_buffer, dst);
+    stodium_get_buffer(jenv, &src_buffer, src);
+
+    jint result = (jint) sodium_bin2base64(
+            AS_OUTPUT(char, dst_buffer),
+            AS_INPUT_LEN(size_t, dst_buffer),
+            AS_INPUT(unsigned char, src_buffer),
+            AS_INPUT_LEN(size_t, bin_len),
+            (const int) variant);
+
+    stodium_release_output(jenv, dst, &dst_buffer);
+    stodium_release_input(jenv, src, &src_buffer);
+    
+    return result;
+}
+
+STODIUM_JNI(jint, sodium_1base642bin) (JNIEnv *jenv, jclass jcls,
+        jobject dst,
+        jobject src,
+        jint variant) {
+    stodium_buffer dst_buffer, src_buffer;
+    stodium_get_buffer(jenv, &dst_buffer, dst);
+    stodium_get_buffer(jenv, &src_buffer, src);
+
+    jint result = (jint) sodium_base642bin(
+            AS_OUTPUT(unsigned char, dst_buffer),
+            AS_INPUT_LEN(size_t, dst_buffer),
+            AS_INPUT(char, src_buffer),
+            AS_INPUT_LEN(size_t, src_buffer),
+            NULL,
+            AS_OUTPUT_LEN(size_t, dst_buffer),
+            NULL,
+            (const int) variant);
+
+    stodium_release_output(jenv, dst, &dst_buffer);
+    stodium_release_input(jenv, src, &src_buffer);
+    
+    return result;
+}
+
+/** ****************************************************************************
+ *
  * CORE - HCHACHA
  *
  **************************************************************************** */
@@ -1972,6 +2097,161 @@ STODIUM_JNI(jint, crypto_1hash_1sha512_1final) (JNIEnv *jenv, jclass jcls,
 
     stodium_release_output(jenv, state, &state_buffer);
     stodium_release_output(jenv, dst, &dst_buffer);
+
+    return result;
+}
+
+/** ****************************************************************************
+ *
+ * KDF
+ *
+ **************************************************************************** */
+
+STODIUM_CONSTANT_STR(kdf)
+
+/** ****************************************************************************
+ *
+ * KDF - Blake2b
+ *
+ **************************************************************************** */
+
+STODIUM_CONSTANT(kdf, blake2b, contextbytes);
+STODIUM_CONSTANT(kdf, blake2b, keybytes);
+STODIUM_JNI(jint, crypto_1kdf_1blake2b_1bytes_1min) (JNIEnv *jenv, jclass jcls) {
+    return (jint) crypto_kdf_blake2b_bytes_min();
+}
+STODIUM_JNI(jint, crypto_1kdf_1blake2b_1bytes_1max) (JNIEnv *jenv, jclass jcls) {
+    return (jint) crypto_kdf_blake2b_bytes_max();
+}
+
+STODIUM_JNI(jint, crypto_1kdf_1blake2b_1derive_1from_1key) (JNIEnv *jenv, jclass jcls,
+        jobject sub,
+        jlong   subid,
+        jobject ctx,
+        jobject key) {
+    stodium_buffer sub_buffer, ctx_buffer, key_buffer;
+    stodium_get_buffer(jenv, &sub_buffer, sub);
+    stodium_get_buffer(jenv, &ctx_buffer, ctx);
+    stodium_get_buffer(jenv, &key_buffer, key);
+
+    jint result = (jint) crypto_kdf_blake2b_derive_from_key(
+            AS_OUTPUT(unsigned char, sub_buffer),
+            AS_INPUT_LEN(size_t, sub.buffer),
+            (uint64_t) subid,
+            AS_INPUT(char, ctx_buffer),
+            AS_INPUT(unsigned char, key_buffer));
+
+    stodium_release_output(jenv, sub, &sub_buffer);
+    stodium_release_input(jenv, ctx, &ctx_buffer);
+    stodium_release_input(jenv, key, &key_buffer);
+
+    return result;
+}
+
+/** ****************************************************************************
+ *
+ * KX (x25519blake2b)
+ *
+ **************************************************************************** */
+
+STODIUM_CONSTANT_STR(kx)
+STODIUM_CONSTANT_HL(kx, publickeybytes)
+STODIUM_CONSTANT_HL(kx, secretkeybytes)
+STODIUM_CONSTANT_HL(kx, seedbytes)
+STODIUM_CONSTANT_HL(kx, sessionkeybytes)
+
+STODIUM_JNI(jint, crypto_1kx_1keypair) (JNIEnv *jenv, jclass jcls,
+        jobject pub,
+        jobject priv) {
+    stodium_buffer pub_buffer, priv_buffer;
+    stodium_get_buffer(jenv, &pub_buffer, pub);
+    stodium_get_buffer(jenv, &priv_buffer, priv);
+
+    jint result = (jint) crypto_kx_keypair(
+            AS_OUTPUT(unsigned char, pub_buffer),
+            AS_OUTPUT(unsigned char, priv_buffer));
+
+    stodium_release_output(jenv, pub, &pub_buffer);
+    stodium_release_output(jenv, priv, &priv_buffer);
+
+    return result;
+}
+
+STODIUM_JNI(jint, crypto_1kx_1seed_1keypair) (JNIEnv *jenv, jclass jcls,
+        jobject pub,
+        jobject priv,
+        jobject seed) {
+    stodium_buffer pub_buffer, priv_buffer, seed_buffer;
+    stodium_get_buffer(jenv, &pub_buffer, pub);
+    stodium_get_buffer(jenv, &priv_buffer, priv);
+    stodium_get_buffer(jenv, &seed_buffer, seed);
+
+    jint result = (jint) crypto_kx_seed_keypair(
+            AS_OUTPUT(unsigned char, pub_buffer),
+            AS_OUTPUT(unsigned char, priv_buffer),
+            AS_INPUT(unsigned char, seed_buffer));
+
+    stodium_release_output(jenv, pub, &pub_buffer);
+    stodium_release_output(jenv, priv, &priv_buffer);
+    stodium_release_input(jenv, seed, &seed_buffer);
+
+    return result;
+}
+
+STODIUM_JNI(jint, crypto_1kx_1server_1session_1keys) (JNIEnv *jenv, jclass jcls,
+            jobject rx,
+            jobject tx,
+            jobject spk,
+            jobject ssk,
+            jobject cpk) {
+    stodium_buffer rx_buffer, tx_buffer, spk_buffer, ssk_buffer, cpk_buffer;
+    stodium_get_buffer(jenv, &rx_buffer, rx);
+    stodium_get_buffer(jenv, &tx_buffer, tx);
+    stodium_get_buffer(jenv, &skp_buffer, skp);
+    stodium_get_buffer(jenv, &ssk_buffer, ssk);
+    stodium_get_buffer(jenv, &cpk_buffer, cpk);
+
+    jint result = (jint) crypto_kx_server_session_keys(
+            AS_OUTPUT(unsigned char, rx_buffer),
+            AS_OUTPUT(unsigned char, tx_buffer),
+            AS_INPUT(unsigned char, spk_buffer),
+            AS_INPUT(unsigned char, ssk_buffer),
+            AS_INPUT(unsigned char, cpk_buffer));
+
+    stodium_release_output(jenv, rx, rx_buffer);
+    stodium_release_output(jenv, tx, tx_buffer);
+    stodium_release_input(jenv, skp, skp_buffer);
+    stodium_release_input(jenv, ssp, ssp_buffer);
+    stodium_release_input(jenv, ckp, ckp_buffer);
+
+    return result;
+}
+
+STODIUM_JNI(jint, crypto_1kx_1client_1session_1keys) (JNIEnv *jenv, jclass jcls,
+            jobject rx,
+            jobject tx,
+            jobject cpk,
+            jobject csk,
+            jobject spk) {
+    stodium_buffer rx_buffer, tx_buffer, cpk_buffer, csk_buffer, spk_buffer;
+    stodium_get_buffer(jenv, &rx_buffer, rx);
+    stodium_get_buffer(jenv, &tx_buffer, tx);
+    stodium_get_buffer(jenv, &ckp_buffer, ckp);
+    stodium_get_buffer(jenv, &csk_buffer, csk);
+    stodium_get_buffer(jenv, &spk_buffer, spk);
+
+    jint result = (jint) crypto_kx_client_session_keys(
+            AS_OUTPUT(unsigned char, rx_buffer),
+            AS_OUTPUT(unsigned char, tx_buffer),
+            AS_INPUT(unsigned char, cpk_buffer),
+            AS_INPUT(unsigned char, csk_buffer),
+            AS_INPUT(unsigned char, spk_buffer));
+
+    stodium_release_output(jenv, rx, rx_buffer);
+    stodium_release_output(jenv, tx, tx_buffer);
+    stodium_release_input(jenv, ckp, ckp_buffer);
+    stodium_release_input(jenv, csp, csp_buffer);
+    stodium_release_input(jenv, skp, skp_buffer);
 
     return result;
 }

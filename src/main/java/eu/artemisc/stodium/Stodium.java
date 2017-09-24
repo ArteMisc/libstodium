@@ -7,7 +7,6 @@
  */
 package eu.artemisc.stodium;
 
-import org.abstractj.kalium.SodiumJNI;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -243,6 +242,32 @@ public final class Stodium {
         while (a.hasRemaining()) {
             a.put(EMPTY_BUFFER, 0, a.remaining() < 1024 ? a.remaining() : 1024);
         }
+    }
+
+    /**
+     * based on sodium_bin2hex
+     * @param bin
+     * @return
+     *
+     * @see <a href="https://github.com/jedisct1/libsodium/blob/master/src/libsodium/sodium/utils.c">libsodium source</a>
+     */
+    @NotNull
+    public static String bin2hex(final @NotNull ByteBuffer bin)
+            throws StodiumException {
+        throw new UnsupportedOperationException();
+    }
+
+    /**
+     * based on sodium_hex2bin
+     * @param hex
+     * @param dst
+     *
+     * @see <a href="https://github.com/jedisct1/libsodium/blob/master/src/libsodium/sodium/utils.c">libsodium source</a>
+     */
+    public static void hex2bin(final @NotNull CharSequence hex,
+                               final @NotNull ByteBuffer   dst)
+            throws ConstraintViolationException {
+        throw new UnsupportedOperationException();
     }
 
     /**

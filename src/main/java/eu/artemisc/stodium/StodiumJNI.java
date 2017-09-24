@@ -402,6 +402,41 @@ public class StodiumJNI {
     // todo detached
 
     //
+    // Codec
+    //
+
+    //
+    // Codec Hex
+    //
+    public static native int sodium_bin2hex(
+            @NotNull ByteBuffer dst,
+            @NotNull ByteBuffer src);
+    public static native int sodium_hex2bin(
+            @NotNull ByteBuffer dst,
+            @NotNull ByteBuffer src);
+
+    //
+    // Codec Base64
+    //
+    public static native int sodium_base64_variant_original();
+    public static native int sodium_base64_variant_original_no_padding();
+    public static native int sodium_base64_variant_urlsafe();
+    public static native int sodium_base64_variant_urlsafe_no_padding();
+
+    public static native int sodium_base64_encoded_len(
+            int bin_len,
+            int variant);
+
+    public static native int sodium_bin2base64(
+            @NotNull ByteBuffer dst,
+            @NotNull ByteBuffer src,
+                     int        variant);
+    public static native int sodium_base642bin(
+            @NotNull ByteBuffer dst,
+            @NotNull ByteBuffer src,
+                     int        variant);
+
+    //
     // GenericHash
     //
     public static native @NotNull String crypto_generichash_primitive();
@@ -480,6 +515,58 @@ public class StodiumJNI {
     public static native int crypto_hash_sha512_final(
             @NotNull ByteBuffer state,
             @NotNull ByteBuffer dst);
+
+    //
+    // Kdf
+    //
+    public static native @NotNull String crypto_kdf_primitive();
+
+    //
+    // Kdf - Blake2b
+    //
+    public static native int crypto_kdf_blake2b_bytes_min();
+    public static native int crypto_kdf_blake2b_bytes_max();
+    public static native int crypto_kdf_blake2b_contextbytes();
+    public static native int crypto_kdf_blake2b_keybytes();
+
+    public static native int crypto_kdf_blake2b_derive_from_key(
+            @NotNull ByteBuffer subkey,
+                     long       subId,
+            @NotNull ByteBuffer context,
+            @NotNull ByteBuffer key);
+
+    //
+    // Kx
+    //
+    public static native @NotNull String crypto_kx_primitive();
+
+    public static native int crypto_kx_publickeybytes();
+    public static native int crypto_kx_secretkeybytes();
+    public static native int crypto_kx_seedbytes();
+    public static native int crypto_kx_sessionkeybytes();
+
+    public static native int crypto_kx_keypair(
+            @NotNull ByteBuffer pk,
+            @NotNull ByteBuffer sk);
+
+    public static native int crypto_kx_seed_keypair(
+            @NotNull ByteBuffer pk,
+            @NotNull ByteBuffer sk,
+            @NotNull ByteBuffer seed);
+
+    public static native int crypto_kx_client_session_keys(
+            @NotNull ByteBuffer rx,
+            @NotNull ByteBuffer tx,
+            @NotNull ByteBuffer clientPk,
+            @NotNull ByteBuffer clientSk,
+            @NotNull ByteBuffer serverPk);
+
+    public static native int crypto_kx_server_session_keys(
+            @NotNull ByteBuffer rx,
+            @NotNull ByteBuffer tx,
+            @NotNull ByteBuffer serverPk,
+            @NotNull ByteBuffer serverSk,
+            @NotNull ByteBuffer clientPk);
 
     //
     // OneTimeAuth
@@ -757,7 +844,7 @@ public class StodiumJNI {
             Class.forName("android.Manifest");
 
             // Load the android JNI libs, as this is libstodium-android
-            System.loadLibrary("kaliumjni");
+            System.loadLibrary("stodiumjni");
 
         } catch (final ClassNotFoundException e1) {
             /*// This is not android, extract pre-build library from jar

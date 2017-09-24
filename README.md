@@ -12,6 +12,62 @@ Credits to:
 * [**libsodium-jni**](https://github.com/joshjdevl/libsodium-jni): author [joshjdevl](https://github.com/joshjdevl) and [Contributors](https://github.com/joshjdevl/libsodium-jni/graphs/contributors)
 * [**Robosodium**](https://github.com/GerardSoleCa/Robosodium): author [GerardSoleCa](https://github.com/GerardSoleCa) and [Contributors](https://github.com/GerardSoleCa/Robosodium/graphs/contributors)
 
+## Implemented APIs
+This library implements JNI wrappers to functions from the libsodium library. The
+library tries to implement zero-copy wherever possible through the use of direct
+ByteBuffers. For applications using byte[] arrays, calls to libstodium methods can
+still be made by wrapping each array with a call to ByteBuffer.wrap(). When using
+arrays, the library will try to keep the amount of copying to a minimum, but
+specifics depend entirely on the JVM used to run the code.
+
+### Implemented primitives
+* AEAD
+--* aes256gcm
+--* chacha20poly1305
+--* chacha20poly1305_ietf
+--* xchacha20poly1305_ietf
+* Auth
+--* hmacsha256
+--* hmacsha512
+--* hmacsha256256
+* Box
+--* curve25519xchacha20poly1305
+--* curve25519xsalsa20poly1305
+* Core
+--* hchacha20
+--* hsalsa20
+* Generic Hash
+--* blake2b
+* Hash
+--* sha256
+--* sha512
+* KDF (Key Derivation Function)
+--* blake2b
+* KX (Key Exchange)
+--* x25519blake2b
+* OneTimeAuth
+--* poly1305
+* Password Hash
+--* argon2i
+--* scrypt
+* Random bytes
+--* sodium randombytes
+* Scalar Mult
+--* curve25519
+* SecretBox
+--* xchacha20poly1305
+--* xsalsa20poly1305
+* Short Hash
+--* siphash24
+--* siphashx24
+* Signature
+--* ed25519 (EdDSA-25519)
+* Stream
+* Misc/Util
+--* Multipart API interface
+--* hex encode/decode
+--* base64 encode/decode
+
 ### Target platform
 
 The library is heavily focussed on intergration with Android Studio and working

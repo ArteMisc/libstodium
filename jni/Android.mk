@@ -50,7 +50,7 @@ LOCAL_DISABLE_FATAL_LINKER_WARNINGS := true
 include $(PREBUILT_STATIC_LIBRARY)
 
 include $(CLEAR_VARS)
-LOCAL_MODULE    := kaliumjni
+LOCAL_MODULE    := stodiumjni
 LOCAL_SRC_FILES :=  \
 	sodium_wrap.c \
 	sodium_jni_buffer.c
