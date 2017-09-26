@@ -52,7 +52,7 @@ public abstract class AEAD {
 
     @Nullable
     public static AEAD aesInstance() {
-        return Aes256Gcm.isAvailable() ? null : AES.get();
+        return Aes256Gcm.isAvailable() ? AES.get() : null;
     }
 
     @NotNull
