@@ -259,7 +259,8 @@ STODIUM_JNI(jint, crypto_1aead_1aes256gcm_1encrypt_1detached) (JNIEnv *jenv, jcl
     jint result = (jint) crypto_aead_aes256gcm_encrypt_detached(
             AS_OUTPUT(unsigned char, dst_buffer),
             AS_OUTPUT(unsigned char, mac_buffer),
-            AS_OUTPUT_LEN(unsigned long long, mac_buffer),
+            //AS_OUTPUT_LEN(unsigned long long, mac_buffer),
+            NULL,
             AS_INPUT(unsigned char, src_buffer),
             AS_INPUT_LEN(unsigned long long, src_buffer),
             AS_INPUT(unsigned char, ad_buffer),
@@ -293,7 +294,7 @@ STODIUM_JNI(jint, crypto_1aead_1aes256gcm_1encrypt) (JNIEnv *jenv, jclass jcls,
  
     jint result = (jint) crypto_aead_aes256gcm_encrypt(
             AS_OUTPUT(unsigned char, dst_buffer),
-            AS_OUTPUT_LEN(unsigned long long, dst_buffer),
+            NULL,
             AS_INPUT(unsigned char, src_buffer),
             AS_INPUT_LEN(unsigned long long, src_buffer),
             AS_INPUT(unsigned char, ad_buffer),
@@ -1647,7 +1648,7 @@ STODIUM_JNI(jint, sodium_1hex2bin) (JNIEnv *jenv, jclass jcls,
             AS_INPUT(char, src_buffer),
             AS_INPUT_LEN(size_t, src_buffer),
             NULL,
-            AS_OUTPUT_LEN(size_t, dst_buffer),
+            NULL,
             NULL);
 
     stodium_release_output(jenv, dst, &dst_buffer);

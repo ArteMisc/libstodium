@@ -1,4 +1,5 @@
 # Copyright (C) 2009 The Android Open Source Project
+# Copyright (C) 2017 Project ArteMisc
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -15,9 +16,7 @@
 LOCAL_PATH := $(call my-dir)
 LIB_FOLDER := lib
 
-# Bugfix for arm, which should refer to the armv6 folder
-# Bugfix for x86, which should refer to the i686 folder
-# Bugfix for mips, which should refer to the mips32 folder
+# arch to folder mapping
 MY_ARCH_FOLDER := $(TARGET_ARCH)
 ifeq ($(MY_ARCH_FOLDER),arm)
     MY_ARCH_FOLDER = armv6
@@ -52,7 +51,6 @@ include $(PREBUILT_STATIC_LIBRARY)
 include $(CLEAR_VARS)
 LOCAL_MODULE    := stodiumjni
 LOCAL_SRC_FILES :=  \
-	sodium_wrap.c \
 	sodium_jni_buffer.c
 APP_UNIFIED_HEADERS := true
 LOCAL_LDFLAGS   += -fPIC
@@ -62,12 +60,8 @@ LOCAL_CFLAGS    += -Wall -g -pedantic -Wno-variadic-macros -std=c99 #-v
 
 LOCAL_C_INCLUDES += $(abspath $(LOCAL_PATH))/../libsodium/libsodium-android-$(MY_ARCH_FOLDER)/include ../libsodium/libsodium-android-$(MY_ARCH_FOLDER)/include/sodium /usr/local/include
 LOCAL_STATIC_LIBRARIES += sodium
-#LOCAL_DISABLE_FATAL_LINKER_WARNINGS := true
 #LOCAL_LDFLAGS := -Wl,-Bsymbolic # to work around error "shared library text segment is not shareable"
 #LOCAL_LDLIBS += -Wl,--no-warn-shared-textrel
 #LOCAL_LDLIBS += -llog -lsodium
-
-# fix?
-#D_FORTIFY_SOURCE=0
 
 include $(BUILD_SHARED_LIBRARY)

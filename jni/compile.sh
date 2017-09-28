@@ -21,12 +21,9 @@ if uname -a | grep -q -i darwin; then
 else
     sudo ldconfig
 fi
-#echo $jnilib
-#echo $destlib
-#echo $destlib/$jnilib 
 
 #sudo cp /usr/local/lib/libsodium.* /usr/lib
 
-gcc -I${JAVA_HOME}/include -I${JAVA_HOME}/include/linux sodium_wrap.c sodium_jni_buffer.c -Wno-variadic-macros -shared -fPIC -L/usr/lib -lsodium -o $jnilib
+gcc -I${JAVA_HOME}/include -I${JAVA_HOME}/include/linux sodium_jni_buffer.c -Wno-variadic-macros -shared -fPIC -L/usr/lib -lsodium -o $jnilib
 sudo rm -f $destlib/$jnilib  
 sudo cp $jnilib $destlib

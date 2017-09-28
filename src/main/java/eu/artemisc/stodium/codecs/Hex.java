@@ -13,9 +13,6 @@ import eu.artemisc.stodium.exceptions.StodiumException;
  */
 final class Hex
         extends Codec {
-    Hex() {
-        super();
-    }
 
     @Override
     public int encodedLength(final int input) {
@@ -40,6 +37,8 @@ final class Hex
                        final @NotNull ByteBuffer src)
             throws StodiumException {
         Stodium.checkDestinationWritable(dst);
+
+        Stodium.checkSizeMin(encodedLength(dst.remaining()), src.remaining());
 
         Stodium.checkStatus(StodiumJNI.sodium_hex2bin(
                 Stodium.ensureUsableByteBuffer(dst),
